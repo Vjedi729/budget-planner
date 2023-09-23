@@ -10,3 +10,4 @@ export interface MenuProps {
 }
 
 export class Menu<State = undefined> extends React.Component<MenuProps, State> {}
+export type MenuFunction = React.FunctionComponent<MenuProps>
