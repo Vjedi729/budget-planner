@@ -29,3 +29,26 @@ export interface InternalTransaction {
 
     readonly amount: number
 }
+
+export class RecurringTransaction {
+    //TODO: Add support for recurring internal transfers
+    readonly recurrence: number;
+    readonly initialDate: Date;
+    //readonly internal?: boolean;
+    readonly amount: number;
+    readonly bucket: string;
+    readonly accountFrom: Account;
+    //readonly accountTo?: Account;
+    readonly vendor: Vendor;
+    readonly description: string;
+
+    constructor(recurrence: number, initialDate: Date, amount: number, bucket: string, accountFrom: Account, vendor: Vendor, description: string){
+        this.recurrence = recurrence;
+        this.initialDate = initialDate;
+        this.amount = amount;
+        this.bucket = bucket;
+        this.accountFrom = accountFrom;
+        this.vendor = vendor;
+        this.description = description;
+    }
+}
