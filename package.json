@@ -4,9 +4,10 @@
   "description": "A basic budget planner for personal use.",
   "main": "index.js",
   "dependencies": {
-    "create-next-app": "^13.4.19"
+    "create-next-app": "^13.4.19",
+    "react": "^18.2.0",
+    "react-data-table-component": "^7.5.4"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
