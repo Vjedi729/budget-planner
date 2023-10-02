@@ -1,6 +1,5 @@
 'use client'
 import React  from "react"
-import Collapsible from 'react-collapsible'
 import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component"
 import { RecurringTransaction } from "@/data/transactions"
 
@@ -38,26 +37,16 @@ const cols: TableColumn<RecurringTransaction>[] = [
     }
 ]
 
-const collapseDiv = () => {
-    return (
-        <Collapsible trigger = "Needs"> 
-             <DataTable
-            columns = {cols}
-            data = {testRecurringData}
-            /> 
-        </Collapsible>
-    );
-    }
 
-// export default function recurringTable() {
-//     return (
-//         <DataTable
-//             columns = {cols}
-//             data = {testRecurringData}
-//         />
-//     );
-// };
-export default collapseDiv;
+export default function recurringTable() {
+     return (
+         <DataTable
+             columns = {cols}
+             data = {testRecurringData}
+         />
+     );
+ };
+
 
 //Want to make individual expandable divs that hold subordinate expandable
 //divs for each bucket (ie Needs -> Electric) that display things like "contains
