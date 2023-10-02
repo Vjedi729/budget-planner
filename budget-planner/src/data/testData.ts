@@ -5,7 +5,7 @@ import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 
 export const testAccount = new Account("[CREDIT] Cosctco Citi Visa *8042")
-export const testData: ExternalTransaction[] = [
+export const testTransactionData: ExternalTransaction[] = [
     new ExternalTransaction(new Date(2023,8,20), 34.14, new Vendor("Meijer"), testAccount),
     new ExternalTransaction(new Date(2023,8,23), 102.54, new Vendor("Costco"), testAccount, [
         { price: 4.99, bucket: "Groceries", desciption: { name: "Strawberries", description: ""} },
@@ -26,7 +26,7 @@ export function getBucketBalances(time: Date, inclusive: boolean = false) {
     // TODO: Add money based on bucket initial date and refill information
 
     // Remove money based on purchases
-    testData.filter((
+    testTransactionData.filter((
         transaction: ExternalTransaction) => transaction.time < time || (inclusive && transaction.time.getTime() == time.getTime())
     ).forEach((transaction: ExternalTransaction) => {
         let purchasePriceSum = 0;
