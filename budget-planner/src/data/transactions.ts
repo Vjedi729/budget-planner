@@ -1,6 +1,7 @@
 // TODO: Transaction super-class?
 
 import { Account } from "./account"
+import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { Vendor } from "./vendor"
 
@@ -18,6 +19,25 @@ export class ExternalTransaction {
         this.account = account;
         this.purchases = purchases;
     }
+
+    remainderPrice(): number {
+        return this.amount - this.purchases.reduce((sum, curr) => sum + curr.price, 0)
+    }
+
+    hasRemainder(): boolean {
+        return this.remainderPrice() > 0.001
+    }
+
+    getRemainderPurchase(): Purchase {
+        return { 
+            price: this.remainderPrice(),
+            bucket: BucketName.NONE,
+            desciption: {
+                name: "Unaccounted",
+                description: "The amount of transaction not accounted for by any purchase."
+            }
+        }
+    }
 }
 
 export interface InternalTransaction {
@@ -28,7 +48,8 @@ export interface InternalTransaction {
     readonly accountReceived: Account
 
     readonly amount: number
-}
+}// TODO: Transaction super-class?
+
 
 export class RecurringTransaction {
     //TODO: Add support for recurring internal transfers
