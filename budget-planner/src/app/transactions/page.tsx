@@ -6,7 +6,7 @@ import { Purchase } from "@/data/purchase"
 
 import { getBucketBalances, testTransactionData } from "@/data/testData"
 import { BucketName } from "@/data/enums"
-import { CumulativeTableColumn } from "@/components/react-data-table-component-utils"
+import { CumulativeTableColumn, SimpleColumn } from "@/components/react-data-table-component-utils"
 
 function dollarFormat(n: number): string { return `${n<0 ? "-" : ""}$${Math.round(Math.abs(n)*100)/100}` }
 
@@ -15,11 +15,15 @@ const cols: TableColumn<ExternalTransaction>[] = [
         name: "Date",
         selector: row => row.time.toUTCString()
     },
-    {
-        name: "Amount",
-        selector: row => row.amount,
-        format: row => `$${row.amount}`
-    },
+    new SimpleColumn(
+        {
+            name: "Amount",
+        },
+        {
+            selector: row => row.amount,
+            format: dollarFormat,
+        }
+    ),
     {
         name: "Location",
         selector: row => row.vendor.name
@@ -38,12 +42,16 @@ const purchaseColumns: ((initialBucketBalance: Record<BucketName, number>) => Ta
     {
 
     },
-    {
-        name: "Amount",
-        selector: row => row.price,
-        format: row => `$${row.price}`,
-        sortable: true
-    },
+    new SimpleColumn(
+        {
+            name: "Amount",
+            sortable: true
+        },
+        {
+            selector: row => row.price,
+            format: dollarFormat,
+        }
+    ),
     {
         name: "Description",
         selector: row => row.desciption.name
@@ -76,7 +84,9 @@ export const PurchaseDataTable: React.FC<ExpanderComponentProps<ExternalTransact
     return (
         <div style={{paddingBlock:"1vh", paddingInlineStart:"48px", backgroundColor:"lightgray"}}>
             <DataTable columns={cols} data={rows} onSort={(col, order, sortedRows) => {
-                (cols[4] as CumulativeTableColumn<Purchase, Record<string, number>, number>).precalculate(sortedRows)
+                cols.forEach(col => { 
+                    if (col instanceof CumulativeTableColumn) col.precalculate(sortedRows);
+                });
                 forceUpdate();
             }}/>
         </div>
