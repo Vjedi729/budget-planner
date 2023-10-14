@@ -1,6 +1,7 @@
 'use client'
 import React  from "react"
 import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component"
+import { CumulativeTableColumn } from "@/components/react-data-table-component-utils"
 import { RecurringTransaction } from "@/data/transactions"
 
 import { testRecurringData } from "@/data/testData"
@@ -9,11 +10,13 @@ const cols: TableColumn<RecurringTransaction>[] = [
     {
         name: "Amount",
         selector: row => row.amount,
-        format: row => `$${row.amount}`
+        format: row => `$${row.amount}`,
+        sortable: true
     },
     {
         name: "Vendor",
-        selector: row => row.vendor.name
+        selector: row => row.vendor.name,
+        sortable: true
     },
     {
         name: "Description",
@@ -21,19 +24,23 @@ const cols: TableColumn<RecurringTransaction>[] = [
     },
     {
         name: "Bucket",
-        selector: row => row.bucket
+        selector: row => row.bucket,
+        sortable: true
     },
     {
         name: "Recurrence",
-        selector: row => row.recurrence
+        selector: row => row.recurrence,
+        sortable: true
     },
     {
         name: "Cost Per Year",
-        selector: row => row.recurrence*row.amount
+        selector: row => row.recurrence*row.amount,
+        sortable: true
     },
     {
         name: "Account",
-        selector: row => row.accountFrom.name
+        selector: row => row.accountFrom.name,
+        sortable: true
     }
 ]
 
@@ -43,6 +50,7 @@ export default function recurringTable() {
          <DataTable
              columns = {cols}
              data = {testRecurringData}
+             defaultSortFieldId={4}
          />
      );
  };
