@@ -4,7 +4,7 @@ import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table
 import { ExternalTransaction } from "@/data/transactions"
 import { Purchase } from "@/data/purchase"
 
-import { getBucketBalances, testTransactionData } from "@/data/testData"
+import { OLD_getBucketBalances, testTransactionData } from "@/data/testData"
 import { BucketName } from "@/data/enums"
 import { CumulativeTableColumn, SimpleColumn } from "@/components/react-data-table-component-utils"
 
@@ -79,7 +79,7 @@ export const PurchaseDataTable: React.FC<ExpanderComponentProps<ExternalTransact
     const forceUpdate = React.useCallback(() => updateState({}), []);
 
     let rows = (props.data.hasRemainder() ? [props.data.getRemainderPurchase()] : []).concat(props.data.purchases)
-    let cols = purchaseColumns(getBucketBalances(props.data.time))
+    let cols = purchaseColumns(OLD_getBucketBalances(props.data.time))
 
     return (
         <div style={{paddingBlock:"1vh", paddingInlineStart:"48px", backgroundColor:"lightgray"}}>
