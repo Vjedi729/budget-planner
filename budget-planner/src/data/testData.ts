@@ -3,6 +3,7 @@ import { Vendor } from "./vendor"
 import { ExternalTransaction } from "./transactions"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
+import { RecurringTransaction } from "./transactions"
 import { BudgetConfig } from "./budgetConfig"
 import { HistoryOf } from "./history"
 
@@ -17,6 +18,11 @@ export const testTransactionData: ExternalTransaction[] = [
         { price: 8.69, bucket: "Groceries", desciption: { name: "Blueberry Acai Chocolates", description: ""} },
         { price: 15.99, bucket: "Groceries", desciption: { name: "Sharp Cheddar Cheese", description: ""} }
     ])
+]
+
+export const testRecurringData: RecurringTransaction[] = [
+    new RecurringTransaction(12, new Date(2023,1,1), 40, "Cats", testAccount, new Vendor("Chewy"), "Cat Food"),
+    new RecurringTransaction(4, new Date(2022,2,1), 120, "Unknown", testAccount, new Vendor("Pointe"), "Pest Control")
 ]
 
 export const testBudgetData: BudgetConfig<"Vishal"|"Meridith"|"Both", "Vishal"|"Meridith"> = {
@@ -132,3 +138,4 @@ export function getBucketBalances<Budgets extends string, TimeType = Date>(
 
     return balances
 }
+

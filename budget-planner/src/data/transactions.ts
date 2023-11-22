@@ -4,6 +4,7 @@ import { Account } from "./account"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { Vendor } from "./vendor"
+import { Schedule, Rule } from "./rschedule"
 
 export class ExternalTransaction {
     readonly time: Date
@@ -48,4 +49,79 @@ export interface InternalTransaction {
     readonly accountReceived: Account
 
     readonly amount: number
+}// TODO: Transaction super-class?
+
+//interface for how reccurences need to work 
+
+export abstract class Recurrence<TimeType> {
+    abstract listTimes(startTime: TimeType, endTime: TimeType): Array<TimeType>;
+}
+
+export class RScheduleRecurrence extends Recurrence<Date> {
+    protected recurrenceSchedule: Schedule;
+    
+    constructor(recurrenceSchedule: Schedule) {
+        super();
+        this.recurrenceSchedule = recurrenceSchedule;
+    }
+
+    listTimes(startTime: Date, endTime: Date): Array<Date> {
+        var timeArray = this.recurrenceSchedule.occurrences().toArray().map(({ date }) => date).filter((item: Date) => {
+            return item.getTime() >= startTime.getTime() && item.getTime() <= endTime.getTime();
+        } );
+        return timeArray
+    }
+} 
+
+
+/*export class Recurring<Type> {
+    readonly repeatedAction: Type;
+    readonly recurrence: Recurrence;
+    
+
+    constructor(repeatedAction: Type, recurrence: Recurrence){
+        this.repeatedAction = repeatedAction;
+        this.recurrence = recurrence;
+    }
+}
+*/
+
+/*
+- Cache (array?) that holds recurrences? 
+  - Check cache every day and enter transactions that happen?
+  - Holds next recurrence of each action and then replaces after making transaction?
+  - Holds all recurrences for a year?
+- remake recurrence list for every transaction in recurring page every day and check for a recurrence on that day?
+- Function that returns the repeats of a certain recurring transaction between the current and X dates
+  - When a repeat is entered from that set?
+- Function to copy recurring transaction into history when a date passes
+
+-Need:
+  -
+  -Way to automatically enter the repeated transactions
+  -Way to check what repeats happen on each day
+*/
+
+
+export class RecurringTransaction {
+    //TODO: Add support for recurring internal transfers
+    readonly recurrence: number;
+    readonly initialDate: Date;
+    //readonly internal?: boolean;
+    readonly amount: number;
+    readonly bucket: string;
+    readonly accountFrom: Account;
+    //readonly accountTo?: Account;
+    readonly vendor: Vendor;
+    readonly description: string;
+
+    constructor(recurrence: number, initialDate: Date, amount: number, bucket: string, accountFrom: Account, vendor: Vendor, description: string){
+        this.recurrence = recurrence;
+        this.initialDate = initialDate;
+        this.amount = amount;
+        this.bucket = bucket;
+        this.accountFrom = accountFrom;
+        this.vendor = vendor;
+        this.description = description;
+    }
 }
