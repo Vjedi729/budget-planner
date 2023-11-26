@@ -1,13 +1,14 @@
 import { Account } from "./account"
 import { Vendor } from "./vendor"
-import { ExternalTransaction } from "./transactions"
+import { ExternalTransaction, Recurrence } from "./transactions"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { RecurringTransaction } from "./transactions"
 import { BudgetConfig } from "./budgetConfig"
-import { HistoryOf } from "./history"
+import { BasicHistoryOf, HistoryOf } from "./history"
 
 import { cloneDeep } from "lodash"
+import { JsSort } from "@/ts-utils/sort-utils"
 
 export const testAccount = new Account("[CREDIT] Cosctco Citi Visa *8042")
 export const testTransactionData: ExternalTransaction[] = [
@@ -66,6 +67,13 @@ export const testBudgetData: BudgetConfig<"Vishal"|"Meridith"|"Both", "Vishal"|"
     }
 }
 
+export const laterDateFirstSort: JsSort.FunctionType<Date> = (a:Date, b:Date) => b.getTime() -a.getTime();
+export const testStartDate = new Date(2020, 1, 1)
+
+let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, testStartDate);
+_testBudgetHistory.reportNoChange(new Date(Date.now()));
+export var testBudgetHistory = _testBudgetHistory;
+
 // TODO: Needs memoization
 export function OLD_getBucketBalances(time: Date, inclusive: boolean = false) {
     let balances: {[key: BucketName]: number} = {
@@ -91,51 +99,71 @@ export function OLD_getBucketBalances(time: Date, inclusive: boolean = false) {
     return balances;
 }
 
-export function getBucketBalances<Budgets extends string, TimeType = Date>(
-    initialBucketBalances: Record<BucketName, number>, initialTime: TimeType,
-    budgetConfig: HistoryOf<BudgetConfig, TimeType>, // budgetSkipBy: TimeType, // Removed because this data should be in Budget Config
-    transactionData: ExternalTransaction[],
-    time: TimeType, inclusive: boolean = false
-) {
-    let balances = cloneDeep(initialBucketBalances);
+export function updateWantsBuckets(
+    bucketBalances: Record<BucketName, number>, budget: BudgetConfig, wantsDollarsToAdd: number
+) : Record<BucketName, number> {
 
-    // TODO: Add money based on bucket initial date and refill information -> Maybe after transactions?
-
-    // Move money between buckets based on data
-    {
-        // TODO: replace timinig with recurrances?
-        let currentTime = initialTime;
-        while(currentTime < time || (currentTime == time && inclusive))
-        {
-            let budget = budgetConfig.getValue(currentTime);
-            if(budget == undefined) continue;
-            Object.entries(budget.wants.bucketFilling).forEach(([toBucket, data]) => {
-                Object.entries(data.allocations).forEach(([fromBucket, amount])=> {
-                    if (amount) {
-
-                        balances[toBucket] = (balances[toBucket] || 0) + amount;
-                        balances[fromBucket] = (balances[fromBucket || 0]) - amount;
-                    }
-                })
-            })
-
-            // Only works if TimeType is Date
-            currentTime = (currentTime as Date).setMonth((currentTime as Date).getMonth()) as TimeType;
-        }
+    // Add money to wants buckets
+    let totalWeight = Object.values(budget.wants.wantsMoneySplit).reduce((a, b) => (a||0)+(b||0))
+    if(totalWeight != undefined) {
+        Object.entries(budget.wants.wantsMoneySplit).forEach(([toBucket, weight]) => {
+            if(weight == undefined || totalWeight == undefined) return;
+            bucketBalances[toBucket] = (bucketBalances[toBucket] || 0) + (wantsDollarsToAdd * weight / totalWeight)
+        })
     }
 
+    // Move money between buckets
+    Object.entries(budget.wants.bucketFilling).forEach(([toBucket, data]) => {
+        Object.entries(data.allocations).forEach(([fromBucket, amount])=> {
+            if (amount) {
+
+                bucketBalances[toBucket] = (bucketBalances[toBucket] || 0) + amount;
+                bucketBalances[fromBucket] = (bucketBalances[fromBucket || 0]) - amount;
+            }
+        })
+    })
+
+    return bucketBalances;
+}
+
+export function getBucketBalances<Budgets extends string, TimeType = Date>(
+    laterTimeFirstSort: JsSort.FunctionType<TimeType>,
+    initialBucketBalances: Record<BucketName, number>, initialTime: TimeType,
+    budgetConfig: HistoryOf<BudgetConfig<Budgets>, TimeType>, budgetRefillRecurrence: Recurrence<TimeType>,
+    transactionData: ExternalTransaction<TimeType>[],
+    endTime: TimeType, inclusive: boolean = false
+): HistoryOf<Record<BucketName, number>, TimeType> {
+    let balancesHistory = new BasicHistoryOf(laterTimeFirstSort, initialBucketBalances, initialTime);
+
+    // TODO: Add money based on amount not spent on needs in the previous time period
+    const amountToAddToWants = 500;
+
+    // Move money between buckets based on data
+    let bucketFillDates = budgetRefillRecurrence.listTimes(initialTime, endTime).sort((a, b) => -laterTimeFirstSort(a, b));
+    bucketFillDates.forEach(currentTime => {
+        let budget = budgetConfig.getValue(currentTime);
+        if(budget == undefined) return;
+
+        balancesHistory.setValue(updateWantsBuckets(cloneDeep(balancesHistory.currentValue), budget, amountToAddToWants), currentTime);
+    })
+
     // Remove money based on purchases
-    transactionData.filter((
-        transaction: ExternalTransaction) => transaction.time < time || (inclusive && transaction.time == time)
-    ).forEach((transaction: ExternalTransaction) => {
+    transactionData.filter((transaction) => {
+            let sortResult = laterTimeFirstSort(transaction.time, endTime)
+            JsSort.ResultEquals(sortResult, JsSort.ResultType.LeftArgFirst) || (inclusive && JsSort.ResultEquals(sortResult, JsSort.ResultType.KeepOriginalOrder))
+    }).forEach((transaction) => {
         let purchasePriceSum = 0;
+        let balances = cloneDeep(balancesHistory.currentValue);
+        
         transaction.purchases.forEach((purchase: Purchase) => {
             balances[purchase.bucket] = (balances[purchase.bucket] || 0) - purchase.price;
             purchasePriceSum += purchase.price
         })
         balances[BucketName.NONE] -= (transaction.amount - purchasePriceSum);
+
+        balancesHistory.setValue(balances, transaction.time)
     }) 
 
-    return balances
+    return balancesHistory
 }
 

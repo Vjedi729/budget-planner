@@ -24,7 +24,8 @@ export interface BudgetConfig<Budgets extends string = string, People extends st
     }
     wants: {
         wantsMoneySplit: MoneySplit<Budgets> // Proportional
-        bucketFilling: Record<Budgets, {allocations: MoneySplit<BucketName>}> // TODO: What should the value be?
-        // TODO: How often do the buckets fill.
+        bucketFilling: Record<Budgets, {allocations: MoneySplit<BucketName>}>  // Dollars per month, for now
+        // TODO: Add something to determine how often buckets are filled
+        // TODO: Support different types of money allocations in Money Split (dollars, percentages, etc.)
     }
 }

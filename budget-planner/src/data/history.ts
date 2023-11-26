@@ -1,11 +1,6 @@
 import { PartialDeep } from "type-fest";
-import _ from 'lodash'
+import { cloneDeep } from 'lodash'
 import { JsSort } from "@/ts-utils/sort-utils";
-// export type DeepPartial<T> = T extends object ? {
-//     [P in keyof T]?: DeepPartial<T[P]>;
-// } : T;
-
-// type DeepPartial<T> = T extends any[] ? T : { [P in keyof T]?: DeepPartial<T[P]> }
 
 export type ChangeOf<T> = PartialDeep<T>
 
@@ -19,18 +14,16 @@ export interface HistoryOf<T, TimeType = number> {
 }
 
 
-function SetWithPartial<T extends object>(original: T, change: ChangeOf<T>): ChangeOf<T> {
+function SetWithPartial<T extends Record<string, any>>(original: Record<string, any>, change: ChangeOf<T>): ChangeOf<T> {
     let retVal: any = {};
-    
-    Object.entries(original).forEach(([key, val]: [string, any]) => {
-        let localChange: any = (change as Record<string, any>)[key]
-        if(localChange != undefined) {
-            if(typeof(localChange) == 'object'){
-                retVal[key as keyof T] = SetWithPartial<typeof val>(val, localChange) as any
-            } else {
-                retVal[key as keyof T] = original[key as keyof T];
-                original[key as keyof T] = localChange;
-            }
+
+    Object.entries(change).forEach(([changeKey, changeVal]) => {
+        let origVal = original[changeKey];
+        if(typeof origVal == 'object') {
+            retVal[changeKey] = SetWithPartial<typeof origVal>(origVal, changeVal)
+        } else {
+            retVal[changeKey] = origVal;
+            original[changeKey] = changeVal;
         }
     })
 
@@ -48,13 +41,13 @@ export abstract class HistoryOf<T extends object, TimeType> {
     {
         this.initialTime = currentTime
         this.currentTime = currentTime
-        this.currentValue = _.cloneDeep(curentValue);
-        this.changes = _.cloneDeep(changes);
+        this.currentValue = cloneDeep(curentValue);
+        this.changes = cloneDeep(changes);
 
     }
 
     abstract getValue(time: TimeType, afterTime?: boolean) : T | undefined
-    abstract setValue(object: ChangeOf<T>, time: TimeType) : ChangeOf<T> // The previous values of changed data
+    abstract setValue(object: ChangeOf<T>, time: TimeType) : ChangeOf<T> | undefined // The previous values of changed data OR undefined if the value could not be set
     abstract reportNoChange(time:TimeType): void // If something happened
 
     abstract getValues(startTime: TimeType, endTime: TimeType) : Array<{start:TimeType, end: TimeType, value: T}>
@@ -94,7 +87,7 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
             return undefined;
         }
 
-        let retVal = _.cloneDeep(this.currentValue);
+        let retVal = cloneDeep(this.currentValue);
 
         // console.log("Starting from:", this.currentValue)
 
@@ -110,12 +103,14 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
         return retVal;
     }
 
-    setValue(object: ChangeOf<T>, currentTime: TimeType): ChangeOf<T> {
-        if (! JsSort.ResultEquals(this.laterTimeFirstSort(currentTime, this.currentTime), JsSort.ResultType.LeftArgFirst)) {
-            return {} as ChangeOf<T>; // TODO: Why does this fail the type check?
+    setValue(object: ChangeOf<T>, currentTime: TimeType): ChangeOf<T> | undefined {
+        if (JsSort.ResultEquals(this.laterTimeFirstSort(currentTime, this.currentTime), JsSort.ResultType.RightArgFirst)) {
+            console.warn("Failed to set value:", object, "at time", currentTime, "-> Cannot set values before or at the internal current time of", this.currentTime);
+            return undefined; // TODO: Why does this fail the type check?
         }
 
         let prevValOfChanges = SetWithPartial<T>(this.currentValue, object);
+        // console.log("Change:", currentTime, object, "Current Values:", this.currentTime, this.currentValue, "Undo Change:", prevValOfChanges);
         this.changes.push({time: currentTime, prevValuesOfChangedElements: prevValOfChanges})
 
         this.currentTime = currentTime;
@@ -130,14 +125,14 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
             return values;
         }
 
-        let currVal = _.cloneDeep(this.currentValue)
+        let currVal = cloneDeep(this.currentValue)
         let currValEndTime = this.currentTime;
 
         this.changes.sort((a, b) => this.laterTimeFirstSort(a.time, b.time))
         let i = 0;
         while(i < this.changes.length && !JsSort.ResultEquals(this.laterTimeFirstSort(this.changes[i].time, startTime), JsSort.ResultType.RightArgFirst)){
             if(this.changes[i].time <= endTime) {
-                values.push({start: this.changes[i].time, end: currValEndTime, value: _.cloneDeep(currVal)})
+                values.push({start: this.changes[i].time, end: currValEndTime, value: cloneDeep(currVal)})
             }
             
             //TODO: save value from this:

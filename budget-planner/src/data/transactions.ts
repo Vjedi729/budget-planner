@@ -4,16 +4,16 @@ import { Account } from "./account"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { Vendor } from "./vendor"
-import { Schedule, Rule } from "./rschedule"
+import { Schedule } from "./rschedule"
 
-export class ExternalTransaction {
-    readonly time: Date
+export class ExternalTransaction<TimeType = Date> {
+    readonly time: TimeType
     readonly amount: number
     readonly vendor: Vendor
     readonly account: Account
     public purchases: Purchase[]
 
-    constructor(time: Date, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = []) {
+    constructor(time: TimeType, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = []) {
         this.time = time;
         this.amount = amount;
         this.vendor = vendor;
@@ -41,11 +41,11 @@ export class ExternalTransaction {
     }
 }
 
-export interface InternalTransaction {
-    readonly timeSent: Date
+export interface InternalTransaction<TimeType = Date> {
+    readonly timeSent: TimeType
     readonly accountSent: Account
 
-    readonly timeReceived: Date
+    readonly timeReceived: TimeType
     readonly accountReceived: Account
 
     readonly amount: number
@@ -73,6 +73,25 @@ export class RScheduleRecurrence extends Recurrence<Date> {
     }
 } 
 
+export class EveryMonthOnTheNth {
+    protected dayOfTheMonth: number
+    constructor(dayOfTheMonth: number) { this.dayOfTheMonth = dayOfTheMonth; }
+
+    listTimes(startTime: Date, endTime: Date): Array<Date> {
+        let currYear = startTime.getFullYear();
+        let currMonth = startTime.getMonth();
+
+        let retVal: Date[] = []
+        while(currYear < endTime.getFullYear() || currMonth < endTime.getMonth())
+        {
+            retVal.push(new Date(currYear, currMonth, this.dayOfTheMonth));
+            if(currMonth == 12) currYear++;
+            currMonth = (currMonth%12) + 1;
+        }
+
+        return retVal;
+    }
+}
 
 /*export class Recurring<Type> {
     readonly repeatedAction: Type;

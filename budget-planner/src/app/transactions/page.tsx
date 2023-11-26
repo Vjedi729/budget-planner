@@ -1,40 +1,45 @@
 'use client'
 import React  from "react"
 import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component"
-import { ExternalTransaction } from "@/data/transactions"
+import { ExternalTransaction, EveryMonthOnTheNth } from "@/data/transactions"
 import { Purchase } from "@/data/purchase"
 
-import { OLD_getBucketBalances, testTransactionData } from "@/data/testData"
+import { getBucketBalances, laterDateFirstSort, testBudgetHistory, testStartDate, testTransactionData } from "@/data/testData"
 import { BucketName } from "@/data/enums"
 import { CumulativeTableColumn, SimpleColumn } from "@/components/react-data-table-component-utils"
 
 function dollarFormat(n: number): string { return `${n<0 ? "-" : ""}$${Math.round(Math.abs(n)*100)/100}` }
 
-const cols: TableColumn<ExternalTransaction>[] = [
+interface ExternalTransactionRow<Date> {
+    transaction: ExternalTransaction<Date>
+    bucketBalance: Record<string, number>
+}
+
+const cols: TableColumn<ExternalTransactionRow<Date>>[] = [
     {
         name: "Date",
-        selector: row => row.time.toUTCString()
+        selector: row => row.transaction.time.toUTCString()
     },
     new SimpleColumn(
         {
             name: "Amount",
         },
         {
-            selector: row => row.amount,
+            selector: row => row.transaction.amount,
             format: dollarFormat,
         }
     ),
     {
         name: "Location",
-        selector: row => row.vendor.name
+        selector: row => row.transaction.vendor.name
     },
     {
         name: "Bucket(s)",
-        selector: row => Array.from(new Set(row.purchases.map(p => p.bucket))).join(", ") || BucketName.NONE
+        selector: row => Array.from(new Set(row.transaction.purchases.map(p => p.bucket))).join(", ") || BucketName.NONE
     },
     {
         name: "Account",
-        selector: row => row.account.name
+        selector: row => row.transaction.account.name
     }
 ]
 
@@ -74,12 +79,15 @@ const purchaseColumns: ((initialBucketBalance: Record<BucketName, number>) => Ta
     )
 ]
 
-export const PurchaseDataTable: React.FC<ExpanderComponentProps<ExternalTransaction>> = (props) => {
+export const PurchaseDataTable: React.FC<ExpanderComponentProps<ExternalTransactionRow<Date>>> = (props) => {
     const [, updateState] = React.useState({});
     const forceUpdate = React.useCallback(() => updateState({}), []);
 
-    let rows = (props.data.hasRemainder() ? [props.data.getRemainderPurchase()] : []).concat(props.data.purchases)
-    let cols = purchaseColumns(OLD_getBucketBalances(props.data.time))
+    let {transaction, bucketBalance} = props.data;
+    console.log(bucketBalance)
+
+    let rows = (transaction.hasRemainder() ? [transaction.getRemainderPurchase()] : []).concat(transaction.purchases)
+    let cols = purchaseColumns(bucketBalance)
 
     return (
         <div style={{paddingBlock:"1vh", paddingInlineStart:"48px", backgroundColor:"lightgray"}}>
@@ -92,15 +100,22 @@ export const PurchaseDataTable: React.FC<ExpanderComponentProps<ExternalTransact
         </div>
     )
 }
-export class Transactions extends React.Component {
 
+export class Transactions extends React.Component {
     render() {
         // Make changeable from UI
         let startDate = new Date(2023, 7, 29);
 
-        // let bucketBalances = getBucketBalances(startDate) // TODO: add memoization (possibly using "React.useMemo"?)
-        let rows: ExternalTransaction[] = testTransactionData.filter(transaction => transaction.time > startDate)
-        return <DataTable columns={cols} data={rows} expandableRows expandableRowsComponent={PurchaseDataTable} expandableRowDisabled={row => (row.purchases.length == 0)}/>
+        let bucketBalanceHistory = getBucketBalances(
+            laterDateFirstSort, {}, testStartDate, testBudgetHistory, 
+            new EveryMonthOnTheNth(2), testTransactionData, 
+            new Date(Date.now()), false
+        )
+
+        let rows: ExternalTransactionRow<Date>[] = testTransactionData.filter(transaction => transaction.time > startDate).map(
+            transaction => {return {transaction: transaction, bucketBalance: bucketBalanceHistory.getValue(transaction.time) || {}}}
+        )
+        return <DataTable columns={cols} data={rows} expandableRows expandableRowsComponent={PurchaseDataTable} expandableRowDisabled={row => (row.transaction.purchases.length == 0)}/>
     }
 }
 
