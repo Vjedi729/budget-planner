@@ -30,6 +30,8 @@ function SetWithPartial<T extends Record<string, any>>(original: Record<string, 
     return retVal;
 }
 
+export type TimelineOf<T extends object, TimeType> = Array<{start:TimeType, end: TimeType, value: T}>
+
 export abstract class HistoryOf<T extends object, TimeType> {
 
     currentValue: T
@@ -118,7 +120,7 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
         return prevValOfChanges;
     }
 
-    getValues(startTime: TimeType, endTime: TimeType) : Array<{start:TimeType, end: TimeType, value: T}> {
+    getValues(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType> {
         let values: Array<{start:TimeType, end: TimeType, value: T}> = []
 
         if(JsSort.ResultEquals(this.laterTimeFirstSort(this.initialTime, endTime), JsSort.ResultType.LeftArgFirst)) {
@@ -135,7 +137,7 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
                 values.push({start: this.changes[i].time, end: currValEndTime, value: cloneDeep(currVal)})
             }
             
-            //TODO: save value from this:
+            //TODO: save value from this: ?? What does this mean ??
             SetWithPartial<T>(currVal, this.changes[i].prevValuesOfChangedElements)
             
             currValEndTime = this.changes[i].time
