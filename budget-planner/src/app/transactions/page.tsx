@@ -1,14 +1,13 @@
 'use client'
-import React  from "react"
+import React from "react"
 import DataTable, { TableColumn, ExpanderComponentProps } from "react-data-table-component"
 import { ExternalTransaction } from "@/data/transactions"
 import { Purchase } from "@/data/purchase"
 
 import { getBucketBalances, testTransactionData } from "@/data/testData"
 import { BucketName } from "@/data/enums"
-import { CumulativeTableColumn, SimpleColumn } from "@/components/react-data-table-component-utils"
-
-function dollarFormat(n: number): string { return `${n<0 ? "-" : ""}$${Math.round(Math.abs(n)*100)/100}` }
+import { CumulativeTableColumn, SimpleColumn } from "@/standard-components/react-data-table-component-utils"
+import { dollarFormat } from "@/utilities/displayUtils"
 
 const cols: TableColumn<ExternalTransaction>[] = [
     {
