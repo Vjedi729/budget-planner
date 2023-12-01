@@ -7,5 +7,5 @@ export interface TextDescription {
 export interface Purchase {
     readonly price: number
     readonly bucket: BucketName
-    readonly desciption: TextDescription
+    readonly description: TextDescription
 }
