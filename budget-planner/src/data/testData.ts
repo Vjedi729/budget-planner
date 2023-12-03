@@ -68,36 +68,12 @@ export const testBudgetData: BudgetConfig<"Vishal"|"Meridith"|"Both", "Vishal"|"
 }
 
 export const laterDateFirstSort: JsSort.FunctionType<Date> = (a:Date, b:Date) => b.getTime() -a.getTime();
-export const testStartDate = new Date(2020, 1, 1)
+export const testInitialDate = new Date(2020, 1, 1)
+export const testInitialBucketBalaces = {}
 
-let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, testStartDate);
+let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, testInitialDate);
 _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetHistory = _testBudgetHistory;
-
-// TODO: Needs memoization
-export function OLD_getBucketBalances(time: Date, inclusive: boolean = false) {
-    let balances: {[key: BucketName]: number} = {
-        "Groceries": 100,
-        "For Matt": 0,
-        [BucketName.NONE]: 0
-    };
-
-    // TODO: Add money based on bucket initial date and refill information
-
-    // Remove money based on purchases
-    testTransactionData.filter((
-        transaction: ExternalTransaction) => transaction.time < time || (inclusive && transaction.time.getTime() == time.getTime())
-    ).forEach((transaction: ExternalTransaction) => {
-        let purchasePriceSum = 0;
-        transaction.purchases.forEach((purchase: Purchase) => {
-            balances[purchase.bucket] = (balances[purchase.bucket] || 0) - purchase.price;
-            purchasePriceSum += purchase.price
-        })
-        balances[BucketName.NONE] -= (transaction.amount - purchasePriceSum);
-    }) 
-
-    return balances;
-}
 
 export function updateWantsBuckets(
     bucketBalances: Record<BucketName, number>, budget: BudgetConfig, wantsDollarsToAdd: number
@@ -126,6 +102,7 @@ export function updateWantsBuckets(
     return bucketBalances;
 }
 
+// TODO: Needs memoization
 export function getBucketBalances<Budgets extends string, TimeType = Date>(
     laterTimeFirstSort: JsSort.FunctionType<TimeType>,
     initialBucketBalances: Record<BucketName, number>, initialTime: TimeType,
