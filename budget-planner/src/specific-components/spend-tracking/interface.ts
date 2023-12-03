@@ -1,8 +1,14 @@
+import { BudgetConfig } from "@/data/budgetConfig";
+import { HistoryOf } from "@/data/history";
 import { ExternalTransaction } from "@/data/transactions";
 
-export interface SpendTrackingProps<TimeType = Date> {
-    // TODO: Add Budget Config (History)
-    startTime: TimeType,
-    endTime: TimeType,
-    transactions: ExternalTransaction[], // TODO: Update to use generic TimeType
+export interface InnerSpendTrackingComponentProps<TimeType = Date> {
+    bucketBalanceHistory: HistoryOf<Record<string, number>, TimeType>
+    transactions: ExternalTransaction<TimeType>[],
 }
+
+export interface OuterSpendTrackingComponentProps<TimeType = Date> {
+
+}
+
+// export type SpendTrackingComponentProps<TimeType = Date> = InnerSpendTrackingComponentProps<TimeType>
