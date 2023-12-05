@@ -33,7 +33,7 @@ export class ExternalTransaction<TimeType = Date> {
         return { 
             price: this.remainderPrice(),
             bucket: BucketName.NONE,
-            desciption: {
+            description: {
                 name: "Unaccounted",
                 description: "The amount of transaction not accounted for by any purchase."
             }
