@@ -28,7 +28,7 @@ export const testRecurringData: RecurringTransaction[] = [
 
 export const testBudgetData: BudgetConfig<"Vishal"|"Meridith"|"Both", "Vishal"|"Meridith"> = {
     people: ["Vishal", "Meridith"],
-    incomes: [{dollars: 2144, everyXdays: 14}],
+    incomes: [{dollars: 2144, everyXDays: 14}],
     needs: {
         bucketNames: [
             "Home Improvement",
@@ -75,7 +75,7 @@ let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, 
 _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetHistory = _testBudgetHistory;
 
-export function updateWantsBuckets(
+export function fillWantsBuckets(
     bucketBalances: Record<BucketName, number>, budget: BudgetConfig, wantsDollarsToAdd: number
 ) : Record<BucketName, number> {
 
@@ -113,7 +113,10 @@ export function getBucketBalances<Budgets extends string, TimeType = Date>(
     let balancesHistory = new BasicHistoryOf(laterTimeFirstSort, initialBucketBalances, initialTime);
 
     // TODO: Add money based on amount not spent on needs in the previous time period
-    const amountToAddToWants = 500;
+        // Change initial to 0
+        // Update value at end of after processing transactions but before build fill dates
+        // Requires re-ordering functions to process bucket fills and transactions in date order (switching between as needed)
+    let amountToAddToWants = 500;
 
     // Move money between buckets based on data
     let bucketFillDates = budgetRefillRecurrence.listTimes(initialTime, endTime).sort((a, b) => -laterTimeFirstSort(a, b));
@@ -121,7 +124,7 @@ export function getBucketBalances<Budgets extends string, TimeType = Date>(
         let budget = budgetConfig.getValue(currentTime);
         if(budget == undefined) return;
 
-        balancesHistory.setValue(updateWantsBuckets(cloneDeep(balancesHistory.currentValue), budget, amountToAddToWants), currentTime);
+        balancesHistory.setValue(fillWantsBuckets(cloneDeep(balancesHistory.currentValue), budget, amountToAddToWants), currentTime);
     })
 
     // Remove money based on purchases

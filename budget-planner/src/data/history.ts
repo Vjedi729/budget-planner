@@ -96,9 +96,7 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
         this.changes.sort((a, b) => this.laterTimeFirstSort(a.time, b.time))
         let i = 0;
         while(i < this.changes.length && (afterTime ? JsSort.ResultEquals(this.laterTimeFirstSort(this.changes[i].time, time), JsSort.ResultType.LeftArgFirst) : !JsSort.ResultEquals(this.laterTimeFirstSort(this.changes[i].time, time), JsSort.ResultType.RightArgFirst))){
-            //TODO: save value from this:
             SetWithPartial<T>(retVal, this.changes[i].prevValuesOfChangedElements)
-            // console.log("Changing:", this.changes[i], "to get", retVal)
             i++;
         }
 
@@ -108,7 +106,7 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
     setValue(object: ChangeOf<T>, currentTime: TimeType): ChangeOf<T> | undefined {
         if (JsSort.ResultEquals(this.laterTimeFirstSort(currentTime, this.currentTime), JsSort.ResultType.RightArgFirst)) {
             console.warn("Failed to set value:", object, "at time", currentTime, "-> Cannot set values before or at the internal current time of", this.currentTime);
-            return undefined; // TODO: Why does this fail the type check?
+            return undefined;
         }
 
         let prevValOfChanges = SetWithPartial<T>(this.currentValue, object);
@@ -137,7 +135,6 @@ export class BasicHistoryOf<T extends object, TimeType> extends HistoryOf<T, Tim
                 values.push({start: this.changes[i].time, end: currValEndTime, value: cloneDeep(currVal)})
             }
             
-            //TODO: save value from this: ?? What does this mean ??
             SetWithPartial<T>(currVal, this.changes[i].prevValuesOfChangedElements)
             
             currValEndTime = this.changes[i].time

@@ -55,7 +55,7 @@ test("Test of BasicHistoryOf", () => {
     })
 
     // TODO: add tests for time cut-off if getValues() times are between changes
-    // ? Add tests for adding values in the middle of the time period?
+    // ? Add tests for adding values in the middle of the time period? -> Haven't decided if this "should" work.
 
     // No value given for `getValue` before and after end time
     expect(hist.getValue(startTime-1)).toBeUndefined();
