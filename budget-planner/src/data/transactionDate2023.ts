@@ -434,7 +434,7 @@ new ExternalTransaction(new Date(2023, 10, 31), 15.16, new Vendor("Meijer"), vis
     new Purchase(1.29, "Both Fun Money", "9% tax")
 ])
 
-new ExternalTransaction(new Date(2023, 11, 03), 18.60, new Vendor("Meijer"), visa3408, [
+new ExternalTransaction(new Date(2023, 11, 3), 18.60, new Vendor("Meijer"), visa3408, [
     new Purchase(0.79, "Groceries", "Salt", "Iodized salt"),
     new Purchase(4.95, "Groceries", "Peppers", "2 bell peppers"),
     new Purchase(4.99, "Groceries", "Baking Yeast"),
@@ -537,5 +537,21 @@ new ExternalTransaction(new Date(2023, 11, 15), 35.65, new Vendor("Costco Gas"),
 ])
 
 new ExternalTransaction(new Date(2023, 11, 17), 63.31, new Vendor("Meijer"), visa3408, [
-    
+    new Purchase(0.73, "Groceries", "Tomatoes", "Roma tomatoes"),
+    new Purchase(0.88, "Groceries", "Sweet Potato"),
+    new Purchase(3.98, "Groceries", "XL avocados", "2 avocados"),
+    new Purchase(2.29, "Groceries", "Canned chili"),
+    new Purchase(2.69, "Groceries", "Olives"),
+    new Purchase(2.99, "Groceries", "Mushrooms"),
+    new Purchase(3.49, "Groceries", "Baby spinach"),
+    new Purchase(5.00, "Groceries", "Bagel bites"),
+    new Purchase(8.35, "Groceries", "Potatoes", "Russet potatoes"),
+    new Purchase(11.49, "Groceries", "Ground beef, 2.5 lbs"),
+    new Purchase(1.88, "Groceries", "Cheese"),
+    new Purchase(1.99, "Groceries", "Cut herbs", "chives"),
+    new Purchase(3.99, "Groceries", "Meijer bacon"),
+    new Purchase(3.99, "Groceries", "Iced Coffee"),
+    new Purchase(6.99, "Groceries", "Dip", "Spinach artichoke dip"),
+    new Purchase(0.63, "Groceries", "1% tax")
 ])
+
