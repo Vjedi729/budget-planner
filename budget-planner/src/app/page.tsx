@@ -1,7 +1,7 @@
 // import Image from 'next/image'
 // import styles from './page.module.css'
 
-import { BasicMenu } from "@/components/select-menu/basic-menu";
+import { BasicMenu } from "@/standard-components/select-menu/basic-menu";
 // import { CinematicMenu } from "@/components/select-menu/cinematic-menu";
 
 export default function MainMenu() {
