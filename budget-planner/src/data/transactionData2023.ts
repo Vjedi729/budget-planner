@@ -555,3 +555,29 @@ new ExternalTransaction(new Date(2023, 11, 17), 63.31, new Vendor("Meijer"), vis
     new Purchase(0.63, "Groceries", "1% tax")
 ])
 
+new ExternalTransaction(new Date(2023, 11, 18), 99.21, new Vendor("Meijer"), visa3408, [
+    new Purchase(3.50, "Housewares", "Bottle Brush"),
+    new Purchase(25.38, "Housewares", "BYO Bottle", "2 15oz water bottles"),
+    new Purchase(20.99, "Housewares", "BYO bottle", "30oz byo water bottle"),
+    new Purchase(22.99, "Housewares", "Can opener", "safety can opener"),
+    new Purchase(6.82, "Both Fun Money", "Mug", "Xmas present for Emily"),
+    new Purchase(1.36, "Groceries", "Onions"),
+    new Purchase(3.29, "Groceries", "Granualated Sugar"),
+    new Purchase(3.49, "Groceries", "Turkey bacon"),
+    new Purchase(3.99, "Groceries", "Cereal", "Reese's puffs cereal"),
+    new Purchase(7.18, "Housewares", "9% tax"),
+    new Purchase(0.12, "Groceries", "1% tax")
+])
+
+new ExternalTransaction(new Date(2023, 11, 20), 81.86, new Vendor("China Town Buffet"), visa8042, [
+    new Purchase(66.86, "Dining", "Xavior bday buffet dinner"),
+    new Purchase(20.00, "Dining", "Tip"),
+])
+
+new ExternalTransaction(new Date(2023, 11, 22), 0.00, new Vendor("CVS Pharmacy"), visa3408, [
+    new Purchase(0.00, "Health", "Ubrelvy 10ct")
+])
+
+new ExternalTransaction(new Date(2023, 11, 22), 64.97, new Vendor("Joanne"), visa3408, [
+    
+])
