@@ -4,7 +4,7 @@ export type PeopleGroups<People extends string> = People | `${People}+${People}`
 
 export type MoneySplit<Budgets extends string> = Partial<Record<Budgets, number>>
 
-export interface BudgetConfig<Budgets extends string = string, People extends string = Budgets> {
+export interface BudgetConfig<Budgets extends string = string, People extends string = string> {
     people: Array<People>
     incomes: Array<{dollars: number, everyXDays: number}>,
     needs: {

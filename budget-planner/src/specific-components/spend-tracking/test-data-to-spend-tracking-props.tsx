@@ -1,23 +1,30 @@
-import { EveryMonthOnTheNth } from "@/data/transactions"
-
-import { getBucketBalances, laterDateFirstSort, testBudgetHistory, testInitialDate, testInitialBucketBalaces, testTransactionData } from "@/data/testData"
+import { getBucketBalances, laterDateFirstSort, testBudgetHistory, testInitialDate, testInitialBucketBalances, testTransactionData, testBudgetData, testBudgetRefillRecurrence } from "@/data/testData"
+import { sampleTransactions, sampleInitialDate } from "@/data/transactionData2023"
 import { JsSort } from "@/ts-utils/sort-utils"
 import { InnerSpendTrackingComponentProps } from "@/specific-components/spend-tracking/interface"
+import { BasicHistoryOf, HistoryOf } from "@/data/history"
+import { BudgetConfig } from "@/data/budgetConfig"
 
 export function TestDataToSpendTrackingProps(
     startDate: Date = new Date(2023, 7, 29), 
     endDate: Date = new Date(Date.now())
 ): InnerSpendTrackingComponentProps {
+
+    let transactions = sampleTransactions
+    let budgetHistory: HistoryOf<BudgetConfig, Date> = new BasicHistoryOf(laterDateFirstSort, testBudgetData, startDate)
+    budgetHistory.reportNoChange(endDate);
+
     return {
         bucketBalanceHistory: getBucketBalances(
-            laterDateFirstSort, testInitialBucketBalaces, testInitialDate, testBudgetHistory, 
-            new EveryMonthOnTheNth(2), testTransactionData, 
+            laterDateFirstSort, testInitialBucketBalances, sampleInitialDate, testBudgetHistory, 
+            testBudgetRefillRecurrence, transactions, 
             endDate, false
-        ), 
-        transactions: testTransactionData.filter(transaction => 
+        ),
+        transactions: transactions.filter(transaction => 
             JsSort.ResultEquals(JsSort.ResultType.LeftArgFirst, laterDateFirstSort(transaction.time, startDate)) &&
             JsSort.ResultEquals(JsSort.ResultType.LeftArgFirst, laterDateFirstSort(endDate, transaction.time))
-        ) 
+        ),
+        budgetConfigHistory: budgetHistory
     };
 }
 

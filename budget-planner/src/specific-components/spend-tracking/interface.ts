@@ -1,7 +1,9 @@
+import { BudgetConfig } from "@/data/budgetConfig";
 import { HistoryOf } from "@/data/history";
 import { ExternalTransaction } from "@/data/transactions";
 
 export interface InnerSpendTrackingComponentProps<TimeType = Date> {
+    budgetConfigHistory: HistoryOf<BudgetConfig, TimeType>
     bucketBalanceHistory: HistoryOf<Record<string, number>, TimeType>
     transactions: ExternalTransaction<TimeType>[],
 }

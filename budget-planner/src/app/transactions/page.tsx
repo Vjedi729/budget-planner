@@ -6,7 +6,7 @@ import { TestDataToSpendTrackingProps } from "@/specific-components/spend-tracki
 
 export const TransactionsPage: React.FC = () => {
     let innerProps = TestDataToSpendTrackingProps();
-    return <TransactionDataTable bucketBalanceHistory={innerProps.bucketBalanceHistory} transactions={innerProps.transactions}/>
+    return <TransactionDataTable bucketBalanceHistory={innerProps.bucketBalanceHistory} transactions={innerProps.transactions} budgetConfigHistory={innerProps.budgetConfigHistory}/>
 }
 
 export default TransactionsPage
