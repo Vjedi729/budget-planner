@@ -47,10 +47,10 @@ new ExternalTransaction(makeDate(2023, 9, 2), 38.15, new Vendor("Walnut Street T
 
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, meijer, visa3408, [
     {price: 22.00, bucket: "Clothing", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
-=======
+]),
+
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, new Vendor("Meijer"), visa3408, [
     {price: 22.00, bucket: "Clothes", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
->>>>>>> spend-tracking-graphs-page
     {price: 1.70, bucket: "Groceries", description: {name: "CHILI BEANS", description:"8 oz canned chili beans"} },
     {price: 1.09, bucket: "Groceries", description: {name: "DRY PASTA", description: ""} },
     {price: 1.09, bucket: "Groceries", description: {name: "PASTA", description: ""} },
@@ -75,11 +75,11 @@ new ExternalTransaction(makeDate(2023, 9, 7), 41.26, new Vendor("Papa Dels"), vi
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, meijer, visa3408, [
     {price: 1.99, bucket: "Home Improvements", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
     {price: 3.99, bucket: "Home Improvements", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
-=======
+]),
+
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, new Vendor("Meijer"), visa3408, [
     {price: 1.99, bucket: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
     {price: 3.99, bucket: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
->>>>>>> spend-tracking-graphs-page
     {price: 4.99, bucket: "Meridith Fun Money", description: {name: "CRAFT WOOD", description: "Wooden box to put CCs in"}},
     {price: 1.09, bucket: "Groceries", description: {name: "EGGS", description: "dozen eggs"}},
     {price: 3.38, bucket: "Groceries", description: {name: "MILK", description: "2 gallons of 1% milk"}},
@@ -95,7 +95,6 @@ new ExternalTransaction(makeDate(2023, 9, 8), 68.95, new Vendor("Meijer"), visa3
     {price: 2.69, bucket: "Groceries", description: {name: "CANTALOUPES", description: "1 cantaloupe"}},
     {price: 6.99, bucket: "Groceries", description: {name: "VEGGIE STRAWS", description: ""}},
     {price: 0.58, bucket: "Groceries", description: {name: "1% Tax", description: ""}},
-<<<<<<< HEAD
     {price: 0.86, bucket: "Home Improvements", description: {name: "9% Tax", description: ""}}
 ]),
 
@@ -641,7 +640,6 @@ new ExternalTransaction(new Date(2023, 11, 10), 80.05, meijer, visa3408, [
     new Purchase(-10.00, "Cats", "Cat litter discount"),
     new Purchase(6.61, "Meridith Fun Money", "9% tax")
 ]),
-<<<<<<< HEAD
 
 new ExternalTransaction(new Date(2023, 11, 12), 30.00, new Vendor("IL Tollway"), visa3408, [
     new Purchase(20.00, "Car", "IPASS transponder"),
@@ -708,7 +706,6 @@ new ExternalTransaction(new Date(2023, 11, 17), 63.31, meijer, visa3408, [
     new Purchase(3.99, "Groceries", "Iced Coffee"),
     new Purchase(6.99, "Groceries", "Dip", "Spinach artichoke dip"),
     new Purchase(0.63, "Groceries", "1% tax")
-<<<<<<< HEAD
 ]),
 
 new ExternalTransaction(makeDate(2023, 11, 18), 99.21, meijer, visa3408, [
@@ -1370,7 +1367,5 @@ new ExternalTransaction(makeDate(2024, 1, 20), 109.36, menards, visa3408, [
     new Purchase(0.89, "Home Improvement", "T nut for broken leg attachment point"),
     new Purchase(1.14, "Home Imporovement", "Replacement threaded insert for ottoman"),
     new Purchase(9.03, "Home Improvement", "9% sales tax")
-=======
->>>>>>> spend-tracking-graphs-page
 ])
 ]
