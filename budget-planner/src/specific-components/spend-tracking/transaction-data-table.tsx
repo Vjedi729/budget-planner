@@ -58,7 +58,7 @@ const purchaseColumns: ((initialBucketBalance: Record<BucketName, number>) => Ta
     ),
     {
         name: "Description",
-        selector: row => row.desciption.name
+        selector: row => row.description.name
     },
     {
         name: "Bucket",

@@ -26,7 +26,7 @@ export class ExternalTransaction<TimeType = Date> {
     }
 
     hasRemainder(): boolean {
-        return this.remainderPrice() > 0.001
+        return Math.abs(this.remainderPrice()) > 0.001
     }
 
     getRemainderPurchase(): Purchase {

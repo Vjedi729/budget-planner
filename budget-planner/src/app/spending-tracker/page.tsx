@@ -1,28 +1,21 @@
 'use client'
+
 import React from "react"
-import { EveryMonthOnTheNth } from "@/data/transactions"
+import { TestDataToSpendTrackingProps } from "@/specific-components/spend-tracking/test-data-to-spend-tracking-props";
+import { SpendTrackingGraphs } from "@/specific-components/spend-tracking/spend-tracking-graphs"
+import { InnerSpendTrackingComponentProps } from "@/specific-components/spend-tracking";
 
-import { getBucketBalances, laterDateFirstSort, testBudgetHistory, testStartDate, testTransactionData } from "@/data/testData"
-import { JsSort } from "@/ts-utils/sort-utils"
-import { SpendTrackingGraph } from "@/specific-components/spend-tracking/spend-tracking-graphs"
-export default class EnterReceipt extends React.Component {
-    render() {
-        // Make changeable from UI
-        let startDate = new Date(2023, 7, 29);
-        let endDate = new Date(Date.now())
+export const SpendTrackerPage: React.FC = () => {
+    let innerProps: InnerSpendTrackingComponentProps = TestDataToSpendTrackingProps();
 
-        let bucketBalanceHistory = getBucketBalances(
-            laterDateFirstSort, {}, testStartDate, testBudgetHistory, 
-            new EveryMonthOnTheNth(2), testTransactionData, 
-            endDate, false
-        )
-
-        return <SpendTrackingGraph 
-            bucketBalanceHistory={bucketBalanceHistory} 
-            transactions={testTransactionData.filter(transaction => 
-                JsSort.ResultEquals(JsSort.ResultType.LeftArgFirst, laterDateFirstSort(transaction.time, startDate)) &&
-                JsSort.ResultEquals(JsSort.ResultType.LeftArgFirst, laterDateFirstSort(endDate, transaction.time))
-            )} 
-        />
-    }
+    // console.log(innerProps)
+    return <SpendTrackingGraphs bucketBalanceHistory={innerProps.bucketBalanceHistory} transactions={innerProps.transactions} budgetConfigHistory={innerProps.budgetConfigHistory}/>
 }
+
+// export const ComponentFactoryContainerPage: React.FC = () => {
+//     return TestDataComponentFactory(SpendTrackingGraph)({})
+// }
+
+// export const ComponentFactoryPage: React.FC = TestDataComponentFactory(SpendTrackingGraph)
+
+export default SpendTrackerPage;
