@@ -1,5 +1,4 @@
-import { BasicHistoryOf, ChangeOf, HistoryOf } from "./history";
-// import { describe, test } from 'node:test';
+import { BasicHistoryOf, ChangeHistoryOf, ChangeOf, HistoryOf } from "./history";
 import "@testing-library/jest-dom"
 
 class TestObject {
@@ -18,10 +17,11 @@ const testChanges: Array<[ChangeOf<TestObject>, TestObject]> = [
     [ {b:{c:5, d:6}}, new TestObject(4, 5, 6)],
     [ {b:{d:7}}, new TestObject(4, 5, 7)]
 ]
+const laterTimeFirstSort = (a:number, b:number)=> b-a
 
 test("Test of BasicHistoryOf", () => {
     const startTime: number = -1; // DO NOT CHANGE
-    let hist: HistoryOf<TestObject> = new BasicHistoryOf<TestObject, number>((a, b)=> b-a, initialObj, startTime);
+    let hist: HistoryOf<TestObject, number> = new BasicHistoryOf<TestObject, number>(laterTimeFirstSort, initialObj, startTime);
 
     // test("Setting values", () => {
         testChanges.forEach(([change, result], i) => {
@@ -35,7 +35,7 @@ test("Test of BasicHistoryOf", () => {
 
     // test("Getting \"initial\" value", () => {
         // console.log("Initial", hist.getValue(-1))
-        expect(hist.getValue(startTime)).toEqual(initialObj)
+         expect(hist.getValue(startTime)).toEqual(initialObj)
     // })
 
     // test("Getting values from past", () => {
@@ -55,7 +55,8 @@ test("Test of BasicHistoryOf", () => {
     })
 
     // TODO: add tests for time cut-off if getValues() times are between changes
-    // ? Add tests for adding values in the middle of the time period?
+    // TODO: add test that getValues() return does not contain multiple entries with the same "start" or "end" time
+    // ? Add tests for adding values in the middle of the time period? -> Haven't decided if this "should" work.
 
     // No value given for `getValue` before and after end time
     expect(hist.getValue(startTime-1)).toBeUndefined();
