@@ -37,10 +37,10 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
     let sortedTransactions = props.transactions.sort((a, b) => earlierDateFirstSort(a.time, b.time));
     // console.log("Sorted Transactions (Earliest to latest)", sortedTransactions)
     // * Temporary hard-coded times
-    let startTime = new Date(2023, 9, 15)
-    let endTime = new Date(2023, 10, 15)
-    // let startTime = sortedTransactions[0].time;
-    // let endTime = sortedTransactions[sortedTransactions.length-1].time;
+    // let startTime = new Date(2023, 9, 15)
+    // let endTime = new Date(2023, 10, 15)
+    let startTime = sortedTransactions[0].time;
+    let endTime = sortedTransactions[sortedTransactions.length-1].time;
 
     // sortedTransactions = sortedTransactions.slice(
     //     sortedTransactions.findIndex(x => ! JsSort.ResultEquals(laterDateFirstSort(x.time, startTime), JsSort.ResultType.RightArgFirst)),

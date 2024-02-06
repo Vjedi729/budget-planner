@@ -23,6 +23,11 @@ const carle = new Vendor("Carle Hospital")
 const sweetbasil = new Vendor("Sweet Basil Cafe")
 const joann = new Vendor("Joann Fabrics")
 const trash = new Vendor("Republic Services")
+const Matt = new Vendor("Matthew Parkes")
+const Ani = new Vendor("Anishi Patel")
+const Varsha = new Vendor("Varsha Hemady")
+const ameren = new Vendor("Ameren IL")
+const Amit = new Vendor("Amit Patel")
 
 
 function makeDate(year: number, month: number, day: number) {
@@ -68,13 +73,22 @@ new ExternalTransaction(makeDate(2023, 9, 5), 88.42, new Vendor("Meijer"), visa3
     {price: 4.75, bucket: "Groceries", description: {name: "Taxes", description: ""} }
 ]),
 
+new ExternalTransaction(makeDate(2023, 9, 6), 322.57, ameren, chase, [
+    new Purchase(322.57, "Utilities", "Electric for August 2023")
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 6), 72.96, carle, chase, [
+    new Purchase(72.96, "Health", "Carle appt copay")
+]),
+
+
 new ExternalTransaction(makeDate(2023, 9, 7), 41.26, new Vendor("Papa Dels"), visa3408, [
     {price: 41.26, bucket: "Dining", description: {name: "Pizza dinner", description: ""}}
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, meijer, visa3408, [
-    {price: 1.99, bucket: "Home Improvements", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
-    {price: 3.99, bucket: "Home Improvements", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
+    {price: 1.99, bucket: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
+    {price: 3.99, bucket: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, new Vendor("Meijer"), visa3408, [
@@ -95,7 +109,7 @@ new ExternalTransaction(makeDate(2023, 9, 8), 68.95, new Vendor("Meijer"), visa3
     {price: 2.69, bucket: "Groceries", description: {name: "CANTALOUPES", description: "1 cantaloupe"}},
     {price: 6.99, bucket: "Groceries", description: {name: "VEGGIE STRAWS", description: ""}},
     {price: 0.58, bucket: "Groceries", description: {name: "1% Tax", description: ""}},
-    {price: 0.86, bucket: "Home Improvements", description: {name: "9% Tax", description: ""}}
+    {price: 0.86, bucket: "Home Improvement", description: {name: "9% Tax", description: ""}}
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 7.75, meijer, visa3408, [
@@ -108,6 +122,10 @@ new ExternalTransaction(makeDate(2023, 9, 8), 7.89, meijer, visa3408, [
     {price: 4.99, bucket: "Housewares", description: {name: "VERSACHALK", description: "Liquid chalk marker"}},
     {price: 2.25, bucket: "Housewares", description: {name: "SG CHALK EASEL", description: "Small chalk signs"}},
     {price: 0.65, bucket: "Housewares", description: {name: "9% tax", description: ""}}
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 11), 35, new Vendor("Hair stylist"), chase, [
+    new Purchase(35, "Health", "Haircut after hair donation")
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 12), 120.00, costco, visa8042, [
@@ -140,6 +158,10 @@ new ExternalTransaction(makeDate(2023, 9, 12), 61.00, new Vendor("Oishi Steakhou
     {price: 45.00, bucket: "Dining", description: {name: "Dinner", description: "sushi and ginger tofu"}},
 ]),
 
+new ExternalTransaction(makeDate(2023, 9, 12), -105, Matt, chase, [
+    new Purchase(-105, "For Matt", "Payback for dinner and costco")
+]),
+
 new ExternalTransaction(makeDate(2023, 9, 15), 52.11, new Vendor("Noodles & Company"), new Account("Venmo"), [
     new Purchase(3.71, "Dining", "Side of Wisconsin Mac & Cheese"),
     new Purchase(14.63, "Dining", "Regular Pesto Cavatapi sub spinach for mushrooms with tofu"),
@@ -152,8 +174,20 @@ new ExternalTransaction(makeDate(2023, 9, 15), 52.11, new Vendor("Noodles & Comp
     new Purchase(-15, "Dining", "Coupon"),
 ]),
 
+new ExternalTransaction(makeDate(2023, 9, 15), 250, Amit, chase, [
+    new Purchase(250, "Education", "Student loan repayment")
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 15), 100.80, water, chase, [
+    new Purchase(100.80, "Utilities", "Water bill for August 2023")
+]),
+
 new ExternalTransaction(makeDate(2023, 9, 16), 56.45, new Vendor("Panera"), visa3408, [
     new Purchase(56.45, "Dining", "Dinner after spinal tap") //TODO: Is this health?
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 18), 56.45, new Vendor("Panera via Paypal"), chase, [
+    new Purchase(56.45, "Dining", "Dinner at Panera")
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 19), 28.13, new Vendor("Culvers"), visa3408, [ //TODO: Is this health?
@@ -200,7 +234,15 @@ new ExternalTransaction(makeDate(2023, 9, 22), 30.00, cvs, visa3408, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 23), 89.99, i3, chase, [
-    new Purchase(89.99, "Bills", "Gigabit internet")
+    new Purchase(89.99, "Utilities", "Gigabit internet")
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 25), 17.03, new Vendor("Walgreens"), chase, [
+    new Purchase(17.03, "Health", "Prescriptions")
+]),
+
+new ExternalTransaction(makeDate(2023, 9, 26), 28.00, new Vendor("Goodwill"), chase, [
+    new Purchase(28.00, BucketName.UNDEFINED, "Scanners")
 ]),
 
 new ExternalTransaction(makeDate(2023, 10, 2), 81.00, new Vendor("Aspen Tap House"), visa3408, [
@@ -231,6 +273,14 @@ new ExternalTransaction(makeDate(2023, 10, 2), 30.05, joann, visa3408, [
     new Purchase(20.98, "Sewing", "UNBLEACHED MUSLIN 120IN", "3 yards muslin"),
     new Purchase(6.59, "Sewing", "DRIT CURVED SAFETY PIN ASSORTMENT"),
     new Purchase(2.48, "Sewing", "Taxes"),
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 2), -35, Ani, chase, [
+    new Purchase(-35, "For Anishi", "Payback for costco")
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 2), -25, Ani, chase, [
+    new Purchase(-25, "For Anishi", "Payback for apples and dinner")
 ]),
 
 new ExternalTransaction(makeDate(2023, 10, 3), 111.40, meijer, visa3408, [
@@ -265,6 +315,14 @@ new ExternalTransaction(makeDate(2023, 10, 3), 111.40, meijer, visa3408, [
 
 new ExternalTransaction(makeDate(2023, 10, 3), -16.79, meijer, visa3408, [
     new Purchase(-16.79, "Clothing", "Pink dress return")
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 6), 256.35, ameren, chase, [
+    new Purchase(256.35, "Utilities", "Electric bill for September"),
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 6), 97.63, trash, chase, [
+    new Purchase(97.63, "Utilities", "3 months trash service")
 ]),
 
 new ExternalTransaction(makeDate(2023, 10, 7), 45.91, costco, visa8042, [
@@ -339,6 +397,14 @@ new ExternalTransaction(makeDate(2023, 10 ,16), 241.31, costco, visa3408, [
     new Purchase(5.40, "Groceries", "Taxes")
 ]),
 
+new ExternalTransaction(makeDate(2023, 10, 16), -75, Matt, chase, [
+    new Purchase(-75, "For Matt", "Costco Payback")
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 16), 250, Amit, chase, [
+    new Purchase(250.00, "Education", "Student loan repayment")
+]),
+
 new ExternalTransaction(makeDate(2023, 10, 17), 50.00, elliot, visa3408, [
     new Purchase(50.00, "Health", "Mental health nurse appt copay")
 ]),
@@ -375,6 +441,10 @@ new ExternalTransaction(makeDate(2023, 10, 19), 115.66, meijer, visa3408, [
 
 new ExternalTransaction(makeDate(2023, 10, 19), 44.00, new Vendor("Urbana Family Dental"), visa3408, [
     new Purchase(44.00, "Health", "Teeth cleaning/sealing")
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 19), 75.75, water, chase, [
+    new Purchase(75.75, "Utilities", "Water bill for september 2023")
 ]),
 
 new ExternalTransaction(makeDate(2023, 10, 20), 31.26, new Vendor("Annapoorna Stores"), visa8042, [
@@ -445,6 +515,10 @@ new ExternalTransaction(makeDate(2023, 10, 23), 11.70, new Vendor("Slim Chickens
 
 new ExternalTransaction(makeDate(2023, 10, 25), 50.00, elliot, visa3408, [
     new Purchase(50.00, "Health", "Therapy copay")
+]),
+
+new ExternalTransaction(makeDate(2023, 10, 25), 89.99, i3, chase, [
+    new Purchase(89.99, "Utilities", "Gigabit internet for november 2023")
 ]),
 
 new ExternalTransaction(makeDate(2023, 10, 26), 15.30, new Vendor("Panera"), visa3408, [
@@ -604,12 +678,12 @@ new ExternalTransaction(new Date(2023, 11, 7), 164.09, costco, visa3408, [
     new Purchase(1.17, "Groceries", "1% tax")
 ]),
 
-new ExternalTransaction(new Date(2023, 11, 7), 1.68, costco, visa3408, [
-    new Purchase(1.68, "Dining", "Hot dog")
+new ExternalTransaction(makeDate(2023, 11, 7), -118, Matt, chase, [
+    new Purchase(-118, "For Matt", "Costco 11/7 payback")
 ]),
 
-new ExternalTransaction(new Date(2023, 11, 7), -118, new Vendor("Matt Parkes"), chase, [
-    new Purchase(-118, "For Matt", "Venmo payment from Matt for groceries")
+new ExternalTransaction(new Date(2023, 11, 7), 1.68, costco, visa3408, [
+    new Purchase(1.68, "Dining", "Hot dog")
 ]),
 
 new ExternalTransaction(new Date(2023, 11, 8), 50.00, elliot, visa3408, [
@@ -682,7 +756,7 @@ new ExternalTransaction(new Date(2023, 11, 15), -35759, new Vendor("Busey Bank")
 ]),
 
 new ExternalTransaction(new Date(2023, 11, 16), 73.57, water, chase, [
-    new Purchase(73.57, "Bills", "Water bill for October")
+    new Purchase(73.57, "Utilities", "Water bill for October")
 ]),
 
 new ExternalTransaction(new Date(2023, 11, 16), 165.74, carle, chase, [
@@ -831,6 +905,14 @@ new ExternalTransaction(makeDate(2023, 12, 4), 52.30, amazon, discover, [
     new Purchase(52.30, "Housewares", "8 TP-link smart lightbulbs")
 ]),
 
+new ExternalTransaction(makeDate(2023, 12, 4), -93, Matt, chase, [
+    new Purchase(-93, "For Matt", "Payback for 12/1 costco trip")
+]),
+
+new ExternalTransaction(makeDate(2023, 12, 4), -17, Matt, chase, [
+    new Purchase(-17, "For Matt", "Dinner")
+]),
+
 new ExternalTransaction(makeDate(2023, 12, 6), 27.25, new Vendor("Fresh International Market"), visa3408, [
     new Purchase(3.19, "Groceries", "Red Chili hot oil"),
     new Purchase(7.99, "Groceries", "Shoyu soy sauce"),
@@ -845,7 +927,7 @@ new ExternalTransaction(makeDate(2023, 12, 6), 67.06, meijer, visa3408, [
     new Purchase(2.24-0.67, "Both Fun Money", "Sale sharpie"),
     new Purchase(1.98, "Groceries", "2 bunches green onion"),
     new Purchase(2.19, "Groceries", "4 oz cremini mushrooms"),
-    new Purchase(2.29, "Grcoeries", "1/2 lb powdered sugar"),
+    new Purchase(2.29, "Groceries", "1/2 lb powdered sugar"),
     new Purchase(2.62, "Groceries", "Gal 1% milk"),
     new Purchase(5.38, "Groceries", "2 4 oz shelf stable tofu"),
     new Purchase(2.99, "Groceries", "1 box panko breadcrumbs"),
@@ -859,7 +941,7 @@ new ExternalTransaction(makeDate(2023, 12, 6), 67.06, meijer, visa3408, [
     new Purchase(0.65, "Groceries", "8 oz can corn"),
     new Purchase(1.26, "Groceries", "4 oz can bamboo shoots"),
     new Purchase(3.99, "Groceries", "Reese's puffs cereal"),
-    new Purchase(3.99, "Grocereis", "Mocha iced coffee"),
+    new Purchase(3.99, "Groceries", "Mocha iced coffee"),
     new Purchase(0.14, "Both Fun Money", "9% sales tax"),
     new Purchase(0.65, "Groceries", "1% sales tax")
 ]),
@@ -922,7 +1004,7 @@ new ExternalTransaction(makeDate(2023, 12, 12), 50, elliot, visa3408, [
 new ExternalTransaction(makeDate(2023, 12, 12), 45.07, joann, visa3408, [
     new Purchase(15.30, "Both Fun Money", "Cat mania embroidery book for Emma's xmas present"),
     new Purchase(12.07, "Meridith Fun Money", "Black cat mug"),
-    new Purchase(5.62, "Both Fun money", "Bead reamers for Mumm'ys xmas present"),
+    new Purchase(5.62, "Both Fun Money", "Bead reamers for Mumm'ys xmas present"),
     new Purchase(8.37, "Both Fun Money", "Bead holder for Mummy's xmas present"),
     new Purchase(-10, "Both Fun Money", "Joann app coupon"),
     new Purchase(3.71, "Both Fun Money", "taxes")
@@ -958,7 +1040,7 @@ new ExternalTransaction(makeDate(2023, 12, 14), 169.97, meijer, visa3408, [
     new Purchase(3.75, "Baking", "Molasses"),
     new Purchase(3.99, "Groceries", "7 oz romaine lettuce"),
     new Purchase(4.99, "Groceries", "Yeast"),
-    new Purchase(5.39, "Grocries", "Egg substitute"),
+    new Purchase(5.39, "Groceries", "Egg substitute"),
     new Purchase(10.98, "Groceries", "2 jars ground ginger"),
     new Purchase(5.89, "Groceries", "Fruit snacks for gingerbread houses"),
     new Purchase(6.99-2.8, "Cats", "Small trash bags"),
@@ -1043,7 +1125,7 @@ new ExternalTransaction(makeDate(2023, 12, 20), 50.00, elliot, visa3408, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 12, 21), 76.83, water, chase, [
-    new Purchase(76.83, "Bills", "Water bill for november")
+    new Purchase(76.83, "Utilities", "Water bill for november")
 ]),
 
 new ExternalTransaction(makeDate(2023, 12, 21), 0, cvs, visa3408, [
@@ -1072,7 +1154,7 @@ new ExternalTransaction(makeDate(2023, 12, 22), 22.39, new Vendor("Lenny's Gas n
 ]),
 
 new ExternalTransaction(makeDate(2023, 12, 24), 89.99, i3, chase, [
-    new Purchase(89.99, "Bills", "Gigabit fiber internet for January")
+    new Purchase(89.99, "Utilities", "Gigabit fiber internet for January")
 ]),
 
 new ExternalTransaction(makeDate(2023, 12, 26), 15.01, joann, visa3408, [
@@ -1124,6 +1206,12 @@ new ExternalTransaction(makeDate(2023, 12, 30), 6.47, new Vendor("Walmart"), vis
     new Purchase(0.11, "Groceries", "taxes")
 ]),
 
+new ExternalTransaction(makeDate(2023, 12, 30), 9.62, new Vendor("Target"), visa3408, [
+    new Purchase(6.38, "Groceries", "Bad iced coffee bottles"),
+    new Purchase(2.89, "Meridith Fun Money", "Altoids"),
+    new Purchase(0.35, "Groceries", "taxes")
+]),
+
 //TODO: Find missing target receipt from 12/30/2023
 
 new ExternalTransaction(makeDate(2024, 1, 2), 34.45, new Vendor("Circle K gas"), visa3408, [
@@ -1148,7 +1236,7 @@ new ExternalTransaction(makeDate(2024, 1, 4), 29.36, menards, visa3408, [
     new Purchase(1.69, "Home Improvement", "Magnetic bit holder for drill"),
     new Purchase(3.81, "Home Improvement", "Drywall mud"),
     new Purchase(2.79, "Home Improvement", "Paper joint tape for drywall"),
-    new Purchase(3.39, "Both fun money", "Micro flush cutter with cap for 3D printing"),
+    new Purchase(3.39, "Both Fun Money", "Micro flush cutter with cap for 3D printing"),
     new Purchase(3.38, "Home Improvement", "J-style peg hooks"),
     new Purchase(1.19, "Home Improvement", "2x1 drywall panel"),
     new Purchase(4.74, "Fish", "Razor scraper for algae removal"),
@@ -1157,7 +1245,7 @@ new ExternalTransaction(makeDate(2024, 1, 4), 29.36, menards, visa3408, [
 ]),
 
 new ExternalTransaction(makeDate(2024, 1, 4), 97.63, trash, chase, [
-    new Purchase(97.63, "Bills", "3 months of trash service")
+    new Purchase(97.63, "Utilities", "3 months of trash service")
 ]),
 
 new ExternalTransaction(makeDate(2024, 1, 5), 88.65, costco, visa8042, [
@@ -1276,7 +1364,7 @@ new ExternalTransaction(makeDate(2024, 1, 15), 50.00, elliot, visa3408, [
 ]),
 
 new ExternalTransaction(makeDate(2024, 1, 16), 70.31, water, chase, [
-    new Purchase(70.31, "Bills", "December Water bill")
+    new Purchase(70.31, "Utilities", "December Water bill")
 ]),
 
 new ExternalTransaction(makeDate(2024, 1, 16), 165.74, carle, visa3408, [
@@ -1326,6 +1414,10 @@ new ExternalTransaction(makeDate(2024, 1, 17), 207.70, costco, visa3408, [
     new Purchase(3.40, "Groceries", "taxes")
 ]),
 
+new ExternalTransaction(makeDate(2024, 1, 17), -75, Matt, chase, [
+    new Purchase(-75, "For Matt", "Payback for 1/17 costco trip")
+]),
+
 new ExternalTransaction(makeDate(2024, 1, 17), 50.00, elliot, visa3408, [
     new Purchase(50.00, "Health", "Therapy copay")
 ]),
@@ -1340,7 +1432,7 @@ new ExternalTransaction(makeDate(2024, 1, 19), 15.49, new Vendor("Walgreens"), v
     new Purchase(0.49, "Home Improvement", "9% sales tax")
 ]),
 
-new ExternalTransaction(makeDate(2023, 1, 20), 33.65, new Vendor("Costco gas"), visa3408, [
+new ExternalTransaction(makeDate(2024, 1, 20), 33.65, new Vendor("Costco gas"), visa3408, [
     new Purchase(33.65, "Car", "11.409 gals gas at $2.949 per gal")
 ]),
 
@@ -1365,7 +1457,196 @@ new ExternalTransaction(makeDate(2024, 1, 20), 109.36, menards, visa3408, [
     new Purchase(4.76, "Home Improvement", "Bolts for couch legs"),
     new Purchase(1.19, "Home Improvement", "Bolts for Couch legs"),
     new Purchase(0.89, "Home Improvement", "T nut for broken leg attachment point"),
-    new Purchase(1.14, "Home Imporovement", "Replacement threaded insert for ottoman"),
+    new Purchase(1.14, "Home Improvement", "Replacement threaded insert for ottoman"),
     new Purchase(9.03, "Home Improvement", "9% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 20), 14.12, menards, visa3408, [
+    new Purchase(9.96, "Housewares", "Boot trays for humidifiers"),
+    new Purchase(2.99, "Housewares", "Extra boot tray"),
+    new Purchase(1.17, "Housewares", "9% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 21), 62.43, new Vendor("Sun Sun Chinese"), visa3408, [
+    new Purchase(56.75, "Dining", "Dinner with parents"),
+    new Purchase(5.68, "Dining", "Tip")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 23), 18.25, costco, visa3408, [
+    new Purchase(6.29, "Groceries", "Blueberries"),
+    new Purchase(5.89, "For Matt", "Raspberries"),
+    new Purchase(5.89, "For Matt", "Raspberries"),
+    new Purchase(0.18, "For Matt", "1% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 23), 19.60, new Vendor("Costco Gas"), visa8042, [
+    new Purchase(19.60, "Car", "6.786 gal gas at $2.889 per gal")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 23), 89.99, i3, chase, [
+    new Purchase(89.99, "Utilities", "Gigabit internet")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 23), 20.12, menards, visa3408, [
+    new Purchase(7.47, "Housewares", "3 more plastic boot trays"),
+    new Purchase(10.99, "Housewares", "Mold killer for carpet under humidifier"),
+    new Purchase(1.66, "Housewares", "9% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 23), 0, new Vendor("Walgreens"), visa3408, [
+    new Purchase(0, "Health", "Nurtec")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 24), 50.00, elliot, visa3408, [
+    new Purchase(50.00, "Health", "Therapy copay")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 24), 30.00, new Vendor("Nebula"), new Account("Capitol One CC"), [
+    new Purchase(30.00, "Both Fun Money", "Yearly Nebula Subscription")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 24), 83.45, new Vendor("Savannag Green HOA"), visa3408, [
+    new Purchase(81.50, "Housing", "Yearly HOA fees"),
+    new Purchase(1.95, "Housing", "Transaction fees")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 26), 20.44, meijer, visa3408, [
+    new Purchase(3.99, "Groceries", "3 bell peppers"),
+    new Purchase(3.18, "Groceries", "2 jars pizza sauce"),
+    new Purchase(7.00, "Groceries", "2 bags mozzarella cheese"),
+    new Purchase(2.99, "Groceries", "Baby spinach"),
+    new Purchase(2.29, "Groceries", "8 pc texas toast garlic bread"),
+    new Purchase(2.62, "Groceries", "1 gal 1% milk"),
+    new Purchase(1.99, "Groceries", "Mini cheese sausages"),
+    new Purchase(1.89, "Groceries", "Can slived olives"),
+    new Purchase(3.29, "Groceries", "4 lb sugar"),
+    new Purchase(0.20, "Groceries", "1% sales tax"),
+    new Purchase(-9.00, "Groceries", "Mperks rewards"),
+    new Purchase(-3.74, "Groceries", "Special offers")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 26), 38.65, menards, visa3408, [
+    new Purchase(2.49, "Health", "Self adhesive bandage tape"),
+    new Purchase(1.97, "Health", "Gauze pads"),
+    new Purchase(3.62, "Groceries", "Lemon extract"),
+    new Purchase(7.99, "Home Improvement", "Smaller long screwdriver"),
+    new Purchase(19.98, "Home Improvement", "Pull out kitchen cabinet baskets"),
+    new Purchase(0.08, "Groceries", "1% sales tax"),
+    new Purchase(2.52, "Home Improvement", "9% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 27), -20.00, Matt, chase, [
+    new Purchase(-20.00, "For Matt", "Berries payback")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 30), 45.14, new Vendor("Schnucks"), visa3408, [
+    new Purchase(6.99, "Groceries", "MAngo smoothie"),
+    new Purchase(1.49, "Groceries", "Pineapple coconut jerky"),
+    new Purchase(2.50, "Groceries", "Peach fruit cups"),
+    new Purchase(1.49, "Groceries", "Mango fruit jerky"),
+    new Purchase(2.00, "Groceries", "Pretzel rods"),
+    new Purchase(2.79, "Groceries", "Paper bowls"),
+    new Purchase(2.79, "Groceries", "Paper plates"),
+    new Purchase(4.99, "Groceries", "Nutella"),
+    new Purchase(3.50, "Groceries", "Bad fruit rolls"),
+    new Purchase(5.50, "Groceries", "Choc chip z-bars"),
+    new Purchase(5.50, "Groceries", "Iced oatmeal z-bars"),
+    new Purchase(1.99, "Groceries", "Half loaf bread"),
+    new Purchase(1.45, "Groceries", "9% sales tax"),
+    new Purchase(0.27, "Groceries", "1% sales tax")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 31), 220.77, costco, visa3408, [
+    new Purchase(10.99, "For Matt", "Almond milk"),
+    new Purchase(6.49, "Groceries", "Turtle chips"),
+    new Purchase(11.99, "Meridith Fun Money", "Choc truffles"),
+    new Purchase(12.79, "For Matt", "Frozen berries"),
+    new Purchase(11.99, "For Matt", "Fig truffles"),
+    new Purchase(12.99, "For Matt", "Guacamole"),
+    new Purchase(8.99, "For Matt", "Strawberries"),
+    new Purchase(7.99, "For Matt", "Sliced mozzerella"),
+    new Purchase(13.99, "For Matt", "Frozen blueberries"),
+    new Purchase(5.79, "Groceries", "Tortilla chips"),
+    new Purchase(13.99, "Groceries", "4 lbs unsalted butter"),
+    new Purchase(13.99, "Groceries", "4 lbs salted butter"),
+    new Purchase(5.89, "For Matt", "Raspberries"),
+    new Purchase(3.99, "For Matt", "Blackberries"),
+    new Purchase(5.99, "For Matt", "Cherry tomatoes"),
+    new Purchase(10.99, "Groceries", "Choc chips"),
+    new Purchase(12.99, "Groceries", "Guacamole packs"),
+    new Purchase(11.99, "Groceries", "Goldfish"),
+    new Purchase(12.49-3.50, "Groceries", "Mediterranean flatbreads"),
+    new Purchase(8.99, "Groceries", "Spinach parmesan dip"),
+    new Purchase(1.97, "Groceries", "Naan dippers"),
+    new Purchase(12.99, "Groceries", "Fruit bars"),
+    new Purchase(4.01, "Groceries", "taxes")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 31), -51, Matt, chase, [
+    new Purchase(-51, "For Matt", "Payback for 1/31 costco trip")
+]),
+
+new ExternalTransaction(makeDate(2024, 1, 31), 30.00, new Vendor("Urbana Family Dental"), visa8042, [
+    new Purchase(30.00, "Health", "Copay for Flouride treatment")
+]),
+
+new ExternalTransaction(makeDate(2024, 2, 3), 81.08, new Vendor("Dos Reales"), visa8042, [
+    new Purchase(12.50, "Dining", "Tamales for Meridith"),
+    new Purchase(11.80, "Dining", "Vegetarian A for Vishal"),
+    new Purchase(12.75, "Dining", "Vegetarian I for Varsha"),
+    new Purchase(13.50, "Dining", "Burrito Rojo for Dylan"),
+    new Purchase(7.50, "Dining", "2 Horchatas for Varsha and Dylan"),
+    new Purchase(2.55, "Dining", "Jarritos for Meridith"),
+    new Purchase(6.97, "Dining", "taxes"),
+    new Purchase(13.51, "Dining", "Tip")
+]),
+
+new ExternalTransaction(makeDate(2024, 2, 3), 318.20, costco, visa8042, [
+    new Purchase(11.99, "Groceries", "Mixed fruit tray"),
+    new Purchase(7.99, "Groceries", "Mango fruit cups"),
+    new Purchase(5.99, "Groceries", "Kettle Corn"),
+    new Purchase(21.89, "Groceries", "Mixed box Z-bars"),
+    new Purchase(9.49, "For Varsha", "Granola Bars"),
+    new Purchase(9.49, "For Varsha", "Granola Bars"),
+    new Purchase(11.99, "For Varsha", "Eggo waffles"),
+    new Purchase(14.49, "For Varsha", "Vanilla soy milk"),
+    new Purchase(16.99, "For Varsha", "Tissues"),
+    new Purchase(11.79, "For Varsha", "Refried beans"),
+    new Purchase(19.89, "For Varsha", "Assorted frito lay chips"),
+    new Purchase(9.99, "For Varsha", "Peanut butter pretzels"),
+    new Purchase(8.99, "For Varsha", "Cheerios 2 pack"),
+    new Purchase(12.99, "For Varsha", "2 pack mexiacan shredded cheese"),
+    new Purchase(19.99, "For Varsha", "Applesauce pouches"),
+    new Purchase(7.89, "For Varsha", "Walnuts"),
+    new Purchase(7.99, "For Varsha", "Sliced mozzerella"),
+    new Purchase(13.99, "For Varsha", "Vitamins"),
+    new Purchase(9.49, "For Varsha", "Salsa"),
+    new Purchase(8.99, "For Varsha", "Almonds"),
+    new Purchase(7.49, "For Varsha", "Pasta assortment"),
+    new Purchase(7.99, "For Varsha", "Everything bagels"),
+    new Purchase(13.99, "For Varsha", "Unsalted butter"),
+    new Purchase(13.99, "For Varsha", "Irish butter"),
+    new Purchase(9.49, "For Varsha", "Pesto sauce"),
+    new Purchase(5.99, "For Varsha", "Croissants"),
+    new Purchase(11.99, "For Varsha", "Spinach ravioli 2 pack"),
+    new Purchase(4.97, "For Varsha", "taxes")
+]),
+
+new ExternalTransaction(makeDate(2024, 2, 3), 76.47, new Vendor("Target"), visa8042, [
+    new Purchase(3.89, "For Varsha", "Bread"),
+    new Purchase(9.18, "For Varsha", "Microwave popcorn"),
+    new Purchase(3.78, "For Varsha", "Good gather ?"),
+    new Purchase(1.98, "For Varsha", "Onions"),
+    new Purchase(4.99, "For Varsha", "Ovaltine"),
+    new Purchase(5.19, "For Varsha", "Cream cheese"),
+    new Purchase(2.19, "For Varsha", "Berries"),
+    new Purchase(5.79, "For Varsha", "Cheese"),
+    new Purchase(5.79, "For Varsha", "Cuties"),
+    new Purchase(1.79, "For Varsha", "Bell peppers"),
+    new Purchase(2.89, "For Varsha", "Tomatoes"),
+    new Purchase(3.99, "For Varsha", "Bread"),
+    new Purchase(19.99, "Both Fun Money", "Camera Lego set"),
+    new Purchase(1.80, "Both Fun Money", "9% sales tax"),
+    new Purchase(0.54, "For Varsha", "1% sales tax")
 ])
 ]
