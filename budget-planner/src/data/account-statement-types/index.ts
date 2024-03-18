@@ -1,0 +1,1 @@
+export type { AccountStatement } from './account-statement'
