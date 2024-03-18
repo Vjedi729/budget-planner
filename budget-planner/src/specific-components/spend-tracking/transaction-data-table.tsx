@@ -107,5 +107,9 @@ export const TransactionDataTable: React.FunctionComponent<InnerSpendTrackingCom
             bucketBalance: props.bucketBalanceHistory.getValue(transaction.time) || {}
         }}
     )
-    return <DataTable columns={cols} data={rows} expandableRows expandableRowsComponent={PurchaseDataTable} expandableRowDisabled={row => (row.transaction.purchases.length == 0)}/>
+    return <DataTable 
+        columns={cols} data={rows} 
+        fixedHeader={true}
+        expandableRows expandableRowsComponent={PurchaseDataTable} expandableRowDisabled={row => (row.transaction.purchases.length == 0)}
+        />
 }

@@ -11,25 +11,9 @@ import { JsSort } from "@/ts-utils/sort-utils";
 import { WantsSpendTrackingGraph } from "./wants-spend-tracking-graph";
 import { FlexColumn } from "./flex-column";
 import { NeedsSpendTrackingGraph } from "./needs-spend-tracking-graph";
+import { DateDaysBeforeOffsetFunctionFactory } from "@/utilities/dateUtils";
 
 // const testBucket: string|undefined = "For Varsha"
-
-function DateDayOffset(dayOffset: number) {
-    return (oldDate: Date, invert: boolean = false) => new Date(
-        oldDate.getFullYear(),
-        oldDate.getMonth(),
-        oldDate.getDate()+(invert?1:-1)*dayOffset,
-        oldDate.getHours(), oldDate.getMinutes(), oldDate.getSeconds(), oldDate.getMilliseconds()
-    );
-}
-
-function DateMonthOffset(monthOffset: number) {
-    return (oldDate: Date, invert: boolean = false) => new Date(
-        oldDate.getFullYear(),
-        oldDate.getMonth() + (invert?1:-1)*monthOffset,
-        oldDate.getDate(),
-        oldDate.getHours(), oldDate.getMinutes(), oldDate.getSeconds(), oldDate.getMilliseconds()
-    );}
 
 export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (props) => {
     
@@ -133,7 +117,7 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
                                     bucket={bucketName}
                                     bucketSpendingHistory={purchaseAmounts}
                                     startingBalances={startingBalances}
-                                    pastSpendingOffset={DateDayOffset(-7)}
+                                    pastSpendingOffset={DateDaysBeforeOffsetFunctionFactory(-7)}
                                     pastSpendingString={(i: number) => `${i} week${i==1?'':'s'} ago`}
                                     pastSpendingTransparencyMultiplier={0.6}
                                     startTime={startTime} endTime={endTime}
