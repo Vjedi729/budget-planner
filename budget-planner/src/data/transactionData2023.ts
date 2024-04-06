@@ -37,20 +37,795 @@ const Neil = new Vendor("Neil VanKannegan")
 const tacoBell = new Vendor("Taco Bell")
 const Nick = new Vendor("Nick Inocencio")
 const epic = new Vendor("Epic Games")
+const mattex = new Vendor("Mattex")
+const farmAndFleet = new Vendor("Blaine's farm and fleet")
+const harborFreight = new Vendor("Harbor Freight tools")
+const dosReales = new Vendor("Dos Reales")
+const tjMaxx = new Vendor("TJ Maxx")
 
 
-function makeDate(year: number, month: number, day: number) {
+function makeDate(year: number, month: number, day: number): Date {
     return new Date(year, month-1, day, 1)
 }
 
 function p(...x: ConstructorParameters<typeof Purchase>) { return new Purchase(...x) }
-function t(...x: ConstructorParameters<typeof ExternalTransaction>) { return new ExternalTransaction(...x) }
+function t<T>(...x: ConstructorParameters<typeof ExternalTransaction<T>>) { return new ExternalTransaction(...x) }
 
-export const sampleInitialDate = new Date(2023, 6);
+export const sampleInitialDate = new Date(2021, 2, 1);
 
-export const sampleTransactions = [
+export const sampleTransactions: ExternalTransaction<Date>[] = [
+t(makeDate(2022, 10, 2), 33.36, dosReales, visa8042, [
+    p(12.95, "Dining", "Chimichanga dinner"),
+    p(6.99, "Dining", "Cheese and Beans nachos"),
+    p(4.99, "Dining", "Guacamole"),
+    p(2.87, "Dining", "Tax"),
+    p(5.56, "Dining", "Tip")
+]),
+
+t(makeDate(2022, 10, 4), 77.64, chewy, capOne, [
+    p(77.64, "Cats", "Cat food")
+]),
+
+t(makeDate(2022, 10, 13), 325.45, costco, visa8042, [
+    p(13.89-3.40, "For Matt", "Cauliflower pizza"),
+    p(10.89, "For Matt", "Ravioli"),
+    p(5.69, "For Matt", "Garlic"),
+    p(7.39, "For Matt", "Kiwis"),
+    p(5.99, "For Matt", "Raspberries"),
+    p(7.99-1.5, "For Matt", "Rabutans"),
+    p(11.69, "For Matt", "Eggo waffles"),
+    p(16.99, "For Matt", "Tuxedo cake"),
+    p(16.99, "For Matt", "Spanakopita"),
+    p(67.07, "For Matt", "Beef brisket"),
+    p(13.89-3.40, "Groceries", "2 cauliflower pizzas"),
+    p(13.49, "Groceries", "2 pack quiche"),
+    p(8.39, "Groceries", "Grated parmesan"),
+    p(6.99, "Groceries", "Peppermint pretzels"),
+    p(7.99, "Groceries", "Pumpkin spice pretzels"),
+    p(10.99, "Groceries", "Marinara"),
+    p(10.49, "Groceries", "Potato soup"),
+    p(10.99, "Groceries", "Tomato soup"),
+    p(19.99, "Health", "Thermometer"),
+    p(17.99, "Both Fun Money", "Hot Sauce asst for Matt bday"),
+    p(14.99, "Groceries", "Apple pie"),
+    p(12.99, "Groceries", "4 lbs sweet tango apples"),
+    p(16.69, "Groceries", "Ginger beer"),
+    p(3.30, "Groceries", "Tax")
+]),
+
+t(makeDate(2022, 10, 13), 37.44, costco, visa0078, [
+    p(37.44, "Car", "9.530 gal gas at $3.929 per gal")
+]),
+
+t(makeDate(2022, 10, 16), 68.63, harborFreight, visa8042, [
+    p(12.99, "Woodworking", "36 in parallel bar clamp"),
+    p(15.99, "Woodworking", "48 in parallel bar clamp"),
+    p(17.99, "Woodworking", "60 in parallel bar clamp"),
+    p(15.99, "Woodworking", "48 in parallel bar clamp"),
+    p(5.67, "Woodworking", "Tax")
+]),
+
+t(makeDate(2022, 10, 24), 40.34, new Vendor("Bombay Market"), capOne, [
+    p(14.97, "Groceries", "3 trays Saag paneer"),
+    p(9.96, "Groceries", "4 6 ct frozen parathas"),
+    p(7.98, "Groceries", "2 bags frozen dal samosas"),
+    p(1.99, "Groceries", "Chana masala"),
+    p(4.99, "Groceries", "Diwali candles"),
+    p(0.45, "Groceries", "Tax")
+]),
+
+t(makeDate(2022, 10, 26), 171.83, costco, visa0078, [
+    p(9.99, "Groceries", "Chocolate chips"),
+    p(9.99, "Groceries", "Fuji box"),
+    p(7.99, "Groceries", "4 lbs apples"),
+    p(7.99, "Groceries", "Pumpkin spice pretzels"),
+    p(13.99, "Groceries", "Shredded mozzarella"),
+    p(19.49, "Groceries", "Laundry detergent"),
+    p(7.99, "For Matt", "Rambutans"),
+    p(16.49, "Both Fun Money", "Non-chocolate halloween candy"),
+    p(16.49, "Both Fun Money", "Non-chocolate halloween candy"),
+    p(18.49, "Both Fun Money", "Chocolate halloween candy"),
+    p(18.49, "Both Fun Money", "Chocolate halloween candy"),
+    p(19.99, "Groceries", "Toilet paper"),
+    p(4.45, "Both Fun Money", "Tax")
+]),
+
+t(makeDate(2022, 10, 30), 62.10, tjMaxx, visa0078, [
+    p(24.99, "Housewares", "Kitchen?"),
+    p(6.99, "Clothes", "Men's shirt"),
+    p(24.99, "Housewares", "Halloween decor"),
+    p(5.13, "Housewares", "Tax")
+]),
+
+t(makeDate(2022, 10, 8), 32.65, new Vendor("Barnes and Noble"), visa0078, [
+    p(29.95, "Meridith Fun Money", "Encyclopedia of Country Living"),
+    p(2.70, "Meridith Fun Money", "Tax")
+]),
+
+//TODO: Find 11-2022 menards date
+t(makeDate(2022, 11, 2), 153.47, new Vendor("Heel to Toe"), visa8042, [
+    p(176.00, "Clothing", "New Shoes for Vishal"),
+    p(-35.20, "Clothing", "Xavior employee discount"),
+    p(12.67, "Clothing", "Tax")
+]),
+
+t(makeDate(2022, 11, 2), 278.31, new Vendor("Home Depot"), capOne, [
+    p(278.31, "Home Improvement", "Ryobi Drill and Driver set")
+]),
+
+t(makeDate(2022, 11, 3), 133.33, costco, visa8042, [
+    p(18.49, "For Matt", "Mangoes"),
+    p(7.99, "For Matt", "Rambutans"),
+    p(7.29, "For Matt", "Kiwis"),
+    p(7.99, "For Matt", "Rambutans"),
+    p(11.99, "Groceries", "Vanilla extract"),
+    p(7.99-2.40, "Groceries", "Hot cocoa"),
+    p(10.99, "For Matt", "Smoked salmon"),
+    p(11.69, "Groceries", "Whipped cream"),
+    p(8.89, "For Matt", "Sweet thin crackers"),
+    p(7.49, "Groceries", "Zebra popcorn"),
+    p(10.69-3, "Groceries", "Boursin 3 pack"),
+    p(11.99, "Groceries", "Spinach ravioli"),
+    p(9.99, "Groceries", "Fuji apples"),
+    p(0.67, "Groceries", "Tax")
+]),
+
+t(makeDate(2022, 11, 3), 21.15, new Vendor("Fazoli's"), visa0078, [
+    p(21.15, "Dining", "Dinner with Nick")
+]),
+
+t(makeDate(2022, 11, 9), 77.64, chewy, capOne, [
+    p(77.64, "Cats", "Cat food")
+]),
+
+t(makeDate(2022, 11, 15), 187.44, costco, visa8042, [
+    p(6.99, "Groceries", "Choc cookies"),
+    p(9.99, "For Nick", "25 lbs rice"),
+    p(11.99, "Groceries", "French onion soup"),
+    p(15.99, "Health", "Tissue"),
+    p(13.89, "Groceries", "Cauliflower pizza"),
+    p(13.99, "Groceries", "Protein bars"),
+    p(22.49, "Groceries", "Protein powder"),
+    p(8.49, "Groceries", "8 cans black beans"),
+    p(7.99, "Groceries", "Sweet potato fries"),
+    p(14.49, "Groceries", "Unsalted Butter"),
+    p(10.49, "Groceries", "Paneer"),
+    p(17.99, "Cats", "Puppy pads"),
+    p(9.99, "Groceries", "Fuji apples"),
+    p(9.99, "Groceries", "Fuji apples"),
+    p(8.99, "Groceries", "4 lbs snap dragon apples"),
+    p(3.69, "Groceries", "Tax")
+]),
+
+t(makeDate(2022, 11, 15), 42.44, new Vendor("Lowes"), visa8042, [
+    p(24.98, "Home Improvement", "screw extractors"),
+    p(4.98, "Home Improvement", "Screw extractor"),
+    p(8.98, "Home Improvement", "Drill block"),
+    p(3.50, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2022, 11, 23), 74.63, new Vendor("Red Robin"), visa8042, [
+    p(6.99, "Dining", "Oreo peppermint crunch shake"),
+    p(13.89, "Dining", "Veggie burger"),
+    p(5.99, "Dining", "Choc monster shake"),
+    p(15.69, "Dining", "Pretzel bacon sandwich"),
+    p(6.99, "For Nick", "Oreo peppermint crunch shake"),
+    p(15.59, "For Nick", "Scorpion burger"),
+    p(1.79, "For Nick", "Garlci fries"),
+    p(7.70, "Dining", "Tax")
+]),
+
+t(makeDate(2022, 11, 27), 108.08, costco, visa8042, [
+    p(5.99, "Groceries", "Croissants"),
+    p(4.69, "Groceries", "Brioche buns"),
+    p(9.99-1, "Groceries", "Chocolate chips"),
+    p(6.49, "Groceries", "Crispy onions"),
+    p(7.49-2.80, "Groceries", "Zebra popcorn"),
+    p(13.59, "Groceries", "Fruit bars"),
+    p(9.99, "Groceries", "Fuji apples"),
+    p(7.99, "Groceries", "Cheddar slices"),
+    p(12.99, "Groceries", "Guacamole"),
+    p(11.99, "Groceries", "Peppermint bark"),
+    p(5.29, "Groceries", "Tomatoes"),
+    p(12.00, "Housewares", "Grill pan"),
+    p(3.39, "Groceries", "Tax")
+]),
+
+t(makeDate(2022, 11, 30), 39.27, new Vendor("Staples"), visa8042, [
+    p(22.99, "Housewares", "Network cable"),
+    p(2.79, "Housewares", "Eraser"),
+    p(2.79, "Housewares", "Eraser"),
+    p(7.46, "Vishal Fun Money", "Stem explorers bricks"),
+    p(3.24, "Housewares", "Tax")
+]),
+
+t(makeDate(2022, 11, 28), 16.50, new Vendor("Urbana Family Dental"), visa8042, [
+    p(16.50, "Health", "Deep cleaning for Vishal")
+]),
+
+t(makeDate(2022, 12, 2), 321.61, costco, visa0078, [
+    p(16.99, "Housewares", "Bath mat"),
+    p(84.99-20, "Housewares", "Humidifier"),
+    p(84.99-20, "Housewares", "Humidifier"),
+    p(84.99-20, "Housewares", "Humidifier"),
+    p(84.99-20, "Housewares", "Humidifier"),
+    p(16.69-5, "Groceries", "Ginger beer"),
+    p(6.99, "Groceries", "Terra chips"),
+    p(25.98, "Housewares", "Tax")
+]),
+
+t(makeDate(2022, 12, 5), 10.89, new Vendor("Sally Beauty Supply"), capOne, [
+    p(9.99, "Meridith Fun Money", "Jade hair dye"),
+    p(0.90, "Meridith Fun Money", "Tax")
+]),
+
+t(makeDate(2022, 12, 5), 12.49, new Vendor("Target"), capOne, [
+    p(12.49, "Groceries", "Turkey burgers")
+]),
+
+t(makeDate(2022, 12, 9), 34.63, new Vendor("Texas roadhouse"), capOne, [
+    p(34.63, "Dining", "Dinner w/ Emma")
+]),
+
+t(makeDate(2022, 12, 11), 31.61, new Vendor("Pekara"), visa8042, [
+    p(9.95, "Dining", "Choc covered strawberry crepe"),
+    p(13.45, "Dining", "French toast breakfast"),
+    p(4.95, "Dining", "Mocha coffee"),
+    p(3.26, "Dining", "Tax")
+]),
+
+t(makeDate(2022, 12, 13), 77.64, chewy, capOne, [
+    p(77.64, "Cats", "Cat food")
+]),
+
+t(makeDate(2023, 12, 17), 17.81, new Vendor("Fresh international market"), capOne, [
+    p(2.39, "Groceries", "Coconut pocky"),
+    p(9.99, "Groceries", "Samanco choc"),
+    p(1.79, "Both Fun Money", "Chopsticks for Sahil"),
+    p(3.19, "Both Fun Money", "Spoon for Sahil")
+]),
+
+t(makeDate(2022, 12, 26), 160.97, meijer, capOne, [
+    p(9.98, "Both Fun Money", "Holiday scrunchies"),
+    p(3.89, "Car", "Washer fluid"),
+    p(5.09, "Both Fun Money", "Thermos for mom's gift"),
+    p(6.99, "Both Fun Money", "Cup tray fro mom's gift"),
+    p(10.49, "Cats", "Litter liner"),
+    p(39.99, "Housewares", "Surge protector"),
+    p(6.59, "Cats", "Litter pans"),
+    p(4.99-1.25, "Vishal Fun Money", "Bluetooth aux adapter"),
+    p(14.99-3.75, "Meridith Fun Money", "Cookie Press"),
+    p(7.70, "Groceries", "Cereal"),
+    p(2.79, "Groceries", "Cinnamon muffins"),
+    p(8.49, "Groceries", "Drumstick ice cream"),
+    p(26.79, "Cats", "cat litter"),
+    p(2.79, "Groceries", "Peppermint bark"),
+    p(11.48, "Housewares", "Tax")
+]),
+
+t(makeDate(2023, 1, 4), 87.74, costco, visa8042, [
+    p(11.99, "Groceries", "Goldfish"),
+    p(13.99, "For Matt", "Spinach frittatas"),
+    p(14.59, "Groceries", "Chocolate almonds"),
+    p(18.99, "For Matt", "Protein bars"),
+    p(7.99, "Groceries", "4 lbs fuji apples"),
+    p(7.99, "Groceries", "4 lbs fuji apples"),
+    p(9.99, "Groceries", "Choc chips"),
+    p(2.21, "Groceries", "Tax")
+]),
+
+t(makeDate(2023, 1, 18), 44.74, new Vendor("Dos reales"), visa8042, [
+    p(12.95, "Dining", "Chimichanga dinner"),
+    p(6.99+2.99, "Dining", "Bean and cheese nachos with guac"),
+    p(12.45, "For Matt", "Enchiladas supremas"),
+    p(4.99, "Dining", "Guacamole"),
+    p(4.61, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 1, 20), 2.00, carle, capOne, [
+    p(2.00, "Health", "Parking")
+]),
+
+t(makeDate(2023, 1, 24), 28.34, meijer, visa0078, [
+    p(4.47, "Groceries", "2 jars pasta sauce"),
+    p(4.47, "Groceries", "2 jars pizza sauce"),
+    p(2.29, "Groceries", "10 lbs all purpose flour"),
+    p(2.49, "Groceries", "Carrots"),
+    p(2.75, "Groceries", "Pepperoni"),
+    p(4.00, "Groceries", "Tombstone pizza"),
+    p(4.00, "Groceries", "Tombstone pizza"),
+    p(1.49, "Groceries", "4 lbs sugar"),
+    p(2.39, "Groceries", "Alfredo sauce"),
+    p(3.99, "Groceries", "Strawberry yogurt"),
+    p(-4.00, "Groceries", "Mperks offer"),
+]),
+
+t(makeDate(2023, 1, 24), 18.25, menards, visa0078, [
+    p(2.39, "Home Improvement", "Heat shrink"),
+    p(2.99, "Housewares", "Cable organizers"),
+    p(2.99, "Housewares", "Cable organizers"),
+    p(2.39, "Home Improvement", "Heat shrink"),
+    p(2.99, "Housewares", "6 ft braided aux cable"),
+    p(1.51, "Housewares", "Tax")
+]),
+
+t(makeDate(2023, 1, 27), 211.50, new Vendor("Target"), capOne, [
+    p(10.00, "Housewares", "Digital clock"),
+    p(110.00, "Housewares", "Overpriced stools"),
+    p(1.59, "Groceries", "Tomatoes"),
+    p(3.99, "Groceries", "Bell peppers"),
+    p(2.39, "Groceries", "Mission tortillas"),
+    p(1.59, "Groceries", "Snapple"),
+    p(3.89, "Groceries", "Tazo tea"),
+    p(2.39, "Groceries", "Mission corn tortillas"),
+    p(6.98, "Groceries", "2 packs trident gum"),
+    p(5.00, "Housewares", "2 decorative trays"),
+    p(30.00, "Garden", "2 blueberry planters"),
+    p(10.00, "Garden", "Herb plant markers"),
+    p(5.00, "Garden", "Pots"),
+    p(17.75, "Housewares", "Tax")
+]),
+
+t(makeDate(2023, 1, 27), 14.99, new Vendor("Target"), capOne, [
+    p(14.99, "Housewares", "Folding stool"),
+    p(2.69, "Meridith Fun Money", "Altoids"),
+    p(24.99, "Vishal Fun Money", "Pokemon tin"),
+    p(3.84, "Vishal Fun Money", "Tax"),
+]),
+
+t(makeDate(2023, 1, 27), -119.92, new Vendor("Target"), capOne, [
+    p(-55.00, "Housewares", "Returned overpriced stool"),
+    p(-55.00, "Housewares", "Returned overpriced stool"),
+    p(-9.92, "Housewares", "Returned tax")
+]),
+
+t(makeDate(2023, 1, 31), 10.73, new Vendor("McDonald's"), capOne, [
+    p(3.89, "Dining", "L fries"),
+    p(2.79, "Dining", "Mocha frappe"),
+    p(2.99, "Dining", "6 pc chicken mcnuggets"),
+    p(1.06, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 2, 3), 32.69, meijer, visa8042, [
+    p(29.99, "Housewares", "Sound bar"),
+    p(2.70, "Housewares", "Tax")
+]),
+
+t(makeDate(2023, 2, 4), 174.89, costco, visa8042, [
+    p(12.49, "For Matt", "Trail mix"),
+    p(7.69-2.20, "For Matt", "Cinnamon toast crunch"),
+    p(12.69, "For Matt", "Protein powder waffle mix"),
+    p(11.69, "For Matt", "Eggo waffles"),
+    p(13.89, "For Matt", "Cauliflower pizza"),
+    p(11.69, "For Matt", "Shredded cheese"),
+    p(12.99, "For Matt", "Guacamole"),
+    p(10.99, "For Matt", "Pork gyoza"),
+    p(19.99, "For Matt", "Protein bars"),
+    p(3.49, "For Matt", "Blackberries"),
+    p(3.49, "For Matt", "Blackberries"),
+    p(9.99, "Groceries", "Chocolate chips"),
+    p(17.99, "Cats", "Puppy pads"),
+    p(5.39, "Groceries", "4 lb fuji apples"),
+    p(18.99, "Groceries", "Cashews"),
+    p(3.64, "For Matt", "Tax")
+]),
+
+t(makeDate(2023, 2, 10), 26.74, new Vendor("Fresh international market"), visa0078, [
+    p(4.39, "Groceries", "Chili oil"),
+    p(6.99, "Groceries", "Red miso"),
+    p(4.59, "Groceries", "Sesame paste"),
+    p(3.99, "Groceries", "Pickled pink ginger"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.69, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.79, "Housewares", "Ramen spoon"),
+    p(0.56, "Groceries", "tax")
+]),
+
+t(makeDate(2023, 2, 12), 27.77, harborFreight, visa0078, [
+    p(8.49, "Fish", "Wire for water tray"),
+    p(16.99, "Home Improvement", "Drill bit set"),
+    p(2.29, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 2, 14), 31.58, new Vendor("Walgreens"), visa0078, [
+    p(11.99, "Health", "3-ply face masks"),
+    p(5.99, "Health", "3-ply face masks"),
+    p(5.99, "Meridith Fun Money", "Choc sampler box"),
+    p(2.50, "Meridith Fun Money", "Wintergreen altoids"),
+    p(2.50, "Vishal Fun Money", "Cinnamon altoids"),
+    p(2.61, "Health", "Tax")
+]),
+t(makeDate(2023, 2, 15), 33.32, costco, visa0078, [
+    p(33.32, "Car", "10.254 gal gas at $3.249 per gal")
+]),
+
+t(makeDate(2023, 2, 15), 38.88, new Vendor("Red Robin Burgers"), visa8042, [
+    p(47.04, "Dining", "Dinner")
+]),
+
+t(makeDate(2023, 2, 18), 108.16, menards, visa8042, [
+    p(5.92, "Home Improvement", "4 8 foot pieces of furring"),
+    p(66.36, "Home Improvement", "4 4x4 panels pegboard"),
+    p(2.99, "Home Improvement", "Value shelf wood"),
+    p(5.19, "Home Improvement", "Wire staples"),
+    p(2.50, "Home Improvement", "Double arm pegboard hook"),
+    p(2.69, "Home Improvement", "Double arm pegboard hook"),
+    p(4.99, "Fish", "Cable labels"),
+    p(8.99, "Home Improvement", "Asst pegboard hooks"),
+    p(8.97, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 2, 19), 166.89, harborFreight, visa8042, [
+    p(109.99, "Home Improvement", "Covered walkway car port thing"),
+    p(3.99, "Home Improvement", "Socket driver set"),
+    p(9.99, "Home Improvement", "7 pc forstner bit set"),
+    p(5.29, "Home Improvement", "Nut and washer asst"),
+    p(25.99, "Home Improvement", "Replacement plan on carport"),
+    p(11.64, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 4, 4), 59.42, new Vendor("La Mixteca"), visa8042, [
+    p(49.42, "Dining", "Dinner"),
+    p(10.00, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 4, 10), 95.13, new Vendor("Bangkok thai"), visa0078, [
+    p(13.95, "Dining", "Chicken fried rice"),
+    p(15.95, "Dining", "Tofu pineapple fried rice"),
+    p(13.95, "Dining", "Beef pad kee mao"),
+    p(13.95, "Dining", "Eggplant with basil leaves"),
+    p(19.95, "Dining", "Curry"),
+    p(7.95, "Dining", "Crab rangoon"),
+    p(9.43, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 4, 10), -9.00, new Vendor("Xavior DeJarnett"), chase, [
+    p(-9, "Dining", "Payback for Bangkok thai on 4/10")
+]),
+
+t(makeDate(2023, 4, 12), 0.00, mattex, visa0078, [
+    p(0.00, "Home Improvement", "HVAC service")
+]),
+
+t(makeDate(2023, 4, 18), 45.78, meijer, capOne, [
+    p(45.78, "Car", "11.987 gal gas at $3.819 per gal")
+]),
+
+t(makeDate(2023, 4, 25), 15.25, costco, visa8042, [
+    p(13.99, "Clothing", "Cargo shorts"),
+    p(1.26, "Colthing", "Tax")
+]),
+
+t(makeDate(2023, 4, 25), 3.89, costco, capOne, [
+    p(1.50, "Dining", "Hot dog"),
+    p(1.99, "Dining", "Cheese pizza slice"),
+    p(0.40, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 4, 25), 15.11, new Vendor("Jarlings custard cup"), capOne, [
+    p(6.90, "Dining", "Fudge brownie deluxe waffle basket"),
+    p(6.65, "Dining", "Berry delight parfait"),
+    p(1.56, "Dining", "Tax")
+]),
+
+t(makeDate(2023, 4, 26), 125.84, new Vendor("HerRoom"), capOne, [
+    p(39.00, "Clothing", "Bra"),
+    p(37.50, "Clothing", "Bra"),
+    p(38.95, "Clothing", "Bra"),
+    p(10.39, "Clothing", "tax")
+]),
+
+//TODO: Figure out when 2 march menards trips were
+
+t(makeDate(2023, 3, 2), 69.06, new Vendor("Rareseeds"), capOne, [
+    p(18.25, "Garden", "2 pink lemonade blueberry plants"),
+    p(18.25, "Garden", "2 top hat blueberry plants"),
+    p(28.50, "Garden", "2 fall gold raspberry plants"),
+    p(4.05, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 3, 2), 327.05, costco, visa0078, [
+    p(16.99, "Housewares", "Queen sheets"),
+    p(16.99, "Housewares", "Queen sheets"),
+    p(5.99, "Groceries", "Popcorn"),
+    p(29.99, "For Matt", "Hairdryer"),
+    p(16.79, "For Matt", "Quart freezer bags"),
+    p(6.49, "For Matt", "Naan dippers"),
+    p(19.99, "For Matt", "Protein bars"),
+    p(6.29, "Groceries", "Potatoes"),
+    p(9.49, "Groceries", "Walnuts"),
+    p(9.99, "Groceries", "Almonds"),
+    p(5.39, "Groceries", "4 lbs fuji apples"),
+    p(16.69, "Groceries", "Ginger beer"),
+    p(5.39, "Groceries", "4 lbs fuji apples"),
+    p(10.89, "Groceries", "Frozen spring rolls"),
+    p(12.99, "For Matt", "Acai bowls"),
+    p(10.49, "Groceries", "Mangoes"),
+    p(9.69, "For Matt", "Noosa yoghurt"),
+    p(5.99, "For Matt", "Tomato medley"),
+    p(2.99, "For Matt", "Blackberries"),
+    p(2.99, "For Matt", "Blackberries"),
+    p(5.79, "For Matt", "Raspberries"),
+    p(89.99, "Both Fun Money", "$100 in nintendo giftcards"),
+    p(8.77, "Groceries", "Tax")
+]),
+
+t(makeDate(2023, 3, 2), 79.41, new Vendor("Home Depot"), visa8042, [
+    p(21.94, "Garden", "Indoor potting mix"),
+    p(18.38, "Home Improvement", "Brad nails"),
+    p(2.12, "Cats", "Shelf brackets"),
+    p(6.97, "Housewares", "Shelf pins"),
+    p(8.97, "For Matt", "Light bulb"),
+    p(14.47, "For Matt", "Light bulb"),
+    p(6.56, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 3, 12), 103.59, farmAndFleet, visa0078, [
+    p(4.99, "Garden", "Green spray paint"),
+    p(4.99, "Garden", "Blue spray paint"),
+    p(8.99, "For Matt", "Parts organizer"),
+    p(2.40, "Cats", "Curry comb"),
+    p(2.99, "Garden", "Terra cotta pot"),
+    p(3.99, "Fish", "Dive sticks"),
+    p(5.99, "For Matt", "Rotary wire brushes"),
+    p(1.92, "Garden", "Zinnia seeds"),
+    p(1.25, "Garden", "Bird suet cake"),
+    p(1.25, "Garden", "Bird suet cake"),
+    p(8.79, "Home Improvement", "Pry bar"),
+    p(47.99, "Woodworking", "Router guide"),
+    p(8.55, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 3, 12), 15.82, harborFreight, visa0078, [
+    p(5.56, "Both Fun Money", "Magnetic tool holder"),
+    p(0.99, "Both Fun Money", "Magnetic parts holder"),
+    p(1.99, "Home Improvement", "Straight pegboard hook"),
+    p(1.99, "Home Improvement", "2 in straight pegboard hooks"),
+    p(1.99, "Home Improvement", "2 in straight pegboard hooks"),
+    p(1.99, "Home Improvement", "Pegboard hooks"),
+    p(1.31, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 3, 16), 32.43, new Vendor("Merry Ann's"), visa8042, [
+    p(32.43, "Dining", "Dinner")
+]),
+
+t(makeDate(2023, 3, 17), 35.71, costco, visa0078, [
+    p(35.71, "Car", "11.026 gal gas")
+]),
+
+t(makeDate(2023, 3, 17), 16.09, new Vendor("Prairie Gardens"), capOne, [
+    p(14.97, "Garden", "Owl planter"),
+    p(1.12, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 3, 19), 21.98, new Vendor("Cracker Barrel"), capOne, [
+    p(14.99, "Vishal Fun Money", "Pokemon clip and go"),
+    p(6.99, "Sewing", "Turtle measuring tape"),
+    p(1.81, "Vishal Fun Money", "Tax")
+]),
+
+t(makeDate(2023, 3, 24), 61.93, new Vendor("Prairie Garden Center"), visa0078, [
+    p(21.67, "Garden", "11 strawberry plants"),
+    p(1.99, "Garden", "Plant seeds"),
+    p(1.99, "Garden", "Plant seeds"),
+    p(1.99, "Garden", "Plant seeds"),
+    p(1.99, "Garden", "Plant seeds"),
+    p(1.99, "Garden", "Plant seeds"),
+    p(3.49, "Meridith Fun Money", "Fudge"),
+    p(11.25, "Vishal Fun Money", "Pinwheel"),
+    p(11.25, "Vishal Fun Money", "Pinwheel"),
+    p(4.32, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 3, 26), 46.17, harborFreight, visa8042, [
+    p(2.39, "Home Improvement", "Ceramic magnet"),
+    p(19.99, "Home Improvement", "16 in digital angle level"),
+    p(9.98, "Home Improvement", "Magnetic tool holder"),
+    p(9.99, "Garden", "Blue tarp"),
+    p(3.82, "Home Improvement", "Tax")
+]),
+
+t(makeDate(2023, 3, 28), 27.98, new Vendor("Walgreens"), chase, [
+    p(6.99, "Groceries", "Ben and Jerrys"),
+    p(7.99, "Groceries", "Dishwasher detergent"),
+    p(2.09, "Groceries", "Hand soap"),
+    p(10.00, "Health", "Prescription"),
+    p(0.91, "Groceries", "Tax")
+]),
+
+t(makeDate(2023, 3, 31), 10.51, new Vendor("Portillos"), visa8042, [
+    p(4.69+0.75, "Dining", "Hot dog"),
+    p(3.99, "Dining", "Garden dog"),
+    p(1.08, "Dining", "Tax")
+]),
+
+new ExternalTransaction(makeDate(2023, 5, 1), -225, Madeline, chase, [
+    p(-225, "Utilities", "Madeline May rent")
+]),
+
+t(makeDate(2023, 5, 5), 70.17, costco, visa8042, [
+    p(8.39, "Housewares", "Collapsible crate"),
+    p(8.39, "Housewares", "Collapsible crate"),
+    p(21.99, "Clothing", "Convertable cargo shorts"),
+    p(26.99, "Clothing", "Workpants"),
+    p(4.41, "Clothing", "Tax")
+]),
+
+t(makeDate(2023, 5, 7), 25.72, new Vendor("Prairie Gardens"), capOne, [
+    p(3.99, "Garden", "Tomato plant"),
+    p(3.99, "Garden", "Tomato plant"),
+    p(3.99, "Garden", "Pepper plant"),
+    p(3.99, "Garden", "Eggplant plant"),
+    p(3.99, "Garden", "Eggplant plant"),
+    p(3.98, "Garden", "2 4 packs of peppers"),
+    p(1.79, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 8), 23.25, new Vendor("Walgreens"), capOne, [
+    p(7.00, "Health", "Cough drops"),
+    p(1.17, "Health", "Prescription"),
+    p(15.00, "Health", "Prescription"),
+    p(0.07, "Health", "Tax")
+]),
+
+t(makeDate(2023, 5, 10), -53.39, costco, visa8042, [
+    p(-53.39, "Clothing", "2 pairs returned pants")
+]),
+
+t(makeDate(2023, 5, 10), 23.13, new Vendor("Rural King"), capOne, [
+    p(23.12, "Garden", "4 lavender plants"),
+    p(2.08, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 10), 30.00, new Vendor("Walgreens"), capOne, [
+    p(15.00, "Health", "Prescription"),
+    p(15.00, "Health", "Prescription")
+]),
+
+t(makeDate(2023, 5, 11), 186.25, costco, visa8042, [
+    p(9.99, "Groceries", "Choc chips"),
+    p(9.99, "Groceries", "Smores bark"),
+    p(8.69, "Groceries", "Life cereal"),
+    p(21.99*3, "Clothing", "3 pair convertible cargo pants"),
+    p(4.99, "Groceries", "Whip cream 3 pack"),
+    p(12.99, "For Matt", "Acai bowl"),
+    p(14.99, "Groceries", "Daybreak cereal"),
+    p(1.39, "Groceries", "Bananas"),
+    p(7.99, "For Matt", "Sliced mozzarella"),
+    p(2.99*2, "For Matt", "2 containers blackberries"),
+    p(5.99*2, "For Matt", "2 containers raspberries"),
+    p(6.29*2, "For Matt", "Celery"),
+    p(5.99, "For Matt", "Tomato medley"),
+    p(4.99, "For Matt", "Eggs"),
+    p(7.74, "Groceries", "Tax")
+]),
+
+t(makeDate(2023, 5, 11), -96.00, Matt, chase, [
+    p(-96, "For Matt", "Payback for 5/11 costco trip")
+]),
+
+t(makeDate(2023, 5, 11), -225, Neil, chase, [
+    p(-225, "Utilities", "Neil may rent")
+]),
+
+t(makeDate(2023, 5, 12), 83.98, new Vendor("Best Buy"), visa8042, [
+    p(50.99, "Both Fun Money", "Animal Crossing for Ani bday"),
+    p(32.99, "Cats", "Microsd card"),
+    p(7.56, "Both Fun Money", "Tax")
+]),
+
+t(makeDate(2023, 5, 12), 40.53, new Vendor("Grubhub"), chase, [
+    p(-40.53, "Dining", "Dinner")
+]),
+
+t(makeDate(2023, 5, 12), 47.96, joann, visa8042, [
+    p(28.00, "Both Fun Money", "Black windchimes"),
+    p(16.00, "Garden", "Green wind chimes"),
+    p(3.86, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 12), 32.65, menards, visa8042, [
+    new Purchase(3.97, "Garden", "Metal tent stake to guide wire trees"),
+    new Purchase(25.98, "Garden", "2 shepherd hooks"),
+    new Purchase(2.70, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 16), 30.87, new Vendor("Prairie Gardens"), capOne, [
+    p(9.97-1, "Garden", "Bird feeder"),
+    p(19.96-2, "Garden", "Plants"),
+    p(1.99-0.2, "Garden", "Annual"),
+    p(2.15, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 17), 53.03, new Vendor("Meatheads"), capOne, [
+    p(10.89, "For Matt", "California burger"),
+    p(13.29, "Dining", "Impossible burger"),
+    p(3.49, "Dining", "Cajun fries"),
+    p(3.49, "Dining", "Normal fries"),
+    p(10.89, "Dining", "Texas ranch burger"),
+    p(0.99, "Dining", "Garlic aioli"),
+    p(0.99, "Dining", "Cucumber wasabi"),
+    p(4.18, "Dining", "Tax"),
+    p(4.82, "Dining", "Tip")
+]),
+
+t(makeDate(2023, 5, 18), 24.80, new Vendor("El toro"), capOne, [
+    p(24.80, "Dining", "Dinner w/ Emma")
+]),
+
+t(makeDate(2023, 5, 19), 111.68, water, chase, [
+    p(111.68, "Utilities", "Apr 2023 water bill")
+]),
+
+t(makeDate(2023, 5, 20), 36.14, new Vendor("Jet's pizza"), capOne, [
+    p(30.12, "Dining", "Pizza bday dinner"),
+    p(6.02, "Dining", "Tip")
+]),
+
+t(makeDate(2023, 5, 29), 174.10, new Vendor("Prairie Gardens"), visa8042, [
+    p(3.99, "Garden", "Plant"),
+    p(7.97, "Garden", "Rain gauge tube"),
+    p(149.99, "Garden", "Apple tree"),
+    p(12.15, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 20), 47.69, sweetbasil, visa8042, [
+    p(18.00, "Dining", "Avocado and Bacon Omelet"),
+    p(17.00, "Dining", "Cinnamon roll french toast combo"),
+    p(3.15, "Dining", "Tax"),
+    p(9.54, "Dining", "Tip")
+]),
+
+t(makeDate(2023, 5, 23), 102.20, costco, visa8042, [
+    p(14.49, "For Matt", "Chili flavored almonds"),
+    p(5.99, "For Matt", "Tomato medley"),
+    p(9.49-3.5, "For Matt", "Noosa yoghurt"),
+    p(10.99, "For Matt", "Fruit tray"),
+    p(7.99, "For Matt", "Organic raspberries"),
+    p(5.99, "Groceries", "Naan bread"),
+    p(13.99-3.50, "Health", "Multivitamins"),
+    p(13.99-3.50, "Health", "Multivitamins"),
+    p(12.79, "Groceries", "Cashews"),
+    p(8.39*2, "Housewares", "2 collapsible crates"),
+    p(0.21, "Groceries", "Tax")
+]),
+
+t(makeDate(2023, 5, 23), 40.06, costco, visa8042, [
+    p(40.06, "Car", "11.684 gal gas at $3.429 per gal")
+]),
+
+t(makeDate(2023, 5, 28), 4.35, menards, visa8042, [
+    p(3.99, "Garden", "mason line for guide wiring trees"),
+    p(0.36, "Garden", "Tax")
+]),
+
+t(makeDate(2023, 5, 31), 71.44, new Vendor("Bread company"), visa8042, [
+    p(9.50, "Dining", "Pear sandwich"),
+    p(9.50, "Dining", "Cheese steak sandwich"),
+    p(7.25, "Groceries", "Jalepeno cheese bread"),
+    p(9.50, "For Matt", "Chicken sandwich"),
+    p(9.50, "Dining", "Veggie sandwich for Ani"),
+    p(6.00, "Dining", "2 lemonades"),
+    p(4.84, "Dining", "Tax"),
+    p(11.10, "Dining", "Tip")
+]),
+
+t(makeDate(2023, 5, 31), -73.75, Matt, chase, [
+    p(-73.75, "For Matt", "Payback for lunch and 5/23 costco trip")
+]),
+
+t(makeDate(2023, 5, 31), 151.00, new Vendor("DMV"), chase, [
+    p(151.00, "Car", "Registration")
+]),
+
 new ExternalTransaction(makeDate(2023, 6, 1), 0.00, epic, visa0078, [
-    new Purchase(0.00, "Meridith fun money", "Midnight Ghost Hunt free offer")
+    new Purchase(0.00, "Meridith Fun Money", "Midnight Ghost Hunt free offer")
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 1), -225, Madeline, chase, [
@@ -58,7 +833,7 @@ new ExternalTransaction(makeDate(2023, 6, 1), -225, Madeline, chase, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 3), -225, Neil, chase, [
-    new Purchase(-225, "utilities", "Neil June Rent")
+    new Purchase(-225, "Utilities", "Neil June Rent")
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 4), 72.96, carle, capOne, [
@@ -86,8 +861,8 @@ new ExternalTransaction(makeDate(2023, 6, 4), 184.25, costco, visa8042, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 5), 84.71, menards, capOne, [
-    new Purchase(12.99, "Gardening", "Safflower seed"),
-    new Purchase(2.28, "Meridith fun money", "Reese's candy"),
+    new Purchase(12.99, "Garden", "Safflower seed"),
+    new Purchase(2.28, "Meridith Fun Money", "Reese's candy"),
     new Purchase(13.28, "Home Improvement", "Wall anchors"),
     new Purchase(3.99, "Cats", "Garbage bags"),
     new Purchase(6.57, "Cats", "Threaded rods for cat flap"),
@@ -127,12 +902,6 @@ new ExternalTransaction(makeDate(2023, 6, 9), 8.12, tacoBell, visa0078, [
 
 new ExternalTransaction(makeDate(2023, 6, 10), 5.00, new Vendor("USPS"), visa0078, [
     new Purchase(5.00, "Cats", "Mailed magic cards")
-]),
-
-new ExternalTransaction(makeDate(2023, 6, 12), 32.65, menards, visa8042, [
-    new Purchase(3.97, "Garden", "Metal tent stake to guide wire trees"),
-    new Purchase(25.98, "Garden", "2 shepherd hooks"),
-    new Purchase(2.70, "Garden", "Tax")
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 14), 51.90, meijer, visa0078, [
@@ -195,14 +964,14 @@ new ExternalTransaction(makeDate(2023, 6, 18), 59.94, amazon, visa0078, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 6, 18), 44.80, new Vendor("Lowes"), visa0078, [
-    new Purchase(4.89, "Gardening", "1/4 in barbed tees 10-pack"),
-    p(5.07, "Gardening", "Back flow valve"),
-    p(2.79, "Gardening", "10 loop stakes"),
-    p(19.98, "Gardening", "4 way hose manifold"),
-    p(3.02, "Gardening", "3/4 in F-F coupling"),
-    p(4.76, "Gardening", "Full flow manifold"),
-    p(0.59, "Gardening", "3/4 x 1/2 in poly adapter"),
-    p(3.70, "Gardening", "Tax")
+    new Purchase(4.89, "Garden", "1/4 in barbed tees 10-pack"),
+    p(5.07, "Garden", "Back flow valve"),
+    p(2.79, "Garden", "10 loop stakes"),
+    p(19.98, "Garden", "4 way hose manifold"),
+    p(3.02, "Garden", "3/4 in F-F coupling"),
+    p(4.76, "Garden", "Full flow manifold"),
+    p(0.59, "Garden", "3/4 x 1/2 in poly adapter"),
+    p(3.70, "Garden", "Tax")
 ]),
 
 t(makeDate(2023, 6, 18), 11, Matt, chase, [
@@ -214,10 +983,10 @@ t(makeDate(2023, 6, 18), 37.05, amazon, visa0078, [
 ]),
 
 t(makeDate(2023, 6, 19), 68.06, amazon, visa0078, [
-    p(15.99, "Gardening", "Drip irrigation nozzles"),
-    p(10.99, "Gardening", "Check valve"),
+    p(15.99, "Garden", "Drip irrigation nozzles"),
+    p(10.99, "Garden", "Check valve"),
     p(16.15, "Home Improvement", "Garage sensors"),
-    p(24.93, "Gardening", "Shipping and taxes")
+    p(24.93, "Garden", "Shipping and taxes")
 ]),
 
 t(makeDate(2023, 6, 22), 62.40, sushikame, visa0078, [
@@ -231,7 +1000,7 @@ t(makeDate(2023, 6, 22), 62.40, sushikame, visa0078, [
 ]),
 
 t(makeDate(2023, 6, 24), 39.23, amazon, visa0078, [
-    p(39.23, "Gardening", "Irrigation timer")
+    p(39.23, "Garden", "Irrigation timer")
 ]),
 
 t(makeDate(2023, 6, 25), 23.54, new Vendor("Chipotle"), visa0078, [
@@ -258,17 +1027,17 @@ t(makeDate(2023, 6, 27), -103, Matt, chase, [
 ]),
 
 t(makeDate(2023, 6, 27), 55.41, new Vendor("Prairie gardens"), visa0078, [
-    p(2.80-0.28, "Gardening", "Pepper plant"),
-    p(3.50-0.35, "Gardening", "Lavender plant"),
-    p(5.99-0.60, "Gardening", "Heliopsis"),
-    p(3.50-0.35, "Gardening", "Basil plant"),
-    p(3.50-0.35, "Gardening", "Cilantro plant"),
-    p(3.50-0.35, "Gardening", "Thai basil"),
-    p(3.50-0.35, "Gardening", "Basil plant"),
-    p(3.50-0.35, "Gardening", "Herb plant"),
-    p(13.99-1.40, "Gardening", "Perennial"),
-    p(16.99-1.70, "Gardening", "Perennial"),
-    p(3.87, "Gardening", "Tax")
+    p(2.80-0.28, "Garden", "Pepper plant"),
+    p(3.50-0.35, "Garden", "Lavender plant"),
+    p(5.99-0.60, "Garden", "Heliopsis"),
+    p(3.50-0.35, "Garden", "Basil plant"),
+    p(3.50-0.35, "Garden", "Cilantro plant"),
+    p(3.50-0.35, "Garden", "Thai basil"),
+    p(3.50-0.35, "Garden", "Basil plant"),
+    p(3.50-0.35, "Garden", "Herb plant"),
+    p(13.99-1.40, "Garden", "Perennial"),
+    p(16.99-1.70, "Garden", "Perennial"),
+    p(3.87, "Garden", "Tax")
 ]),
 
 t(makeDate(2023, 6, 28), 114.00, new Vendor("Courier cafe"), visa8042, [
@@ -434,14 +1203,14 @@ new ExternalTransaction(makeDate(2023, 7, 10), -45, Matt, chase, [
 
 new ExternalTransaction(makeDate(2023, 7, 10), 8.84, menards, visa0078, [
     new Purchase(6.22, "Housewares", "Aluminum flats to make file rails from"),
-    new Purchase(1.89, "Meridith fun money", "Calypso lemonade"),
+    new Purchase(1.89, "Meridith Fun Money", "Calypso lemonade"),
     new Purchase(0.73, "Housewares", "Tax")
 ]),
 
 new ExternalTransaction(makeDate(2023, 7, 11), 22.64, meijer, visa0078, [
     new Purchase(7.99, "Housewares", "File folders"),
     new Purchase(9.99, "Housewares", "Hanging files"),
-    new Purchase(2.79, "Meridith fun money", "Altoids"),
+    new Purchase(2.79, "Meridith Fun Money", "Altoids"),
     new Purchase(1.87, "Housewares", "Tax")
 ]),
 
@@ -525,14 +1294,14 @@ new ExternalTransaction(makeDate(2023, 7, 25), 21.16, joann, visa0078, [
     new Purchase(5.98, "Housewares", "Cube basket"),
     new Purchase(5.98, "Housewares", "Cube basket"),
     new Purchase(5.98, "Housewares", "Cube basket"),
-    new Purchase(1.50, "Vishal fun money", "Bubble wand"),
+    new Purchase(1.50, "Vishal Fun Money", "Bubble wand"),
     new Purchase(1.72, "Housewares", "Tax")
 ]),
 
 new ExternalTransaction(makeDate(2023, 7, 28), 35.39, new Vendor("Harbor Freight"), visa8042, [
-    new Purchase(12.99, "Both fun money", "De-Soldering kit for Dad's bday"),
-    new Purchase(19.48, "Both fun money", "Soldering iron for dad's bday"),
-    new Purchase(2.92, "Both fun money", "Tax")
+    new Purchase(12.99, "Both Fun Money", "De-Soldering kit for Dad's bday"),
+    new Purchase(19.48, "Both Fun Money", "Soldering iron for dad's bday"),
+    new Purchase(2.92, "Both Fun Money", "Tax")
 ]),
 
 new ExternalTransaction(makeDate(2023, 7, 28), 40.80, chewy, visa0078, [
@@ -2381,7 +3150,7 @@ new ExternalTransaction(makeDate(2024, 2, 7), 50.00, elliot, visa3408, [
     new Purchase(50.00, "Health", "Therapy copay")
 ]),
 
-new ExternalTransaction(makeDate(2023, 2, 8), 81.73, chewy, visa3408, [
+new ExternalTransaction(makeDate(2024, 2, 8), 81.73, chewy, visa3408, [
     new Purchase(81.73, "Cats", "Cat food")
 ]),
 
@@ -2415,7 +3184,7 @@ new ExternalTransaction(makeDate(2024, 2, 11), 40.50, new Vendor("Jets pizza"), 
     new Purchase(40.50, "Dining", "Pizza dinner")
 ]),
 
-new ExternalTransaction(makeDate(2023, 2, 12), 439.96, costco, visa3408, [
+new ExternalTransaction(makeDate(2024, 2, 12), 439.96, costco, visa3408, [
     new Purchase(199.97, "Home Improvement", "DVR camera set"),
     new Purchase(9.99, "Groceries", "Oat milk"),
     new Purchase(13.99, "For Matt", "Frozen chicken"),
@@ -2529,7 +3298,7 @@ new ExternalTransaction(makeDate(2024, 2, 25), 35.82, meijer, visa3408, [
     new Purchase(3.29, "Groceries", "4 lbs sugar"),
     new Purchase(20.99, "Cats", "cat litter"),
     new Purchase(1.99, "Groceries", "clementines"),
-    new Purchase(1.49, "M Fun Money", "Discount chocolates"),
+    new Purchase(1.49, "Meridith Fun Money", "Discount chocolates"),
     new Purchase(2.57, "Cats", "Tax")
 ]),
 
@@ -2659,7 +3428,7 @@ new ExternalTransaction(makeDate(2024, 3, 6), 335.45, costco, visa3408, [
     new Purchase(13.99, "Groceries", "Fruit bars"),
     new Purchase(11.99, "Groceries", "Goldfish"),
     new Purchase(8.99, "Groceries", "Almonds"),
-    new Purchase(5.99, "Matt", "Cucumbers"),
+    new Purchase(5.99, "For Matt", "Cucumbers"),
     new Purchase(5.49, "Groceries", "Strawberries"),
     new Purchase(5.99-2.30, "Groceries", "Popcorn"),
     new Purchase(12.99, "Groceries", "Individual guac packs"),
@@ -2781,10 +3550,10 @@ new ExternalTransaction(makeDate(2024, 3, 23), 64.74, meijer, visa3408, [
 ]),
 
 new ExternalTransaction(makeDate(2024, 3, 24), 28.27, new Vendor("Lowes"), visa3408, [
-    new Purchase(13.98, "Gardening", "Rabbit repellent"),
-    new Purchase(6.98, "Gardening", "Orchid"),
+    new Purchase(13.98, "Garden", "Rabbit repellent"),
+    new Purchase(6.98, "Garden", "Orchid"),
     new Purchase(4.98, "Home Improvement", "Caulk"),
-    new Purchase(2.33, "Gardening", "Tax")
+    new Purchase(2.33, "Garden", "Tax")
 ]),
 
 new ExternalTransaction(makeDate(2024, 3, 24), 45.62, sweetbasil, visa3408, [
@@ -2821,5 +3590,58 @@ new ExternalTransaction(makeDate(2024, 3, 26), 163.84, costco, visa3408, [
     new Purchase(10.99, "Groceries", "Choc chips"),
     new Purchase(12.49, "Groceries", "Cashews"),
     new Purchase(6.03, "For Matt", "Tax")
+]),
+
+t(makeDate(2024, 3, 29), 7.50, new Vendor("McDonalds"), visa8042, [
+    p(2.99, "Dining", "Med french fries"),
+    p(3.99, "Dining", "Caramel coffee"),
+    p(0.52, "Dining", "Tax")
+]),
+
+t(makeDate(2024, 3, 29), 15.01, meijer, visa3408, [
+    p(15.01, "Car", "5.054 gal gas at $2.969 per gal")
+]),
+
+t(makeDate(2024, 3, 29), 12.52, new Vendor("Subway"), visa8042, [
+    p(4.99, "Dining", "6 inch veggie delight"),
+    p(6.39, "Dining", "6 inch turkey sub"),
+    p(1.14, "Dining", "Tax")
+]),
+
+t(makeDate(2024, 4, 1), 368.22, costco, visa8042, [
+    p(69.99, "Both Fun Money", "Axe throwing game"),
+    p(16.79, "For Matt", "Tyson chicken"),
+    p(14.49, "For Matt", "Pistachios"),
+    p(5.89, "For Matt", "sweet kale salad"),
+    p(5.99, "For Matt", "Celery sticks"),
+    p(8.99, "For Matt", "Mediterranian salad"),
+    p(11.99, "For Matt", "Dates"),
+    p(5.59, "For Matt", "Mini peppers"),
+    p(5.99, "For Matt", "Cucumbers"),
+    p(5.49, "For Matt", "Carrots"),
+    p(15.99, "For Matt", "Protein bars"),
+    p(9.99, "For Matt", "Bunch lettuce?"),
+    p(9.99, "For Matt", "Choc covered mangoes"),
+    p(5.89*2, "For Matt", "2 containers raspberries"),
+    p(2.99*3, "For Matt", "3 containers blackberries"),
+    p(8.99, "For Matt", "Cocoa cereal"),
+    p(6.99, "For Matt", "4 lbs honeycrisp apples"),
+    p(19.49, "Groceries", "Toilet paper"),
+    p(16.99, "Groceries", "Tuxedo cake"),
+    p(6.99*2, "Groceries", "8 lbs honeycrisp apples"),
+    p(5.99, "Groceries", "Popcorn"),
+    p(8.99, "Groceries", "Pepperoni bagel bites"),
+    p(36.99, "Both Fun Money", "Lego plants for Ani"),
+    p(6.69, "Groceries", "Mandarins"),
+    p(14.49, "Health", "Allergy medicine"),
+    p(3.99, "Groceries", "Churro puffs"),
+    p(15.72, "Both Fun Money", "Tax")
+]),
+
+t(makeDate(2024, 4, 1), 28.98, menards, visa8042, [
+    p(5.98, "Housewares", "2 yankee whisks"),
+    p(28.98, "Home Improvement", "Garage door remote"),
+    p(2.99, "Housewares", "Mini spatula"),
+    p(3.42, "Housewares", "Tax")
 ])
 ]

@@ -21,8 +21,9 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
     // * Temporary hard-coded times
     // let startTime = new Date(2023, 8, 15)
     // let endTime = new Date(2023, 8, 25)
-    let startTime = sortedTransactions[0].time;
-    let endTime = sortedTransactions[sortedTransactions.length-1].time;
+    const startTime = sortedTransactions[0].time;
+    const endTime = sortedTransactions[sortedTransactions.length-1].time;
+    // console.log("Graphing from ", startTime, endTime)
 
     sortedTransactions = sortedTransactions.slice(
         sortedTransactions.findIndex(x => ! JsSort.ResultEquals(laterDateFirstSort(x.time, startTime), JsSort.ResultType.RightArgFirst)),
@@ -94,7 +95,7 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
                                 <h3 style={{textAlign:"center"}}>{bucketName}</h3>
                                 <WantsSpendTrackingGraph 
                                     bucket={bucketName}
-                                    bucketBalanceTimeline={bucketBalanceTimeline}
+                                    // bucketBalanceTimeline={bucketBalanceTimeline}
                                     bucketSpendingTimeline={purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
                                     bucketBudgetTimeline={bucketBudgets.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
                                     startingBalances={props.bucketBalanceHistory.getValue(startTime) || {}}
