@@ -44,7 +44,7 @@ function makeDate(year: number, month: number, day: number) {
 }
 
 function p(...x: ConstructorParameters<typeof Purchase>) { return new Purchase(...x) }
-function t(...x: ConstructorParameters<typeof ExternalTransaction>) { return new ExternalTransaction(...x) }
+function t<T>(...x: ConstructorParameters<typeof ExternalTransaction<T>>) { return new ExternalTransaction(...x) }
 
 export const sampleInitialDate = new Date(2023, 6);
 

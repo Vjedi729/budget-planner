@@ -6,7 +6,7 @@ import { BasicHistoryOf, HistoryOf } from "@/data/history"
 import { BudgetConfig } from "@/data/budgetConfig"
 
 export function TestDataToSpendTrackingProps(
-    startDate: Date = new Date(2023, 7, 29), 
+    startDate: Date = new Date(2020, 2, 14), 
     endDate: Date = new Date(Date.now())
 ): InnerSpendTrackingComponentProps {
 

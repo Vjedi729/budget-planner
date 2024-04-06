@@ -133,8 +133,10 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
                                     bucket={bucketName}
                                     bucketSpendingHistory={purchaseAmounts}
                                     startingBalances={startingBalances}
-                                    pastSpendingOffset={DateDayOffset(-7)}
-                                    pastSpendingString={(i: number) => `${i} week${i==1?'':'s'} ago`}
+                                    // pastSpendingOffset={DateDayOffset(-7)}
+                                    // pastSpendingString={(i: number) => `${i} week${i==1?'':'s'} ago`}
+                                    pastSpendingOffset={DateMonthOffset(-1)}
+                                    pastSpendingString={(i: number) => `${i} month${i==1?'':'s'} ago`}
                                     pastSpendingTransparencyMultiplier={0.6}
                                     startTime={startTime} endTime={endTime}
                                 />
