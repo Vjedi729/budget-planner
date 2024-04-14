@@ -9,6 +9,7 @@ import { BasicHistoryOf, HistoryOf } from "./history"
 
 import { cloneDeep, includes } from "lodash"
 import { JsSort } from "@/ts-utils/sort-utils"
+import { filterRecord } from "@/ts-utils/record-utils"
 
 export const testAccount = new Account("[CREDIT] Costco Citi Visa *8042")
 export const testTransactionData: ExternalTransaction[] = [
@@ -32,7 +33,7 @@ export const testBudgetData: BudgetConfig<"Vishal Fun Money"|"Meridith Fun Money
     needs: {
         bucketNames: [
             "Home Improvement",
-            "Shelter", 
+            "Housing", 
             "Groceries", 
             "Utilities", 
             "Car", 
@@ -79,6 +80,10 @@ _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetHistory = _testBudgetHistory;
 
 export type BucketBalance = Record<BucketName, number>
+
+export function GetGroupBalance(bucketBalance: BucketBalance, buckets: BucketName[]) {
+    return Object.values(filterRecord(bucketBalance, buckets, 0)).reduce((p,c)=>p+c,0)
+}
 
 export function fillWantsBuckets(
     bucketBalances: BucketBalance, budget: BudgetConfig, wantsDollarsToAdd: number

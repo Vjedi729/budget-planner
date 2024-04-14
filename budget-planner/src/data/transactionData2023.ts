@@ -1471,7 +1471,7 @@ new ExternalTransaction(makeDate(2023, 9, 2), 38.15, new Vendor("Walnut Street T
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, meijer, visa3408, [
-    {price: 22.00, bucket: "Clothing", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
+    {price: 22.00, bucket: "Clothes", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, new Vendor("Meijer"), visa3408, [

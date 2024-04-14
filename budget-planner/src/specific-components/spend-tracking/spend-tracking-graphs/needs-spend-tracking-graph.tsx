@@ -1,4 +1,4 @@
-import { BucketBalance } from "@/data/testData";
+import { BucketBalance, GetGroupBalance } from "@/data/testData";
 import { HistoryOf, TimelineOf } from "@/data/history";
 import { BucketName } from "@/data/enums";
 
@@ -30,6 +30,7 @@ ChartJS.register(
 import 'chartjs-adapter-moment';
 import { Line as LineChart } from "react-chartjs-2";
 import { plotDataFromTimeline } from "./wants-spend-tracking-graph";
+import { JsSort } from "@/ts-utils/sort-utils";
 
 export interface NeedsSpendingProps<TimeType = Date> {
     startingBalances: BucketBalance
@@ -38,7 +39,7 @@ export interface NeedsSpendingProps<TimeType = Date> {
     pastSpendingString?: (pastI: number) => string
     pastSpendingTransparencyMultiplier?: number
     bucketSpendingPrediction?: TimelineOf<BucketBalance, TimeType>
-    bucket: BucketName,
+    buckets: BucketName[],
     startTime: TimeType,
     endTime: TimeType,
     chartOptions?: ChartOptions<"line">
@@ -57,14 +58,14 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
     
     let datasets = [                
         plotDataFromTimeline(
-            "Actual", props.bucket, props.bucketSpendingHistory.getValues(props.startTime, props.endTime),
+            "Actual", props.buckets, props.bucketSpendingHistory.getValues(props.startTime, props.endTime),
             [230, 250, 10], {}, x => -x
         ),
         plotDataFromTimeline(
-            "Predicted", props.bucket, props.bucketSpendingPrediction || [],
+            "Predicted", props.buckets, props.bucketSpendingPrediction || [],
             [30, 200, 220]
-            )
-        ]
+        )
+    ]
         
     const pastSpendingString = props.pastSpendingString || ((i:number) => `${i}`)
     let pastStartTime = props.startTime;
@@ -74,6 +75,7 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
     while(true) {
         pastStartTime = props.pastSpendingOffset(pastStartTime)
         pastEndTime = props.pastSpendingOffset(pastEndTime)
+        if(JsSort.IsRightArgFirst(props.bucketSpendingHistory.laterTimeFirstSort, pastStartTime, props.bucketSpendingHistory.initialTime)) break;
         const pastSpendingTimeline = props.bucketSpendingHistory.getValues(pastStartTime, pastEndTime).map(x => {
             let start = x.start;
             let end = x.end;
@@ -92,8 +94,8 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
         let pastSpendingTimelineStartValues = props.bucketSpendingHistory.getValue(pastStartTime, false) || {};
 
         datasets.push(plotDataFromTimeline(
-            `Historical (${pastSpendingString(pastI+1)})`, props.bucket, pastSpendingTimeline,
-            [170, 30, 220, pastTransparencyMultiplier], {}, x => -(x- (pastSpendingTimelineStartValues[props.bucket] || 0))
+            `Historical (${pastSpendingString(pastI+1)})`, props.buckets, pastSpendingTimeline,
+            [170, 30, 220, pastTransparencyMultiplier], {}, x => -(x-GetGroupBalance(pastSpendingTimelineStartValues, props.buckets))
         ))
 
         pastTransparencyMultiplier *= props.pastSpendingTransparencyMultiplier == undefined ? 0.6 : props.pastSpendingTransparencyMultiplier
