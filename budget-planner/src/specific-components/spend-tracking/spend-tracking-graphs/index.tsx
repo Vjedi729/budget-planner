@@ -67,8 +67,6 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
             </form>
 
             <SpendTrackingGraphColumns props={props} startTime={startTime} endTime={endTime}/>
-            
-
         </div>
     )
 }
