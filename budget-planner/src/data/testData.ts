@@ -15,10 +15,10 @@ export const testAccount = new Account("[CREDIT] Costco Citi Visa *8042")
 export const testTransactionData: ExternalTransaction[] = [
     new ExternalTransaction(new Date(2023,8,20), 34.14, new Vendor("Meijer"), testAccount),
     new ExternalTransaction(new Date(2023,8,23), 102.54, new Vendor("Costco"), testAccount, [
-        { price: 4.99, bucket: "Groceries", description: { name: "Strawberries", description: ""} },
-        { price: 11.99, bucket: "For Matt", description: { name: "Fig Chocolate", description: ""} },
-        { price: 8.69, bucket: "Groceries", description: { name: "Blueberry Acai Chocolates", description: ""} },
-        { price: 15.99, bucket: "Groceries", description: { name: "Sharp Cheddar Cheese", description: ""} }
+        new Purchase(4.99, "Groceries", "Strawberries", ""),
+        new Purchase(11.99, "For Matt", "Fig Chocolate", ""),
+        new Purchase(8.69, "Groceries", "Blueberry Acai Chocolates", ""),
+        new Purchase(15.99, "Groceries", "Sharp Cheddar Cheese", "")
     ])
 ]
 

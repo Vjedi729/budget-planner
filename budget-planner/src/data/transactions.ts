@@ -2,7 +2,7 @@
 
 import { Account } from "./account"
 import { BucketName } from "./enums"
-import { Purchase } from "./purchase"
+import { Purchase, PurchaseConfig } from "./purchase"
 import { Vendor } from "./vendor"
 import { Schedule } from "./rschedule"
 
@@ -30,14 +30,10 @@ export class ExternalTransaction<TimeType = Date> {
     }
 
     getRemainderPurchase(): Purchase {
-        return { 
-            price: this.remainderPrice(),
-            bucket: BucketName.NONE,
-            description: {
-                name: "Unaccounted",
-                description: "The amount of transaction not accounted for by any purchase."
-            }
-        }
+        return new Purchase(
+            this.remainderPrice(), BucketName.NONE, 
+            "Unaccounted", "The amount of transaction not accounted for by any purchase."
+        )
     }
 }
 
