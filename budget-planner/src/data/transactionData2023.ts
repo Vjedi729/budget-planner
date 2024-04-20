@@ -3,6 +3,9 @@ import { Account } from "./account"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { Vendor } from "./vendor"
+import { makeDate } from "./helperFunctions";
+import { t } from "./helperFunctions"
+import { p } from "./helperFunctions";
 import { Mandali } from "next/font/google";
 //import { takeCoverage } from "v8";
 
@@ -64,12 +67,6 @@ const chilis = new Vendor("Chili's")
 const sewer = new Vendor("Urbana Sanitary District")
 const lamixteca = new Vendor("La Mixteca")
 
-function makeDate(year: number, month: number, day: number): Date {
-    return new Date(year, month-1, day, 1)
-}
-
-function p(...x: ConstructorParameters<typeof Purchase>) { return new Purchase(...x) }
-function t<T>(...x: ConstructorParameters<typeof ExternalTransaction<T>>) { return new ExternalTransaction(...x) }
 
 export const sampleInitialDate = new Date(2021, 2, 1);
 

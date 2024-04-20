@@ -42,13 +42,13 @@ export class ExternalTransaction<TimeType = Date> {
 }
 
 export interface InternalTransaction<TimeType = Date> {
-    readonly timeSent: TimeType
-    readonly accountSent: Account
+    timeSent: TimeType
+    accountSent: Account
 
-    readonly timeReceived: TimeType
-    readonly accountReceived: Account
+    timeReceived: TimeType
+    accountReceived: Account
 
-    readonly amount: number
+    amount: number
 }// TODO: Transaction super-class?
 
 //interface for how reccurences need to work 
