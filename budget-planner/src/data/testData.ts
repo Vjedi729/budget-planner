@@ -9,15 +9,16 @@ import { BasicHistoryOf, HistoryOf } from "./history"
 
 import { cloneDeep, includes } from "lodash"
 import { JsSort } from "@/ts-utils/sort-utils"
+import { filterRecord } from "@/ts-utils/record-utils"
 
 export const testAccount = new Account("[CREDIT] Costco Citi Visa *8042")
 export const testTransactionData: ExternalTransaction[] = [
     new ExternalTransaction(new Date(2023,8,20), 34.14, new Vendor("Meijer"), testAccount),
     new ExternalTransaction(new Date(2023,8,23), 102.54, new Vendor("Costco"), testAccount, [
-        { price: 4.99, bucket: "Groceries", description: { name: "Strawberries", description: ""} },
-        { price: 11.99, bucket: "For Matt", description: { name: "Fig Chocolate", description: ""} },
-        { price: 8.69, bucket: "Groceries", description: { name: "Blueberry Acai Chocolates", description: ""} },
-        { price: 15.99, bucket: "Groceries", description: { name: "Sharp Cheddar Cheese", description: ""} }
+        new Purchase(4.99, "Groceries", "Strawberries", ""),
+        new Purchase(11.99, "For Matt", "Fig Chocolate", ""),
+        new Purchase(8.69, "Groceries", "Blueberry Acai Chocolates", ""),
+        new Purchase(15.99, "Groceries", "Sharp Cheddar Cheese", "")
     ])
 ]
 
@@ -32,7 +33,7 @@ export const testBudgetData: BudgetConfig<"Vishal Fun Money"|"Meridith Fun Money
     needs: {
         bucketNames: [
             "Home Improvement",
-            "Shelter", 
+            "Housing", 
             "Groceries", 
             "Utilities", 
             "Car", 
@@ -79,6 +80,10 @@ _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetHistory = _testBudgetHistory;
 
 export type BucketBalance = Record<BucketName, number>
+
+export function GetGroupBalance(bucketBalance: BucketBalance, buckets: BucketName[]) {
+    return Object.values(filterRecord(bucketBalance, buckets, 0)).reduce((p,c)=>p+c,0)
+}
 
 export function fillWantsBuckets(
     bucketBalances: BucketBalance, budget: BudgetConfig, wantsDollarsToAdd: number

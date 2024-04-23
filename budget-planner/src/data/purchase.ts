@@ -1,21 +1,31 @@
 import { BucketName } from "./enums"
+import { SpendingBucket } from "./spendingBucket"
 export interface TextDescription {
     name: string
     description: string
 }
 
-export interface Purchase {
+export interface PurchaseConfig {
     price: number
-    bucket: BucketName
+    reason: BucketName
     description: TextDescription
 }
 
+export interface Purchase extends PurchaseConfig {}
 export class Purchase {
-    constructor(price: number, bucket: BucketName, name: string, description: string = "") {
+    constructor(price: number, reason: BucketName | string, name: string, description: string = "") {
         this.price = price;
-        this.bucket = bucket
+        this.reason = reason;
         this.description = {
             name: name, description: description
         }
+    }
+
+    public get bucket() { return SpendingBucket.BucketPseudonyms[this.reason] || this.reason }
+    
+    getBucketDesc() { return (this.reason != this.bucket) ? `${this.bucket} (${this.reason})` : this.reason}
+
+    static fromConfig(p: PurchaseConfig) {
+        return new Purchase(p.price, p.reason, p.description.name, p.description.description);
     }
 }

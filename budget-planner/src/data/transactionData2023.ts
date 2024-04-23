@@ -1539,40 +1539,40 @@ new ExternalTransaction(makeDate(2023, 8, 30), -53, Matt, chase, [
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 2), 53.14, new Vendor("Sweet Basil Cafe"), visa8042, [
-    {price: 17.00, bucket: "Dining", description: { name: "Philly Beef Sandwich", description: ""} },
-    {price: 16.00, bucket: "Dining", description: {name: "California Stuffed Cheesecake", description: ""} },
-    {price: 6.00, bucket: "Dining", description: {name:"Milkshake", description: ""} },
-    {price: 3.51, bucket: "Dining", description: {name: "Taxes", description: ""} },
-    {price: 10.63, bucket: "Dining", description: {name: "Tip", description: ""} }
-]),
+    {price: 17.00, reason: "Dining", description: { name: "Philly Beef Sandwich", description: ""} },
+    {price: 16.00, reason: "Dining", description: {name: "California Stuffed Cheesecake", description: ""} },
+    {price: 6.00, reason: "Dining", description: {name:"Milkshake", description: ""} },
+    {price: 3.51, reason: "Dining", description: {name: "Taxes", description: ""} },
+    {price: 10.63, reason: "Dining", description: {name: "Tip", description: ""} },
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 2), 38.15, new Vendor("Walnut Street Tea Co."), visa8042, [
-    {price: 35.00, bucket: "Meridith Fun Money", description: {name: "Blue Zoku Water Bottle", description: ""} },
-    {price: 3.15, bucket: "Meridith Fun Money", description: {name: "Taxes", description: ""} }
+    Purchase.fromConfig({price: 35.00, reason: "Meridith Fun Money", description: {name: "Blue Zoku Water Bottle", description: ""} }),
+    Purchase.fromConfig({price: 3.15, reason: "Meridith Fun Money", description: {name: "Taxes", description: ""} })
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, meijer, visa3408, [
-    {price: 22.00, bucket: "Clothing", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
+    Purchase.fromConfig({price: 22.00, reason: "Clothes", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} }),
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 5), 88.42, new Vendor("Meijer"), visa3408, [
-    {price: 22.00, bucket: "Clothes", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
-    {price: 1.70, bucket: "Groceries", description: {name: "CHILI BEANS", description:"8 oz canned chili beans"} },
-    {price: 1.09, bucket: "Groceries", description: {name: "DRY PASTA", description: ""} },
-    {price: 1.09, bucket: "Groceries", description: {name: "PASTA", description: ""} },
-    {price: 1.59, bucket: "Groceries", description: {name: "NOODLES", description: "Ramen Noodles"} },
-    {price: 2.79, bucket: "Groceries", description: {name: "HONEY WHEAT", description: "Wheat Bread"} },
-    {price: 3.29, bucket: "Groceries", description: {name: "LIFEWAY KEFIR", description: "Yogurt Drink"} },
-    {price: 3.79, bucket: "Groceries", description: {name: "MEIJER BUTTER", description: "Butter Sticks"} },
-    {price: 4.69, bucket: "Groceries", description: {name: "OVALTINE", description: ""} },
-    {price: 4.99, bucket: "Groceries", description: {name: "ICED COFFEE", description: ""} },
-    {price: 6.49, bucket: "Groceries", description: {name: "METHOD TUB TILE", description: "Bathroom Cleaner"} },
-    {price: 6.69, bucket: "Groceries", description: {name: "CEREAL", description: "Life Cinnamon Cereal"} },
-    {price: 10.99, bucket: "Cats", description: {name: "PRNA DRY CAT", description: "Emergency cat kibble"} },
-    {price: 15.99, bucket: "Cats", description: {name: "TIDY CATS", description: "Cat Litter"} },
-    {price: 3.09, bucket: "Meridith Fun Money", description: {name: "KETTLE CHIPS", description: "Kettle potato chips"} },
-    {price: 4.75, bucket: "Groceries", description: {name: "Taxes", description: ""} }
-]),
+    {price: 22.00, reason: "Clothes", description: {name: "OR BLTD MAXI DRESS", description: "Green Maxi Dress, returned"} },
+    {price: 1.70, reason: "Groceries", description: {name: "CHILI BEANS", description:"8 oz canned chili beans"} },
+    {price: 1.09, reason: "Groceries", description: {name: "DRY PASTA", description: ""} },
+    {price: 1.09, reason: "Groceries", description: {name: "PASTA", description: ""} },
+    {price: 1.59, reason: "Groceries", description: {name: "NOODLES", description: "Ramen Noodles"} },
+    {price: 2.79, reason: "Groceries", description: {name: "HONEY WHEAT", description: "Wheat Bread"} },
+    {price: 3.29, reason: "Groceries", description: {name: "LIFEWAY KEFIR", description: "Yogurt Drink"} },
+    {price: 3.79, reason: "Groceries", description: {name: "MEIJER BUTTER", description: "Butter Sticks"} },
+    {price: 4.69, reason: "Groceries", description: {name: "OVALTINE", description: ""} },
+    {price: 4.99, reason: "Groceries", description: {name: "ICED COFFEE", description: ""} },
+    {price: 6.49, reason: "Groceries", description: {name: "METHOD TUB TILE", description: "Bathroom Cleaner"} },
+    {price: 6.69, reason: "Groceries", description: {name: "CEREAL", description: "Life Cinnamon Cereal"} },
+    {price: 10.99, reason: "Cats", description: {name: "PRNA DRY CAT", description: "Emergency cat kibble"} },
+    {price: 15.99, reason: "Cats", description: {name: "TIDY CATS", description: "Cat Litter"} },
+    {price: 3.09, reason: "Meridith Fun Money", description: {name: "KETTLE CHIPS", description: "Kettle potato chips"} },
+    {price: 4.75, reason: "Groceries", description: {name: "Taxes", description: ""} },
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 6), 322.57, ameren, chase, [
     new Purchase(322.57, "Utilities", "Electric for August 2023")
@@ -1584,80 +1584,80 @@ new ExternalTransaction(makeDate(2023, 9, 6), 72.96, carle, chase, [
 
 
 new ExternalTransaction(makeDate(2023, 9, 7), 41.26, new Vendor("Papa Dels"), visa3408, [
-    {price: 41.26, bucket: "Dining", description: {name: "Pizza dinner", description: ""}}
+    Purchase.fromConfig({price: 41.26, reason: "Dining", description: {name: "Pizza dinner", description: ""}})
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, meijer, visa3408, [
-    {price: 1.99, bucket: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
-    {price: 3.99, bucket: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
-]),
+    {price: 1.99, reason: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
+    {price: 3.99, reason: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 68.95, new Vendor("Meijer"), visa3408, [
-    {price: 1.99, bucket: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
-    {price: 3.99, bucket: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
-    {price: 4.99, bucket: "Meridith Fun Money", description: {name: "CRAFT WOOD", description: "Wooden box to put CCs in"}},
-    {price: 1.09, bucket: "Groceries", description: {name: "EGGS", description: "dozen eggs"}},
-    {price: 3.38, bucket: "Groceries", description: {name: "MILK", description: "2 gallons of 1% milk"}},
-    {price: 1.79, bucket: "Groceries", description: {name: "CREAM CHEESE", description: "8 oz cream cheese"}},
-    {price: 2.29, bucket: "Groceries", description: {name: "PRETZELS", description: ""}},
-    {price: 2.39, bucket: "Groceries", description: {name: "MEIJER SYRUP", description: "Sugar Pancake Syrup"}},
-    {price: 2.48, bucket: "Groceries", description: {name: "MILK", description: "Half gallon whole milk"}},
-    {price: 3.69, bucket: "Groceries", description: {name: "STRAWBERRIES", description: ""}},
-    {price: 3.99, bucket: "Groceries", description: {name: "PRETZEL STICKS", description: "Gluten free pretzels"}},
-    {price: 5.19, bucket: "Groceries", description: {name: "BLUEBERRIES", description: ""}},
-    {price: 12.58, bucket: "Groceries", description: {name: "BREAD MIX", description: "2 boxes Gluten free waffle mix"}},
-    {price: 17.99, bucket: "Groceries", description: {name: "MEIJER SYRUP", description: "16 oz jug Maple Syrup"}},
-    {price: 2.69, bucket: "Groceries", description: {name: "CANTALOUPES", description: "1 cantaloupe"}},
-    {price: 6.99, bucket: "Groceries", description: {name: "VEGGIE STRAWS", description: ""}},
-    {price: 0.58, bucket: "Groceries", description: {name: "1% Tax", description: ""}},
-    {price: 0.86, bucket: "Home Improvement", description: {name: "9% Tax", description: ""}}
-]),
+    {price: 1.99, reason: "Home Improvement", description: {name: "POSTER TACK", description: "Sticky tack for cabinet labels"}},
+    {price: 3.99, reason: "Home Improvement", description: {name: "WOOD SHAPES", description: "Wood shapes to make kitchen cabinet labels"}},
+    {price: 4.99, reason: "Meridith Fun Money", description: {name: "CRAFT WOOD", description: "Wooden box to put CCs in"}},
+    {price: 1.09, reason: "Groceries", description: {name: "EGGS", description: "dozen eggs"}},
+    {price: 3.38, reason: "Groceries", description: {name: "MILK", description: "2 gallons of 1% milk"}},
+    {price: 1.79, reason: "Groceries", description: {name: "CREAM CHEESE", description: "8 oz cream cheese"}},
+    {price: 2.29, reason: "Groceries", description: {name: "PRETZELS", description: ""}},
+    {price: 2.39, reason: "Groceries", description: {name: "MEIJER SYRUP", description: "Sugar Pancake Syrup"}},
+    {price: 2.48, reason: "Groceries", description: {name: "MILK", description: "Half gallon whole milk"}},
+    {price: 3.69, reason: "Groceries", description: {name: "STRAWBERRIES", description: ""}},
+    {price: 3.99, reason: "Groceries", description: {name: "PRETZEL STICKS", description: "Gluten free pretzels"}},
+    {price: 5.19, reason: "Groceries", description: {name: "BLUEBERRIES", description: ""}},
+    {price: 12.58, reason: "Groceries", description: {name: "BREAD MIX", description: "2 boxes Gluten free waffle mix"}},
+    {price: 17.99, reason: "Groceries", description: {name: "MEIJER SYRUP", description: "16 oz jug Maple Syrup"}},
+    {price: 2.69, reason: "Groceries", description: {name: "CANTALOUPES", description: "1 cantaloupe"}},
+    {price: 6.99, reason: "Groceries", description: {name: "VEGGIE STRAWS", description: ""}},
+    {price: 0.58, reason: "Groceries", description: {name: "1% Tax", description: ""}},
+    {price: 0.86, reason: "Home Improvement", description: {name: "9% Tax", description: ""}}
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 7.75, meijer, visa3408, [
-    {price: 5.99, bucket: "Housewares", description: {name: "R+R CFT PILLOW", description: "Pillow for guest room"}},
-    {price: 1.12, bucket: "Vishal Fun Money", description: {name: "XKITES", description: "Kite string reel"}},
-    {price: 0.64, bucket: "Housewares", description: {name: "9% tax", description: ""}}
-]),
+    {price: 5.99, reason: "Housewares", description: {name: "R+R CFT PILLOW", description: "Pillow for guest room"}},
+    {price: 1.12, reason: "Vishal Fun Money", description: {name: "XKITES", description: "Kite string reel"}},
+    {price: 0.64, reason: "Housewares", description: {name: "9% tax", description: ""}}
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 8), 7.89, meijer, visa3408, [
-    {price: 4.99, bucket: "Housewares", description: {name: "VERSACHALK", description: "Liquid chalk marker"}},
-    {price: 2.25, bucket: "Housewares", description: {name: "SG CHALK EASEL", description: "Small chalk signs"}},
-    {price: 0.65, bucket: "Housewares", description: {name: "9% tax", description: ""}}
-]),
+    {price: 4.99, reason: "Housewares", description: {name: "VERSACHALK", description: "Liquid chalk marker"}},
+    {price: 2.25, reason: "Housewares", description: {name: "SG CHALK EASEL", description: "Small chalk signs"}},
+    {price: 0.65, reason: "Housewares", description: {name: "9% tax", description: ""}}
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 11), 35, new Vendor("Hair stylist"), chase, [
     new Purchase(35, "Health", "Haircut after hair donation")
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 12), 120.00, costco, visa8042, [
-    {price: 120.00, bucket: "Groceries", description: {name: "EXGS RENEW", description: "Costco membership renewal"}}
-]),
+    {price: 120.00, reason: "Groceries", description: {name: "EXGS RENEW", description: "Costco membership renewal"}}
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 12), 203.56, costco, visa3408, [
-    {price: 10.79, bucket: "For Matt", description: {name: "ORG STRAWBRRY", description: "Organic Strawberries"}},
-    {price: 10.99, bucket: "For Matt", description: {name: "PLACKERS FLS", description: ""}},
-    {price: 11.99, bucket: "For Matt", description: {name: "KS TRAIL MIX", description: ""}},
-    {price: 14.79, bucket: "For Matt", description: {name: "BRAZIL BITES", description: ""}},
-    {price: 10.99, bucket: "For Matt", description: {name: "DRIED LYCHEE", description: ""}},
-    {price: 14.79, bucket: "For Matt", description: {name: "EGG BITES", description: ""}},
-    {price: 13.99, bucket: "For Matt", description: {name: "ORG PB PWDR", description: "Peanut Butter Powder"}},
-    {price: 4.69, bucket: "For Matt", description: {name: "STRAWBERRIES", description: ""}},
-    {price: 4.49, bucket: "For Matt", description: {name: "BLACKBERRIES", description: ""}},
-    {price: 2.29, bucket: "For Matt", description: {name: "RASPBERRIES", description: ""}},
-    {price: 27.98, bucket: "For Embrys", description: {name: "GODOG TOY", description: "Dragon dog toys for Chai and Kona"}},
-    {price: 9.99, bucket: "Groceries", description: {name: "KS CHOC CHIP", description: "Chocolate Chips"}},
-    {price: 12.49, bucket: "Groceries", description: {name: "KS CASHEWS", description: ""}},
-    {price: 9.49, bucket: "Groceries", description: {name: "KS ALMONDS", description: ""}},
-    {price: 11.99, bucket: "Groceries", description: {name: "GOLDFISH 66Z", description: "Goldfish 3 pack"}},
-    {price: 19.98, bucket: BucketName.UNDEFINED, description: {name: "CV HC BOX", description: "Unknown"}},
-    {price: 4.99, bucket: "Groceries", description: {name: "KS WHIP CRM", description: "Whipped cream"}},
-    {price: 6.85, bucket: "Groceries", description: {name: "Taxes", description: ""}}
-]),
+    {price: 10.79, reason: "For Matt", description: {name: "ORG STRAWBRRY", description: "Organic Strawberries"}},
+    {price: 10.99, reason: "For Matt", description: {name: "PLACKERS FLS", description: ""}},
+    {price: 11.99, reason: "For Matt", description: {name: "KS TRAIL MIX", description: ""}},
+    {price: 14.79, reason: "For Matt", description: {name: "BRAZIL BITES", description: ""}},
+    {price: 10.99, reason: "For Matt", description: {name: "DRIED LYCHEE", description: ""}},
+    {price: 14.79, reason: "For Matt", description: {name: "EGG BITES", description: ""}},
+    {price: 13.99, reason: "For Matt", description: {name: "ORG PB PWDR", description: "Peanut Butter Powder"}},
+    {price: 4.69, reason: "For Matt", description: {name: "STRAWBERRIES", description: ""}},
+    {price: 4.49, reason: "For Matt", description: {name: "BLACKBERRIES", description: ""}},
+    {price: 2.29, reason: "For Matt", description: {name: "RASPBERRIES", description: ""}},
+    {price: 27.98, reason: "For Embrys", description: {name: "GODOG TOY", description: "Dragon dog toys for Chai and Kona"}},
+    {price: 9.99, reason: "Groceries", description: {name: "KS CHOC CHIP", description: "Chocolate Chips"}},
+    {price: 12.49, reason: "Groceries", description: {name: "KS CASHEWS", description: ""}},
+    {price: 9.49, reason: "Groceries", description: {name: "KS ALMONDS", description: ""}},
+    {price: 11.99, reason: "Groceries", description: {name: "GOLDFISH 66Z", description: "Goldfish 3 pack"}},
+    {price: 19.98, reason: BucketName.UNDEFINED, description: {name: "CV HC BOX", description: "Unknown"}},
+    {price: 4.99, reason: "Groceries", description: {name: "KS WHIP CRM", description: "Whipped cream"}},
+    {price: 6.85, reason: "Groceries", description: {name: "Taxes", description: ""}}
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 12), 61.00, new Vendor("Oishi Steakhouse"), visa3408, [
-    {price: 16.00, bucket: "For Matt", description: {name: "Matt's dinner", description: ""}},
-    {price: 45.00, bucket: "Dining", description: {name: "Dinner", description: "sushi and ginger tofu"}},
-]),
+    {price: 16.00, reason: "For Matt", description: {name: "Matt's dinner", description: ""}},
+    {price: 45.00, reason: "Dining", description: {name: "Dinner", description: "sushi and ginger tofu"}},
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 12), -105, Matt, chase, [
     new Purchase(-105, "For Matt", "Payback for dinner and costco")
@@ -1702,15 +1702,15 @@ new ExternalTransaction(makeDate(2023, 9, 19), 28.13, new Vendor("Culvers"), vis
 ]),
 
 new ExternalTransaction(makeDate(2023, 9, 22), 393.33, costco, visa3408, [
-    {price: 17.49, bucket: "For Varsha", description: {name: "MAC & CHEESE", description: "Mac and cheese boxes"}},
-    {price: 10.99, bucket: "For Varsha", description: {name: "KS CHS PIZZA", description: "Frozen cheese pizzas"}},
-    {price: 45.99, bucket: "Health", description: {name: "ORAL-B X-FIL", description: "Toothbrush heads"}},
-    {price: 45.99, bucket: "Health", description: {name: "ORAL-B X-FIL", description: "Toothbrush heads"}},
-    {price: 69.99, bucket: "Health", description: {name: "NORELCOC06800", description: "New shaver"}},
-    {price: 11.99, bucket: "For Varsha", description: {name: "KS SPIN RAV", description: "2 pack spinach ravioli"}},
-    {price: 11.99, bucket: "For Varsha", description: {name: "KS SPIN RAV", description: "2 pack spinach ravioli"}},
-    {price: 8.49, bucket: "For Varsha", description: {name: "ALLERCLR 365", description: "Allergy medicine"}},
-    {price: 14.99, bucket: "Groceries", description: {name: "KS GUAC", description: "Guacamole"}},
+    {price: 17.49, reason: "For Varsha", description: {name: "MAC & CHEESE", description: "Mac and cheese boxes"}},
+    {price: 10.99, reason: "For Varsha", description: {name: "KS CHS PIZZA", description: "Frozen cheese pizzas"}},
+    {price: 45.99, reason: "Health", description: {name: "ORAL-B X-FIL", description: "Toothbrush heads"}},
+    {price: 45.99, reason: "Health", description: {name: "ORAL-B X-FIL", description: "Toothbrush heads"}},
+    {price: 69.99, reason: "Health", description: {name: "NORELCOC06800", description: "New shaver"}},
+    {price: 11.99, reason: "For Varsha", description: {name: "KS SPIN RAV", description: "2 pack spinach ravioli"}},
+    {price: 11.99, reason: "For Varsha", description: {name: "KS SPIN RAV", description: "2 pack spinach ravioli"}},
+    {price: 8.49, reason: "For Varsha", description: {name: "ALLERCLR 365", description: "Allergy medicine"}},
+    {price: 14.99, reason: "Groceries", description: {name: "KS GUAC", description: "Guacamole"}},
     new Purchase(4.79, "For Matt", "BLACKBERRIES"),
     new Purchase(4.99, "For Matt", "RASPBERRIES"),
     new Purchase(4.99, "For Matt", "RASPBERRIES"),
@@ -1727,7 +1727,7 @@ new ExternalTransaction(makeDate(2023, 9, 22), 393.33, costco, visa3408, [
     new Purchase(17.49, "For Varsha", "KS3PLYTISSUE"),
     new Purchase(19.16, "Groceries", "9% Tax"),
     new Purchase(1.60, "Groceries", "1% tax")
-]),
+].map(p => Purchase.fromConfig(p))),
 
 new ExternalTransaction(makeDate(2023, 9, 22), 30.00, cvs, visa3408, [
     new Purchase(10.00, "Health", "Acetalzolamide 15ct"),

@@ -1,4 +1,4 @@
-import { BucketBalance } from "@/data/testData";
+import { BucketBalance, GetGroupBalance } from "@/data/testData";
 import { TimelineOf } from "@/data/history";
 import { BucketName } from "@/data/enums";
 import { PartialDeep } from "type-fest";
@@ -37,7 +37,7 @@ export interface WantsSpendingProps<TimeType = Date> {
     // bucketBalanceTimeline: TimelineOf<BucketBalance, TimeType> // For Testing
     bucketBudgetTimeline: TimelineOf<BucketBalance, TimeType>
     bucketSpendingTimeline: TimelineOf<BucketBalance, TimeType>
-    bucket: BucketName,
+    buckets: BucketName[],
     startTime: TimeType,
     endTime: TimeType,
     options?: ChartOptions<"line">
@@ -46,7 +46,7 @@ export interface WantsSpendingProps<TimeType = Date> {
 type ColorArray = [number, number, number] | [number, number, number, number | undefined]
 
 export function plotDataFromTimeline<TimeType>(
-    name: string, bucket: BucketName, timeline: TimelineOf<BucketBalance, TimeType>, 
+    name: string, buckets: BucketName[], timeline: TimelineOf<BucketBalance, TimeType>, 
     color: ColorArray, valueOverrides: PartialDeep<ChartDataset<"line", { x: TimeType; y: number; }[]>> = {}, 
     func: (value:number) => number = x=>x
 ): ChartDataset<"line", { x: TimeType; y: number; }[]> {
@@ -54,7 +54,7 @@ export function plotDataFromTimeline<TimeType>(
 
     return Object.assign(valueOverrides, {
         label: name,
-        data: timeline.map(entry => ({x: entry.start, y: func(entry.value[bucket] || 0)})),
+        data: timeline.map(entry => ({x: entry.start, y: func(GetGroupBalance(entry.value, buckets))})).filter((p, i, a) => i==0 || i==a.length-1 || p.y != (a[i-1].y)),
         stepped: "before",
         borderColor: `rgb(${color.join(', ')})`,
         backgroundColor:  `rgb(${color.slice(0,3).join(', ')}, ${0.35*color[3]})`,
@@ -76,17 +76,18 @@ export const WantsSpendTrackingGraph: React.FC<WantsSpendingProps> = (props) => 
         data={{
             datasets: [
                 plotDataFromTimeline(
-                    "Spending", props.bucket, props.bucketSpendingTimeline, 
+                    "Spending", props.buckets, props.bucketSpendingTimeline, 
                     [230, 250, 10], 
                     {fill: false}, x=>-x
                 ),
                 plotDataFromTimeline(
-                    "Maintain Balance Budget", props.bucket, props.bucketBudgetTimeline, [60, 190, 60], {fill: {value: -Infinity}}
+                    "Maintain Balance Budget", props.buckets, props.bucketBudgetTimeline, [60, 190, 60], 
+                    {fill: {value: -Infinity}}
                 ),
                 plotDataFromTimeline(
-                    "Actual Budget", props.bucket, 
+                    "Actual Budget", props.buckets, 
                     props.bucketBudgetTimeline, [220, 60, 60], 
-                    {fill: {value:Infinity}}, x=>x+(props.startingBalances[props.bucket]||0)
+                    {fill: {value:Infinity}}, x=>x+GetGroupBalance(props.startingBalances, props.buckets)
                 ), 
             ]
         }}
