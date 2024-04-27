@@ -51,7 +51,7 @@ export const SpendTrackingGraphs: React.FC<InnerSpendTrackingComponentProps> = (
     // * Allow user-selected boundaries
     let [endTime, setEndTime] = useState(new Date(Date.now()));
     let [startTime, setStartTime] = useState(DateMonthOffset(1)(endTime));
-    let [lockedTimeInterval, setLockedTimeInterval] = useState(false);
+    let [lockedTimeInterval, setLockedTimeInterval] = useState(true);
 
     return (
         <div>

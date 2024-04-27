@@ -5,6 +5,7 @@ import { BucketName } from "./enums"
 import { Purchase, PurchaseConfig } from "./purchase"
 import { Vendor } from "./vendor"
 import { Schedule } from "./rschedule"
+import { dollarFormat } from "@/utilities/displayUtils"
 
 export class ExternalTransaction<TimeType = Date> {
     readonly time: TimeType
@@ -21,6 +22,8 @@ export class ExternalTransaction<TimeType = Date> {
         this.purchases = purchases;
     }
 
+    public get buckets(): Set<BucketName> { return new Set(this.purchases.map(p => p.bucket)) }
+
     remainderPrice(): number {
         return this.amount - this.purchases.reduce((sum, curr) => sum + curr.price, 0)
     }
@@ -34,6 +37,12 @@ export class ExternalTransaction<TimeType = Date> {
             this.remainderPrice(), BucketName.NONE, 
             "Unaccounted", "The amount of transaction not accounted for by any purchase."
         )
+    }
+
+    summarize(purchaseFilter: (p: Purchase)=>boolean = ()=>true): string {
+        const [action, direction]  = this.amount < 0 ? ["Received", "from"] : ["Spent", "at"]
+        const filteredPurchases = this.purchases.filter(purchaseFilter);
+        return `${action} ${dollarFormat(Math.abs(this.amount))} at ${this.vendor.name}${filteredPurchases.length > 0 ? ` ${direction}` : ""}${filteredPurchases.map(p => `\n- ${p.summarize()}`).join('')}`
     }
 }
 

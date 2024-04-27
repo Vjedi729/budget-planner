@@ -1,3 +1,4 @@
+import { dollarFormat } from "@/utilities/displayUtils"
 import { BucketName } from "./enums"
 import { SpendingBucket } from "./spendingBucket"
 export interface TextDescription {
@@ -24,6 +25,8 @@ export class Purchase {
     public get bucket() { return SpendingBucket.BucketPseudonyms[this.reason] || this.reason }
     
     getBucketDesc() { return (this.reason != this.bucket) ? `${this.bucket} (${this.reason})` : this.reason}
+
+    summarize() { return `${this.description.name} for ${dollarFormat(this.price)}`}
 
     static fromConfig(p: PurchaseConfig) {
         return new Purchase(p.price, p.reason, p.description.name, p.description.description);

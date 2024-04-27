@@ -11,6 +11,7 @@ import { JsSort } from "@/ts-utils/sort-utils";
 import { WantsSpendTrackingGraph } from "./wants-spend-tracking-graph";
 import { FlexColumn } from "./flex-column";
 import { NeedsSpendTrackingGraph } from "./needs-spend-tracking-graph";
+import { ExternalTransaction } from "@/data/transactions";
 
 // const testBucket: string|undefined = "For Varsha"
 
@@ -52,7 +53,7 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
     // console.log("Bucket Balance Changes for testBucket", props.bucketBalanceHistory.changes.filter(x => x.prevValuesOfChangedElements[testBucket] != undefined))
     // console.log("Starting Balances", startingBalances, "full timeline", bucketBalanceTimeline)
 
-    let purchaseAmounts: HistoryOf<BucketBalance, Date> = new BasicHistoryOf(
+    let purchaseAmounts: HistoryOf<BucketBalance, Date, ExternalTransaction> = new BasicHistoryOf(
         laterDateFirstSort, 
         Object.fromEntries(Object.entries(startingBalances).map(([k,v]) => [k,-v])), 
         props.bucketBalanceHistory.initialTime, 0
@@ -61,7 +62,7 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
         // console.log("Purchase Amounts", cloneDeep(purchaseAmounts.currentValue), "before Transaction", cloneDeep(transaction), transaction.hasRemainder() ? "remainder" : undefined, transaction.getRemainderPurchase())
         let newPurchaseAmounts = processTransaction(transaction, cloneDeep(purchaseAmounts.currentValue))
         // console.log("After transaction", cloneDeep(newPurchaseAmounts))
-        let changes = purchaseAmounts.setValue(newPurchaseAmounts, transaction.time)
+        let changes = purchaseAmounts.setValue(newPurchaseAmounts, transaction.time, undefined, transaction)
         // if(changes != undefined && changes[testBucket] != undefined) console.warn("Test bucket changed from", changes[testBucket])
         // console.log("Purchase Amount previous values", changes, "new value", cloneDeep(purchaseAmounts))
     })
@@ -91,6 +92,8 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
     let wantsBuckets: string[] = Object.keys(props.bucketBalanceHistory.currentValue).filter( x => !needsBuckets.includes(x) && x!=BucketName.UNDEFINED );
 
     // console.log("Wants Buckets", wantsBuckets)
+    const wantsBucketSpendingTimeline = purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
+    const wantsBucketBudgetTimeline = bucketBudgets.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
 
     // TODO: Something like this: https://stackoverflow.com/questions/57528694/chart-js-multiple-charts-with-one-common-legend
     return (
@@ -110,8 +113,9 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
                 </div> */}
                 <WantsSpendTrackingGraph
                     buckets={wantsBuckets}
-                    bucketSpendingTimeline={purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
-                    bucketBudgetTimeline={bucketBudgets.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
+                    bucketSpendingHistory={purchaseAmounts}
+                    bucketSpendingTimeline={wantsBucketSpendingTimeline}
+                    bucketBudgetTimeline={wantsBucketBudgetTimeline}
                     startingBalances={startingBalances}
                     startTime={startTime} endTime={endTime}
                     options={{aspectRatio:3}}
@@ -123,8 +127,9 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
                             <WantsSpendTrackingGraph 
                                 buckets={[bucketName]}
                                 // bucketBalanceTimeline={bucketBalanceTimeline}
-                                bucketSpendingTimeline={purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
-                                bucketBudgetTimeline={bucketBudgets.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort))}
+                                bucketSpendingHistory={purchaseAmounts}
+                                bucketSpendingTimeline={wantsBucketSpendingTimeline}
+                                bucketBudgetTimeline={wantsBucketBudgetTimeline}
                                 startingBalances={startingBalances}
                                 startTime={startTime} endTime={endTime}
                             />

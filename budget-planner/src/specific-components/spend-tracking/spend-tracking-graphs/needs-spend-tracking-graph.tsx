@@ -14,7 +14,8 @@ import {
     Filler,
     TimeSeriesScale,
     // * Options
-    ChartOptions
+    ChartOptions,
+    TooltipItem
 } from 'chart.js';
 ChartJS.register(
     CategoryScale,
@@ -29,12 +30,13 @@ ChartJS.register(
 );
 import 'chartjs-adapter-moment';
 import { Line as LineChart } from "react-chartjs-2";
-import { plotDataFromTimeline } from "./wants-spend-tracking-graph";
+import { TimelinePoint, plotDataFromTimeline, purchaseTooltipText } from "./wants-spend-tracking-graph";
 import { JsSort } from "@/ts-utils/sort-utils";
+import { ExternalTransaction } from "@/data/transactions";
 
 export interface NeedsSpendingProps<TimeType = Date> {
     startingBalances: BucketBalance
-    bucketSpendingHistory: HistoryOf<BucketBalance, TimeType>
+    bucketSpendingHistory: HistoryOf<BucketBalance, TimeType, ExternalTransaction>
     pastSpendingOffset: (orig: TimeType, invert?: boolean) => TimeType
     pastSpendingString?: (pastI: number) => string
     pastSpendingTransparencyMultiplier?: number
@@ -49,10 +51,24 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
     const defaultOptions = {
         plugins: {
             legend: {display: false},
+            tooltip: {
+                callbacks: {
+                    title: (items: TooltipItem<"line">[]) => {
+                        // console.log("TooltipItems", items); 
+                        const point = items[0].raw as TimelinePoint<Date, ExternalTransaction[]>;
+                        return point.x.toDateString();
+                    },
+                    // label: (item: TooltipItem<"line">) => {
+                    //     console.log("TooltipItem", item); 
+                    //     return "Label";
+                    // },
+                    footer: (items: TooltipItem<"line">[]) => purchaseTooltipText(items, props.buckets).join('\n')
+                }
+            }
         },
         aspectRatio: 1,
         responsive:true, 
-        scales: {x: {type: "time", time: {unit: "day"}}}
+        scales: {x: {type: "time", time: {unit: "day"}}},
     }
 
     

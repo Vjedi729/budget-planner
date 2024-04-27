@@ -24,11 +24,11 @@ function SetWithPartial<T extends Record<string, any>>(original: Record<string, 
 }
 
 export interface TimelineEntry<T, TimeType, Meta=any> {start:TimeType, end: TimeType, value: T, metadata?:Meta}
-export type TimelineOf<T, TimeType> = Array<TimelineEntry<T, TimeType>>
+export type TimelineOf<T, TimeType, Meta = any> = Array<TimelineEntry<T, TimeType, Meta>>
 export function TimelineSortByTime<TimeType>(sortFn: JsSort.FunctionType<TimeType>): JsSort.FunctionType<TimelineEntry<any, TimeType>> {
     return (a, b) => sortFn(a.start, b.start) || sortFn(a.end, b.end)
 }
-export abstract class HistoryOf<T, TimeType> {
+export abstract class HistoryOf<T, TimeType, Meta = any> {
 
     currentValue: T
     initialTime: TimeType
@@ -46,12 +46,16 @@ export abstract class HistoryOf<T, TimeType> {
     }
 
     abstract getValue(time: TimeType, afterTime?: boolean) : T | undefined
-    abstract setValue(object: ChangeOf<T>, time: TimeType, endTime?: TimeType, meta?: any) : ChangeOf<T> | undefined // The previous values of changed data OR undefined if the value could not be set
+    abstract setValue(object: ChangeOf<T>, time: TimeType, endTime?: TimeType, meta?: Meta) : ChangeOf<T> | undefined // The previous values of changed data OR undefined if the value could not be set
     abstract reportNoChange(time:TimeType): void
 
-    abstract getValues(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType>
-    abstract getFullTimeline(): TimelineOf<T, TimeType> // The full timeline
-
+    // TODO: Add boolean for filtering zero-time entries
+    // abstract getValues(startTime: TimeType, endTime: TimeType, filterZeroTimeEntries: true) : TimelineOf<T, TimeType, Meta[]>
+    // abstract getValues(startTime: TimeType, endTime: TimeType, filterZeroTimeEntries: false) : TimelineOf<T, TimeType, Meta>    
+    abstract getValues(startTime: TimeType, endTime: TimeType/*, filterZeroTimeEntries: boolean*/) : TimelineOf<T, TimeType, Meta[]>
+    // abstract getFullTimeline(filterZeroTimeEntries: true): TimelineOf<T, TimeType, Meta[]>
+    // abstract getFullTimeline(filterZeroTimeEntries: false): TimelineOf<T, TimeType, Meta>
+    abstract getFullTimeline(/*filterZeroTimeEntries: boolean*/): TimelineOf<T, TimeType, Meta[]> // The full timeline
 
     // * Utility Functions for Histories
     protected laterTime(a: TimeType, b: TimeType): TimeType {
@@ -69,11 +73,19 @@ export abstract class HistoryOf<T, TimeType> {
         )
     }
 
-    filterZeroTimeEntries(timeline: TimelineOf<T, TimeType>, keepEntriesAtTimes: TimeType[] = []): TimelineOf<T, TimeType> {
-        return timeline.filter(x => this.isZeroTimeEntry(x, keepEntriesAtTimes))
+    filterZeroTimeEntries(timeline: TimelineOf<T, TimeType, Meta>, keepEntriesAtTimes: TimeType[] = []): TimelineOf<T, TimeType, Meta[]> {
+        return timeline.reduce<TimelineOf<T, TimeType, Meta[]>>(
+            (list, entry) => list.concat([{
+                start: entry.start, end: entry.end, 
+                value: entry.value, 
+                metadata: entry.metadata ? [entry.metadata] : []
+            }]), 
+            []
+        );
+        // return timeline.filter(x => this.isZeroTimeEntry(x, keepEntriesAtTimes))
     }
 }
-export class ChangeHistoryOf<T extends object, TimeType> extends HistoryOf<T, TimeType> {
+export class ChangeHistoryOf<T extends object, TimeType, Meta = any> extends HistoryOf<T, TimeType, Meta> {
     protected changes: ChangeArray<T, TimeType>
     defaultInitialValue: any;
 
@@ -115,7 +127,7 @@ export class ChangeHistoryOf<T extends object, TimeType> extends HistoryOf<T, Ti
         return retVal;
     }
 
-    setValue(object: ChangeOf<T>, currentTime: TimeType, endTime?: TimeType, meta?:any): ChangeOf<T> | undefined {
+    setValue(object: ChangeOf<T>, currentTime: TimeType, endTime?: TimeType, meta?:Meta): ChangeOf<T> | undefined {
         if (JsSort.ResultEquals(this.laterTimeFirstSort(currentTime, this.currentTime), JsSort.ResultType.RightArgFirst)) {
             console.warn("Failed to set value:", object, "at time", currentTime, "-> Cannot set values before or at the internal current time of", this.currentTime);
             return undefined;
@@ -131,7 +143,7 @@ export class ChangeHistoryOf<T extends object, TimeType> extends HistoryOf<T, Ti
         return prevValOfChanges;
     }
 
-    getValues(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType> { // * Includes at end time result
+    getValues(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType, Meta[]> { // * Includes at end time result
         let values: Array<{start:TimeType, end: TimeType, value: T}> = []
 
         if(JsSort.ResultEquals(this.laterTimeFirstSort(this.initialTime, endTime), JsSort.ResultType.LeftArgFirst)) {
@@ -167,14 +179,14 @@ export class ChangeHistoryOf<T extends object, TimeType> extends HistoryOf<T, Ti
         return values;
     }
 
-    getFullTimeline(): TimelineOf<T, TimeType> {
+    getFullTimeline(): TimelineOf<T, TimeType, Meta[]> {
         return this.getValues(this.initialTime, this.currentTime)
     }
 }
 
-export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends HistoryOf<T, TimeType> {
+export class TimelineHistoryOf<T extends Record<string, any>, TimeType, Meta = any> extends HistoryOf<T, TimeType, Meta> {
     
-    protected timeline: TimelineOf<T, TimeType>
+    protected timeline: TimelineOf<T, TimeType, Meta>
     defaultInitialValue: any;
     constructor(laterTimeFirstSort: JsSort.FunctionType<TimeType>, currentValue: T, currentTime: TimeType, defaultInitialValue: any = undefined) {
         super(laterTimeFirstSort, currentValue, currentTime)
@@ -182,8 +194,8 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends 
         this.timeline = [{start: currentTime, end: currentTime, value: currentValue}]
     }
 
-    getFullTimeline(): TimelineOf<T, TimeType> {
-        return this.timeline;
+    getFullTimeline(): TimelineOf<T, TimeType, Meta[]> {
+        return this.filterZeroTimeEntries(this.timeline, [this.currentTime, this.initialTime]);
     }
 
     getValue(time: TimeType, afterTime: boolean = true): T | undefined {
@@ -200,7 +212,7 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends 
 
     // * Start and end entries contain the full extent of their time, causing the timeline to extend beyond the specified start and end times
     // ? Change return type to separate entries containing start and end times?
-    getValuesUnmodified(start: TimeType, end: TimeType): TimelineOf<T, TimeType> {
+    getValuesUnmodified(start: TimeType, end: TimeType): TimelineOf<T, TimeType, Meta[]> {
         let [endTime, startTime] = [start, end].sort(this.laterTimeFirstSort)
 
         return this.filterZeroTimeEntries(
@@ -218,7 +230,7 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends 
         )
     }
 
-    getValues(startTime: TimeType, endTime: TimeType): TimelineOf<T, TimeType> {
+    getValues(startTime: TimeType, endTime: TimeType): TimelineOf<T, TimeType, Meta[]> {
         return this.getValuesUnmodified(startTime, endTime).map(
             // Clip first and last entry
             x => { x.start = this.laterTime(x.start, startTime); x.end = this.earlierTime(x.end, endTime); return x; }
@@ -231,7 +243,7 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends 
         this.currentTime = time;
     }
 
-    setValue(object: PartialDeep<T, {}>, time: TimeType, endTime?: TimeType | undefined, meta?:any): PartialDeep<T, {}> | undefined {
+    setValue(object: PartialDeep<T, {}>, time: TimeType, endTime?: TimeType | undefined, meta?:Meta): PartialDeep<T, {}> | undefined {
         if (JsSort.ResultEquals(this.laterTimeFirstSort(time, this.currentTime), JsSort.ResultType.RightArgFirst)) {
             console.warn("Failed to set value:", object, "at time", time, "-> Cannot set values before or at the internal current time of", this.currentTime);
             return undefined;
@@ -244,14 +256,14 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType> extends 
         this.timeline.push({
             start: cloneDeep(time), end: cloneDeep(this.currentTime), 
             value: cloneDeep(this.currentValue), 
-            metadata: cloneDeep(meta)
+            metadata: meta
         });
 
         return retVal;
     }
 }
 
-export class BasicHistoryOf<T extends object, TimeType> extends TimelineHistoryOf<T, TimeType>{};
+export class BasicHistoryOf<T extends object, TimeType, Meta = any> extends TimelineHistoryOf<T, TimeType, Meta>{};
 
 // Note from Vishal
 /*
