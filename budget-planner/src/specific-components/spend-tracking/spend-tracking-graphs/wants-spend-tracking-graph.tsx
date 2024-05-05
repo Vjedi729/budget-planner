@@ -56,6 +56,16 @@ export function plotDataFromTimeline<TimeType, Meta>(
 ): ChartDataset<"line", TimelinePoint<TimeType, Meta>[]> {
     color[3] = color[3] || 1;
 
+    const lastEntry = timeline[timeline.length-1];
+    // console.log("Last entry for", buckets, lastEntry)
+    const points: TimelinePoint<TimeType, Meta>[] = timeline.map(
+        entry => ({x: entry.start, y: func(GetGroupBalance(entry.value, buckets)), meta: entry.metadata})
+    ).filter(
+        (p, i, a) => i==0 || i==a.length-1 || p.y != (a[i-1].y)
+    ).concat(
+        lastEntry == undefined ? [] : [{x: lastEntry.end, y: func(GetGroupBalance(lastEntry.value, buckets)), meta: lastEntry.metadata}]
+    )
+
     return Object.assign(valueOverrides, {
         label: name,
         // TODO: Filter before creating points and add point at last time.
