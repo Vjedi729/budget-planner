@@ -3084,9 +3084,9 @@ new ExternalTransaction(makeDate(2024, 1, 27), -20.00, Matt, chase, [
     new Purchase(-20.00, "For Matt", "Berries payback")
 ]),
 
-new ExternalTransaction(makeDate(2024, 1, 29), 5585, new Vendor("Modern Home Upgrades"), chase, [
-    new Purchase(5585, "Home Improvement", "50% downpayment for kitchen remodel")
-]),
+// new ExternalTransaction(makeDate(2024, 1, 29), 5585, new Vendor("Modern Home Upgrades"), chase, [
+//     new Purchase(5585, "Home Improvement", "50% downpayment for kitchen remodel")
+// ]),
 
 new ExternalTransaction(makeDate(2024, 1, 29), 63.51, new Vendor("Sushi Ichiban"), visa3408, [
     new Purchase(63.51, "Dining", "Dinner pickup order")

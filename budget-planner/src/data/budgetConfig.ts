@@ -6,9 +6,11 @@ export type MoneySplit<Budgets extends string> = Partial<Record<Budgets, number>
 
 export interface BudgetConfig<Budgets extends string = string, People extends string = string> {
     people: Array<People>
-    incomes: Array<{dollars: number, everyXDays: number}>,
+    incomes: {
+        bucketNames: Array<BucketName>
+    }
     needs: {
-        bucketNames: Array<string>
+        bucketNames: Array<BucketName>
     }
     wants: {
         wantsMoneySplit: MoneySplit<Budgets> // Proportional

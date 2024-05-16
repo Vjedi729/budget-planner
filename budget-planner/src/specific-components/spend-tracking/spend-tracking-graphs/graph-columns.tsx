@@ -89,7 +89,7 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
 
     // * Filter which buckets are wants
     let needsBuckets: string[] = props.budgetConfigHistory.currentValue.needs.bucketNames;
-    let wantsBuckets: string[] = Object.keys(props.bucketBalanceHistory.currentValue).filter( x => !needsBuckets.includes(x) && x!=BucketName.UNDEFINED );
+    let wantsBuckets: string[] = Object.keys(props.bucketBalanceHistory.currentValue).filter( x => !needsBuckets.includes(x) && x!=BucketName.UNDEFINED && !props.budgetConfigHistory.currentValue.incomes.bucketNames.includes(x) );
 
     // console.log("Wants Buckets", wantsBuckets)
     const wantsBucketSpendingTimeline = purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
