@@ -7,6 +7,10 @@ export function makeDate(year: number, month: number, day: number): Date {
     return new Date(year, month-1, day, 1)
 }
 
+export function makeTime(year: number, month: number, day: number, hour: number, minute?: number): Date {
+    return new Date(year, month-1, day, hour, minute)
+}
+
 export function p(...x: ConstructorParameters<typeof Purchase>) { return new Purchase(...x) }
 
 export function t<T>(...x: ConstructorParameters<typeof ExternalTransaction<T>>) { return new ExternalTransaction(...x) }

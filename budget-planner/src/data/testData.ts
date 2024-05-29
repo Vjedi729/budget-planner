@@ -50,10 +50,10 @@ export const testBudgetData: BudgetConfig<"Vishal Fun Money"|"Meridith Fun Money
         },
         bucketFilling: {
             "Meridith Fun Money": { "allocations": {
-                "Cats": 150, // What is happening here?
-                "Fish": 20,
-                "Garden": 20,
-                "Sewing": 30,
+                "Cats": 110, // What is happening here?
+                "Fish": 10,
+                "Garden": 15,
+                "Sewing": 5,
             }},
             "Vishal Fun Money": { "allocations": {
                 "Garden": 10,
