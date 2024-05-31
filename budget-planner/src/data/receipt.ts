@@ -1,10 +1,12 @@
 import { Account } from "./account"
+import { t } from "./helper-functions";
 import { Purchase } from "./purchase"
+import { ExternalTransaction } from "./transactions";
 import { Vendor } from "./vendor"
 
 
-export class Receipt<TimeType = Date> {
-    public time: TimeType;
+export class Receipt {
+    public time: Date;
     public amount: number;
     //public tax: ;
     public vendor: Vendor;
@@ -15,7 +17,7 @@ export class Receipt<TimeType = Date> {
 
 
     
-    constructor(time: TimeType, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = [], itemCount: number){
+    constructor(time: Date, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = [], itemCount: number){
         this.time = time;
         this.amount = amount;
         this.vendor = vendor;
@@ -31,6 +33,10 @@ export class Receipt<TimeType = Date> {
             console.log(remainingItems.toString() + "items unaccounted for")
             }
         }
+    }
+
+    transactionFromReceipt(): ExternalTransaction {
+        return t(this.time, this.amount, this.vendor, this.account, this.purchases)
     }
     
 }
