@@ -72,7 +72,7 @@ const Max = new Vendor("Maxwell Shramuk")
 const prairieGardens = new Vendor("Prairie Garden Center")
 
 
-export const sampleInitialDate = new Date(2021, 2, 1);
+export const sampleInitialDate = new Date(2021, 3, 1);
 
 export const sampleTransactions: ExternalTransaction<Date>[] = [
 t(makeDate(2022, 9, 1), 217.99, new Vendor("Home Depot"), visa0078, [
@@ -4275,6 +4275,21 @@ t(makeTime(2024, 5, 8, 14, 13), 70.82, meijer, visa3408, [
     p(0.35, "Groceries", "1% sales tax")
 ]),
 
+t(makeTime(2024, 5, 8, 16, 24), 50.00, elliot, visa3408, [
+    p(50.00, "Health", "M Therapy copay")
+]),
+
+t(makeTime(2024, 5, 9, 18), 40.00, Ani, chase, [
+    p(40.00, "Dining", "Dinner with Anishi")
+]),
+
+t(makeTime(2024, 5, 11, 11, 32), 14.02, new Vendor("Portillo's"), visa3408, [
+    p(4.19, "Dining", "hot dog for Ani"),
+    p(3.69, "Dining", "Fries for Ani"),
+    p(4.69, "Dining", "Cake shake for Ani"),
+    p(1.45, "Dining", "Tax")
+]),
+
 t(makeTime(2024, 5, 11, 18, 4), 27.92, prairieGardens, visa3408, [
     p(25.97, "Meridith Fun Money", "Hibiscus for mother's day"),
     p(1.95, "Meridith Fun Money", "Tax")
@@ -4289,6 +4304,10 @@ t(makeTime(2024, 5, 13, 18, 26), 22.95, new Vendor("Jeni's Ice Cream"), visa3408
     p(9.45, "Dining", "Meridith'd ice cream cone"),
     p(2.13, "Dining", "tax"),
     p(2.72, "Dining", "tip")
+]),
+
+t(makeTime(2024, 5, 13, 18), 10.00, new Vendor("IPASS"), visa3408, [
+    p(10.00, "Car", "IPass refill")
 ]),
 
 t(makeTime(2024, 5, 14, 18, 0), 11.90, costco, visa3408, [
@@ -4315,5 +4334,188 @@ t(makeTime(2024, 5, 14, 17, 45), 24.80, menards, visa3408, [
     p(16.77, "Home Improvement", "3 cabinet handles"),
     p(5.98, "Both Fun Money", "Yankee whisks for Matt and Ani"),
     p(2.05, "Home Improvement", "Tax")
+]),
+
+t(makeTime(2024, 5, 15, 10, 22), 100.00, elliot, visa3408, [
+    p(100.00, "Health", "Old therapy copays")
+]),
+
+t(makeTime(2024, 5, 15, 17, 14), 50.00, elliot, visa3408, [
+    p(50.00, "Health", "M therapy copay")
+]),
+
+t(makeTime(2024, 5, 16, 18), 16.34, amazon, visa3408, [
+    p(16.34, "Fish", "seachem flourish excel")
+]),
+
+t(makeTime(2024, 5, 16, 18, 30), 165.74, carle, visa3408, [
+    p(165.74, "Health", "Carle payment plan")
+]),
+
+t(makeTime(2024, 5, 20, 20, 23), 130.07, costco, visa3408, [
+    p(15.89-5, "For Matt", "Protein Bars"),
+    p(4.99, "For Matt", "Mini peppers"),
+    p(8.99, "For Matt", "Mediterranian salad mix"),
+    p(5.99, "For Matt", "Celery"),
+    p(5.99, "For Matt", "Brocolli"),
+    p(5.99, "For Matt", "Tomato medley"),
+    p(5.89, "For Matt", "4 lbs honeycrisp apples"),
+    p(5.89, "For Matt", "Raspberries"),
+    p(5.89, "For Matt", "Raspberries"),
+    p(4.49, "For Matt", "Strawberries"),
+    p(5.99, "For Matt", "French bread pack"),
+    p(13.99-3.50, "Health", "Meridith's Multivitamins"),
+    p(11.99, "Groceries", "Spinach ravioli"),
+    p(7.49, "Groceries", "Nonstick spray 2 pack"),
+    p(16.99, "Health", "Tissues"),
+    p(9.49, "Groceries", "Pesto spread"),
+    p(2.63, "Groceries", "tax")
+]),
+
+t(makeTime(2024, 5, 20, 20, 32), 36.62, costco, visa3408, [
+    p(36.62, "Car", "10.934 gal gas at $3.349 per gal")
+]),
+
+t(makeTime(2024, 5, 20, 19, 56), 40.59, menards, visa3408, [
+    p(8.96, "Garden", "4 herb plants"),
+    p(2.99, "Garden", "6 pack bell pepper plants"),
+    p(6.66, "Garden", "2 eggplant plants"),
+    p(3.33, "Garden", "serrano pepper plant"),
+    p(15.31, "Garden", "Chicken wire"),
+    p(3.34, "Garden", "Tax")
+]),
+
+t(makeTime(2024, 5, 20, 18, 23), 120.23, new Vendor("Sushi Man"), visa3408, [
+    p(89.95, "Dining", "Birthday AYCE sushi"),
+    p(10.34, "For Matt", "Tax"),
+    p(20.04, "For Matt", "Tip")
+]),
+
+t(makeTime(2024, 5, 21, 18, 5), 38.41, meijer, visa3408, [
+    p(5.49, "Garden", "Bamboo stakes"),
+    p(5.78, "Garden", "Thai basil plant"),
+    p(2.59, "Both Fun Money", "Nail polish"),
+    p(2.59-1.04, "Both Fun Money", "Nail polish"),
+    p(2.99, "Both Fun Money", "Nail polish"),
+    p(2.99, "Both Fun Money", "Nail polish"),
+    p(3.39, "Both Fun Money", "Nail polish"),
+    p(1.69, "Both Fun Money", "Nail polish"),
+    p(0.69, "Groceries", "Garlic bulb"),
+    p(1.39, "Groceries", "1 dozen eggs"),
+    p(2.15, "Groceries", "Taco bell sauce"),
+    p(5.24, "Groceries", "2 gal milk"),
+    p(2.38, "Garden", "9% sales tax"),
+    p(0.09, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 5, 21, 17, 14), 7.72, prairieGardens, visa3408, [
+    p(3.99-0.40, "Garden", "Tomatillo plant"),
+    p(3.99-0.40, "Garden", "Tomatillo plant"),
+    p(0.54, "Garden", "Tax")
+]),
+
+t(makeTime(2024, 5, 22, 14, 19), 5.00, new Vendor("Loyola"), capOne, [
+    p(5.00, "Health", "Parking at loyola")
+]),
+
+t(makeTime(202, 5, 24, 16, 42), 91.75, meijer, visa3408, [
+    p(0.99-0.35, "Groceries", "Stewed tomatoes"),
+    p(1.09, "Groceries", "1 lb ziti pasta"),
+    p(1.99, "Groceries", "8 oz cream cheese"),
+    p(2.29-0.45, "Groceries", "Shredded cheddar"),
+    p(2.29, "Groceries", "Shredded italian cheese"),
+    p(2.59, "Groceries", "Froen garlic bread"),
+    p(3.05-0.50, "Groceries", "alfredo pasta sauce"),
+    p(3.25-3.25, "Groceries", "4 lbs white sugar"),
+    p(3.59, "Groceries", "potato bread"),
+    p(3.59-1.00, "Groceries", "Ricotta cheese"),
+    p(3.69-0.75, "Groceries", "baby spinach"),
+    p(5.29, "Groceries", "Ground beef"),
+    p(13.99-1.00, "Groceries", "trash bags for kitchen"),
+    p(28.99, "Cats", "cat litter"),
+    p(1.99, "Groceries", "chocolate bar"),
+    p(3.49, "Groceries", "Bell peppers"),
+    p(3.99, "Groceries", "Vegan marshmallows"),
+    p(-5.00, "Groceries", "$5 off coupon"),
+    p(4.17, "Cats", "9% sales tax"),
+    p(0.45, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 5, 25, 18, 26), 38.77, costco, visa3408, [
+    p(38.77, "Car", "11.61 gal gas at $3.339 per gal")
+]),
+
+t(makeTime(2024, 5, 25, 10, 24), 34.96, costco, visa3408, [
+    p(34.96, "Car", "10.47 gal gas at $3.339 per gal")
+]),
+
+t(makeTime(2024, 5, 25, 16, 57), 26.00, new Vendor("Urbana Park District"), visa3408, [
+    p(26.00, "Both Fun Money", "1 hour rental for 2 canoes")
+]),
+
+t(makeTime(2024, 5, 26, 13, 5), 5.95, meijer, visa3408, [
+    p(3.29-3.29, "Groceries", "Free bag of kettle chips"),
+    p(5.89, "Groceries", "3 lbs potatoes"),
+    p(0.06, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 5, 27, 19, 36), 9.00, tacoBell, capOne, [
+    p(1.99, "Dining", "Cheesy bean and rice burrito"),
+    p(6.19, "Dining", "Steak grilled cheese burrito"),
+    p(0.31, "Dining", "Donation round up"),
+    p(0.51, "Dining", "tax")
+]),
+
+t(makeTime(2024, 5, 28, 17, 39), 82.15, costco, visa3408, [
+    p(8.49, "Groceries", "25 lbs flour"),
+    p(19.99, "Groceries", "Apple sauce"),
+    p(12.49, "Groceries", "unsalted cashews"),
+    p(14.00, "Clothing", "XL pair convertible pants"),
+    p(5.89, "Groceries", "honeycrisp apples"),
+    p(5.89, "Groceries", "4 lbs Honeycrisp apples"),
+    p(12.49, "Groceries", "Choc chips"),
+    p(2.91, "Groceries", "Tax")
+]),
+
+t(makeTime(2024, 5, 28, 16, 36), 39.13, costco, visa3408, [
+    p(39.13, "Car", "11.719 gal gas at $3.339 per gal")
+]),
+
+t(makeTime(2024, 5, 28, 17, 15), 10.64, lowes, visa3408, [
+    p(9.76, "Garden", "20 ct inline drippers")
+]),
+
+t(makeTime(2024, 5, 28, 16, 57), 4.49, menards, visa3408, [
+    p(4.49, "Garden", "lawn staples")
+]),
+
+t(makeTime(2024, 5, 28, 17, 0), 6.20, menards, capOne, [
+    p(6.20, "Housewares", "Softener salt")
+]),
+
+t(makeTime(2024, 5, 30, 18, 23), 29.14, olivegarden, capOne, [
+    p(29.14, "Dining", "Dinner w/ Emma")
+]),
+
+t(makeTime(2024, 5, 31, 11, 2), 45.09, meijer, capOne, [
+    p(4.19, "Garden", "Hose washers"),
+    p(9.99, "Garden", "Hose adapter"),
+    p(1.39, "Groceries", "1 dozen eggs"),
+    p(2.62, "Groceries", "1 gal milk"),
+    p(3.99, "Groceries", "2 lbs brown sugar"),
+    p(5.49, "Groceries", "reese's puffs cereal"),
+    p(0.13, "Groceries", "1% sales tax"),
+    p(14.69, "Health", "Shampoo"),
+    p(2.60, "Garden", "9% sales tax")
+]),
+
+t(makeTime(2024, 6, 3, 18, 48), 69.30, dosReales, capOne, [
+    p(11.80, "Dining", "Vishal Veg F"),
+    p(16.99, "Dining", "M carne asada"),
+    p(13.75, "For Matt", "Enchiladas"),
+    p(5.50, "For Matt", "Guacamole"),
+    p(3.75, "Dining", "Horchata"),
+    p(5.96, "Dining", "Tax"),
+    p(11.55, "Dining", "tip")
 ])
 ]
