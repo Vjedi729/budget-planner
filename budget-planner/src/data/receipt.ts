@@ -1,3 +1,4 @@
+import { Integer } from "type-fest";
 import { Account } from "./account"
 import { t } from "./helper-functions";
 import { Purchase } from "./purchase"
@@ -13,9 +14,6 @@ export class Receipt {
     public account: Account;
     public purchases: Purchase[];
     public itemCount?: number;
-
-
-
     
     constructor(time: Date, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = [], itemCount: number){
         this.time = time;
@@ -39,4 +37,24 @@ export class Receipt {
         return t(this.time, this.amount, this.vendor, this.account, this.purchases)
     }
     
+}
+
+export class StoreReceipt extends Receipt {
+    storeIDNumber: number
+    cashierName: string
+
+    constructor(time: Date, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = [], itemCount: number, cashierName: string, storeIDNumber: number){
+        super(time, amount, vendor, account, purchases, itemCount);
+        this.storeIDNumber = storeIDNumber
+        this.cashierName = cashierName
+    }
+}
+
+export class MeijerReceipt extends StoreReceipt {
+    savingsTotal: number
+
+    constructor(time: Date, amount: number, vendor: Vendor, account: Account, purchases: Purchase[] = [], itemCount: number, cashierName: string, storeIDNumber: number, savingsTotal: number){
+        super(time, amount, vendor, account, purchases, itemCount, cashierName, storeIDNumber);
+        this.savingsTotal = savingsTotal
+    }
 }
