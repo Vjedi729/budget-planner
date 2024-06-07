@@ -1059,6 +1059,10 @@ new ExternalTransaction(makeDate(2023, 6, 5), 84.71, menards, capOne, [
     new Purchase(6.99, "Cats", "Tax")
 ]),
 
+t(makeDate(2023, 6, 6), 4035, new Vendor("UofI Vet Hospital"), visa8042, [
+    p(4035, "Cats", "Popoki foreign body surgery")
+]),
+
 new ExternalTransaction(makeDate(2023, 6, 8), 11.76, amazon, capOne, [
     new Purchase(11.76, "Cats", "Card containers to ship magic cards")
 ]),
@@ -1512,6 +1516,10 @@ new ExternalTransaction(makeDate(2023, 8, 4), 86.79, costco, visa0078, [
 
 new ExternalTransaction(makeDate(2023, 8, 8), -225, Neil, chase, [
     new Purchase(-225, "Housing", "Neil's August rent")
+]),
+
+t(makeDate(2023, 8, 8), 347.84, ameren, chase, [
+    p(347.84, "Utilities", "Electrci for 7-23")
 ]),
 
 new ExternalTransaction(makeDate(2023, 8, 10), 56.41, costco, visa8042, [
@@ -3431,6 +3439,10 @@ new ExternalTransaction(makeDate(2024, 2, 16), 677.90, costco, visa8042, [
     new Purchase(54.23, "Home Improvement", "Tax")
 ]),
 
+t(makeDate(2024, 2, 16), 662.53, ameren, chase, [
+    p(662.53, "Utilities", "Gas/electric for 1-24")
+]),
+
 new ExternalTransaction(makeDate(2024, 2, 16), 36.02, costco, visa8042, [
     new Purchase(36.02, "Car", "11.261 gal of gas at $3.199 per gal")
 ]),
@@ -3764,6 +3776,10 @@ t(makeDate(2024, 3, 18), 81.72, chewy, visa3408, [
     p(7.07, "Cats", "Tax")
 ]),
 
+t(makeDate(2024, 3, 18), 302.55, ameren, chase, [
+    p(302.55, "Utilities", "Gas/electric for 2-24")
+]),
+
 new ExternalTransaction(makeDate(2024, 3, 18), 172.33, meijer, visa3408, [
     new Purchase(6.89, "For Matt", "Sweet kale salad"),
     new Purchase(10.99, "For Matt", "FRozen 3 berry medley"),
@@ -4075,6 +4091,10 @@ t(makeDate(2024, 4, 13), 66.44, new Vendor("Neil St Blue's"), visa3408, [
     p(10.75, "Dining", "Tip")
 ]),
 
+t(makeDate(2024, 4, 15), 62.52, ameren, chase, [
+    p(62.52, "Utilities", "Gas/electric for 3-24")
+]),
+
 t(makeDate(2024, 4, 15), 30, Ani, chase, [
     p(30.00, "Trip", "Blankets")
 ]),
@@ -4279,6 +4299,10 @@ t(makeTime(2024, 5, 8, 16, 24), 50.00, elliot, visa3408, [
     p(50.00, "Health", "M Therapy copay")
 ]),
 
+t(makeTime(2024, 5, 8, 14, 5), 10.00, cvs, visa3408, [
+    p(10.00, "Health", "Adderall copay")
+]),
+
 t(makeTime(2024, 5, 9, 18), 40.00, Ani, chase, [
     p(40.00, "Dining", "Dinner with Anishi")
 ]),
@@ -4299,12 +4323,18 @@ t(makeTime(2024, 5, 12, 16, 41), 39.09, costco, visa3408, [
     p(39.09, "Car", "11.995 gal gas at $3.259 per gal")
 ]),
 
+t(makeTime(2024, 5, 15, 5, 47), 34.57, new Vendor("HogSalt Burgers"), visa3408, [
+    p(34.57, "Dining", "Dinner with Jonathan, Max, and Priyankka")
+]),
+
 t(makeTime(2024, 5, 13, 18, 26), 22.95, new Vendor("Jeni's Ice Cream"), visa3408, [
     p(8.65, "Dining", "Vishal's ice cream cone"),
     p(9.45, "Dining", "Meridith'd ice cream cone"),
     p(2.13, "Dining", "tax"),
     p(2.72, "Dining", "tip")
 ]),
+
+
 
 t(makeTime(2024, 5, 13, 18), 10.00, new Vendor("IPASS"), visa3408, [
     p(10.00, "Car", "IPass refill")
@@ -4336,6 +4366,10 @@ t(makeTime(2024, 5, 14, 17, 45), 24.80, menards, visa3408, [
     p(2.05, "Home Improvement", "Tax")
 ]),
 
+t(makeDate(2024, 5, 15), 39.81, ameren, chase, [
+    p(39.81, "Utilities", "Gas/elecgtric for 4-24")
+]),
+
 t(makeTime(2024, 5, 15, 10, 22), 100.00, elliot, visa3408, [
     p(100.00, "Health", "Old therapy copays")
 ]),
@@ -4350,6 +4384,10 @@ t(makeTime(2024, 5, 16, 18), 16.34, amazon, visa3408, [
 
 t(makeTime(2024, 5, 16, 18, 30), 165.74, carle, visa3408, [
     p(165.74, "Health", "Carle payment plan")
+]),
+
+t(makeTime(2024, 5, 20, 18), 69.05, water, chase, [
+    p(69.05, "Utilities", "Water for 4-24")
 ]),
 
 t(makeTime(2024, 5, 20, 20, 23), 130.07, costco, visa3408, [
@@ -4418,7 +4456,7 @@ t(makeTime(2024, 5, 22, 14, 19), 5.00, new Vendor("Loyola"), capOne, [
     p(5.00, "Health", "Parking at loyola")
 ]),
 
-t(makeTime(202, 5, 24, 16, 42), 91.75, meijer, visa3408, [
+t(makeTime(2024, 5, 24, 16, 42), 91.75, meijer, visa3408, [
     p(0.99-0.35, "Groceries", "Stewed tomatoes"),
     p(1.09, "Groceries", "1 lb ziti pasta"),
     p(1.99, "Groceries", "8 oz cream cheese"),
@@ -4464,6 +4502,10 @@ t(makeTime(2024, 5, 27, 19, 36), 9.00, tacoBell, capOne, [
     p(6.19, "Dining", "Steak grilled cheese burrito"),
     p(0.31, "Dining", "Donation round up"),
     p(0.51, "Dining", "tax")
+]),
+
+t(makeTime(2024, 5, 28, 6, 7), 89.99, i3, chase, [
+    p(89.99, "Utilities", "Internet for 6-24")
 ]),
 
 t(makeTime(2024, 5, 28, 17, 39), 82.15, costco, visa3408, [

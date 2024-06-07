@@ -8,7 +8,8 @@ export function makeDate(year: number, month: number, day: number): Date {
 }
 
 export function makeTime(year: number, month: number, day: number, hour: number, minute?: number): Date {
-    return new Date(year, month-1, day, hour, minute)
+    //return new Date(year, month-1, day, hour, minute)
+    return makeDate(year, month, day)
 }
 
 export function p(...x: ConstructorParameters<typeof Purchase>) { return new Purchase(...x) }
