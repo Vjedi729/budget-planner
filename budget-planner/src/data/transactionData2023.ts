@@ -6,7 +6,6 @@ import { Vendor } from "./vendor"
 import { makeDate } from "./helperFunctions";
 import { t } from "./helperFunctions"
 import { p } from "./helperFunctions";
-import { Mandali } from "next/font/google";
 import { makeTime } from "./helperFunctions";
 //import { takeCoverage } from "v8";
 
@@ -4551,6 +4550,11 @@ t(makeTime(2024, 5, 31, 11, 2), 45.09, meijer, capOne, [
     p(2.60, "Garden", "9% sales tax")
 ]),
 
+t(makeTime(2024, 6, 1, 19, 15), 47.51, sushikame, chase, [
+    p(39.93, "Dining", "Dinner from Sushi Kame"),
+    p(8.38, "Dining", "Doordash tip")
+]),
+
 t(makeTime(2024, 6, 3, 18, 48), 69.30, dosReales, capOne, [
     p(11.80, "Dining", "Vishal Veg F"),
     p(16.99, "Dining", "M carne asada"),
@@ -4559,5 +4563,56 @@ t(makeTime(2024, 6, 3, 18, 48), 69.30, dosReales, capOne, [
     p(3.75, "Dining", "Horchata"),
     p(5.96, "Dining", "Tax"),
     p(11.55, "Dining", "tip")
+]),
+
+t(makeTime(2024, 6, 7, 20, 18), 45.30, costco, visa3408, [
+    p(10.99, "For Matt", "Coconut water"),
+    p(7.99, "For Matt", "Grain chips"),
+    p(9.99, "For Matt", "Muffins"),
+    p(5.89, "Groceries", "4 lbs honeycrisp apples"),
+    p(9.99, "Groceries", "Borusin variety"),
+    p(0.45, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 7, 18, 3), -15.26, costco, capOne, [
+    p(-14.00, "Clothing", "Returned convertible pants"),
+    p(-1.26, "Clothing", "Returned tax")
+]),
+
+t(makeTime(2024, 6, 7, 19), 63.21, new Vendor("Masijta Grill"), visa3408, [
+    p(18.00, "For Matt", "Bulgogi bowl"),
+    p(18.00, "Dining", "Bulgogi bowl"),
+    p(13.00, "Dining", "Tofu yakisoba"),
+    p(5.39, "For Matt", "11% sales tax"),
+    p(8.82, "Dining", "Tip")
+]),
+
+t(makeTime(2024, 6, 8, 12, 27), 39.98, meijer, visa3408, [
+    p(5.24, "Groceries", "2 gal 1% milk"),
+    p(5.29, "Groceries", "Life Cereal"),
+    p(5.59, "Cats", "Food for stray cats"),
+    p(20.99, "Cats", "Cat litter"),
+    p(3.50-1.00, "Groceries", "Oreo ice cream"),
+    p(3.50-1.00, "Groceries", "Mint choc chip ice cream"),
+    p(-5.00, "Groceries", "Mperks discount"),
+    p(2.11, "Cats", "9% sales tax"),
+    p(0.16, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 8, 13), 23.96, petsmart, visa3408, [
+    p(21.99, "Cats", "Cat food"),
+    p(1.97, "Cats", "9% sales tax")
+]),
+
+t(makeTime(2024, 6, 9, 13), 108.99, amazon, visa3408, [
+    p(108.99, "Cats", "Cat tree")
+]),
+
+t(makeTime(2024, 6, 11, 17, 36), 39.74, new Vendor("Jet's Pizza"), visa3408, [
+    p(17.18, "Dining", "8 corner pizza"),
+    p(8.99, "Dining", "Turbo stix"),
+    p(4.50, "Dining", "Delivery charge"),
+    p(3.01, "Dining", "Sales tax"),
+    p(6.06, "Dining", "Tip")
 ])
 ]

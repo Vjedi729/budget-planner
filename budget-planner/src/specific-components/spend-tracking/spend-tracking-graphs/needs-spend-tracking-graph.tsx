@@ -27,7 +27,7 @@ ChartJS.register(
     Filler,
     TimeSeriesScale
 );
-import 'chartjs-adapter-moment';
+import 'chartjs-adapter-moment'
 import { Line as LineChart } from "react-chartjs-2";
 import { plotDataFromTimeline } from "./wants-spend-tracking-graph";
 import { JsSort } from "@/ts-utils/sort-utils";
