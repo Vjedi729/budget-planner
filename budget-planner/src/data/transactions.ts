@@ -78,7 +78,7 @@ export class RScheduleRecurrence extends Recurrence<Date> {
     }
 } 
 
-export class EveryMonthOnTheNth {
+export class EveryMonthOnTheNth implements Recurrence<Date> {
     protected dayOfTheMonth: number
     constructor(dayOfTheMonth: number) { this.dayOfTheMonth = dayOfTheMonth; }
 
