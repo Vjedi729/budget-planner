@@ -4,8 +4,9 @@ import { ExternalTransaction, Recurrence } from "./transactions"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { RecurringTransaction, EveryMonthOnTheNth } from "./transactions"
-import { BudgetConfig } from "./budgetConfig"
+import { BudgetConfig, OLD_BudgetConfig } from "./budgetConfig"
 import { BasicHistoryOf, HistoryOf } from "./history"
+import { BucketBalance } from "./bucket-fill-algorithm/interface"
 
 import { cloneDeep, includes } from "lodash"
 import { JsSort } from "@/ts-utils/sort-utils"
@@ -27,7 +28,7 @@ export const testRecurringData: RecurringTransaction[] = [
     new RecurringTransaction(4, new Date(2022,2,1), 120, "Unknown", testAccount, new Vendor("Pointe"), "Pest Control")
 ]
 
-export const testBudgetData: BudgetConfig<"Vishal Fun Money"|"Meridith Fun Money"|"Both Fun Money", "Vishal"|"Meridith"> = {
+export const testBudgetData: OLD_BudgetConfig<"Vishal Fun Money"|"Meridith Fun Money"|"Both Fun Money", "Vishal"|"Meridith"> = {
     people: ["Vishal", "Meridith"],
     incomes: [{dollars: 2144, everyXDays: 14}],
     needs: {
@@ -79,14 +80,12 @@ let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, 
 _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetHistory = _testBudgetHistory;
 
-export type BucketBalance = Record<BucketName, number>
-
 export function GetGroupBalance(bucketBalance: BucketBalance, buckets: BucketName[]) {
     return Object.values(filterRecord(bucketBalance, buckets, 0)).reduce((p,c)=>p+c,0)
 }
 
 export function fillWantsBuckets(
-    bucketBalances: BucketBalance, budget: BudgetConfig, wantsDollarsToAdd: number
+    bucketBalances: BucketBalance, budget: OLD_BudgetConfig, wantsDollarsToAdd: number
 ) : BucketBalance {
 
     // console.log("Before Filling", cloneDeep(bucketBalances))
@@ -116,7 +115,7 @@ export function fillWantsBuckets(
 }
 
 function HELPER_quickFillWantsBucket<TimeType>(
-    budgetHistory: HistoryOf<BudgetConfig, TimeType>,
+    budgetHistory: HistoryOf<OLD_BudgetConfig, TimeType>,
     balancesHistory: HistoryOf<BucketBalance, TimeType>,
     amountToAddToWants: number,
     currentTime: TimeType
@@ -152,7 +151,7 @@ export function processTransaction<TimeType>(
 export function getBucketBalancesDetailed<Budgets extends string, TimeType = Date>(
     laterTimeFirstSort: JsSort.FunctionType<TimeType>,
     initialBucketBalances: BucketBalance, initialTime: TimeType,
-    budgetConfig: HistoryOf<BudgetConfig<Budgets>, TimeType>, budgetRefillRecurrence: Recurrence<TimeType>,
+    budgetConfig: HistoryOf<OLD_BudgetConfig<Budgets>, TimeType>, budgetRefillRecurrence: Recurrence<TimeType>,
     transactionData: ExternalTransaction<TimeType>[],
     endTime: TimeType, inclusive: boolean = false
 ) {
@@ -205,7 +204,7 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
 export function getBucketBalances<Budgets extends string, TimeType = Date>(
     laterTimeFirstSort: JsSort.FunctionType<TimeType>,
     initialBucketBalances: BucketBalance, initialTime: TimeType,
-    budgetConfig: HistoryOf<BudgetConfig<Budgets>, TimeType>, budgetRefillRecurrence: Recurrence<TimeType>,
+    budgetConfig: HistoryOf<OLD_BudgetConfig<Budgets>, TimeType>, budgetRefillRecurrence: Recurrence<TimeType>,
     transactionData: ExternalTransaction<TimeType>[],
     endTime: TimeType, inclusive: boolean = false
 ): HistoryOf<BucketBalance, TimeType> {
