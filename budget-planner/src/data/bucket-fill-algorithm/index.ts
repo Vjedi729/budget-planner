@@ -4,13 +4,33 @@ import { BucketFillAlgorithm } from "./interface";
 import { BucketName } from "../enums";
 import { getOrDefault } from "@/ts-utils/record-utils";
 
+
+export class LogBuckets implements BucketFillAlgorithm<"LogBuckets"> {
+    readonly uniqueKeyString = "LogBuckets";
+
+    label: string
+    bucketWhitelist: Array<BucketName> | undefined
+
+    constructor(label: string, whitelist?: Array<BucketName>) {
+        this.label = label;
+        this.bucketWhitelist = whitelist;
+    }
+
+    fillBuckets(initialBucketBalances: BucketBalance<number>): BucketBalance<number> {
+        const toLog = (this.bucketWhitelist !== undefined) ? 
+            Object.fromEntries(Object.entries(initialBucketBalances).filter(([name, _]) => this.bucketWhitelist?.includes(name))) :
+            initialBucketBalances;
+        console.log(this.label, toLog)
+
+        return initialBucketBalances;
+    }
+}
 export class FillSequence implements BucketFillAlgorithm<"Sequence"> {
-    readonly uniqueKeyString: "Sequence";
+    readonly uniqueKeyString = "Sequence";
 
     sequence: BucketFillAlgorithm<string>[]
 
     constructor(seq: BucketFillAlgorithm<string>[]) {
-        this.uniqueKeyString = "Sequence";
         this.sequence = seq;
     }
 
@@ -86,12 +106,15 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
 
     fillEqualPercent(initialBucketBalances: BucketBalance, targets?: BucketTargets): BucketBalance {
         targets = targets || this.GetTargets(initialBucketBalances)
+        // console.log(targets);
         const fractionToFillTo = initialBucketBalances[this.source] / this.GetMoneyNeededToFillAll(targets);
 
         Object.entries(targets).forEach(([targetName, targetAmount]) => {
             const amount = fractionToFillTo * targetAmount
+            // console.log("Adding", amount, "to bucket", targetName)
             initialBucketBalances[this.source] -= amount;
-            initialBucketBalances[targetName] = getOrDefault(initialBucketBalances, targetAmount, 0) + amount;
+            initialBucketBalances[targetName] = getOrDefault(initialBucketBalances, targetName, 0) + amount;
+            // console.log(initialBucketBalances[targetName])
         });
 
         return initialBucketBalances

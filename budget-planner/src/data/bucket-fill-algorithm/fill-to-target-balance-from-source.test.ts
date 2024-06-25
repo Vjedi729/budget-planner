@@ -1,6 +1,7 @@
 import { FillToTargetBalanceFromSource, FromSourceDistributionMethods } from "."
 import { cloneDeep } from "lodash";
 import "@testing-library/jest-dom"
+import { getOrDefault } from "@/ts-utils/record-utils";
 
 const sourceBucket = "source";
 const allTargetBuckets = ["a", "b", "c", "d", "e", "f"];
@@ -26,17 +27,24 @@ test("Equal-Dollar Balance-Targeting Bucket Filling (with insufficient funds)", 
 })
 
 test("Equal-Percent Balance-Targeting Bucket Filling (with insufficient funds)", () => {
+    const targetBalance = 0;
     const test = new FillToTargetBalanceFromSource(
         sourceBucket, 
-        Object.fromEntries(allTargetBuckets.map(name => [name, 100])),
+        Object.fromEntries(allTargetBuckets.map(name => [name, targetBalance])),
         FromSourceDistributionMethods.EqualPercentFull
     )
 
     const result = test.fillBuckets(cloneDeep(initialBalances))
 
-    console.log(result)
+    // console.log(result)
 
     expect(result['c']).toEqual(initialBalances['c'])
     expect(result[sourceBucket]).toBeCloseTo(0)
-    allTargetBuckets.forEach(name => {if (name == "c") return; expect(result[name]).toBeCloseTo(insufficientByAmount/(allTargetBuckets.length-1))})
+    const expectedFillFraction = (initialBalances[sourceBucket]/(insufficientByAmount+initialBalances[sourceBucket]))
+    allTargetBuckets.forEach(name => {
+        if (name == "c") return; 
+        const amountNeeded = targetBalance-getOrDefault(initialBalances, name, 0)
+        const amountAdded = getOrDefault(result, name, 0)-getOrDefault(initialBalances, name, 0)
+        
+        expect(amountAdded/amountNeeded).toBeCloseTo(expectedFillFraction)})
 })

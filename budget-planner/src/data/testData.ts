@@ -12,6 +12,7 @@ import { cloneDeep, includes } from "lodash"
 import { JsSort } from "@/ts-utils/sort-utils"
 import { filterRecord } from "@/ts-utils/record-utils"
 import { dollarFormat } from "@/utilities/displayUtils"
+import { isDefined } from "@/ts-utils/undefined-utils"
 
 export const testAccount = new Account("[CREDIT] Costco Citi Visa *8042")
 export const testTransactionData: ExternalTransaction[] = [
@@ -126,55 +127,48 @@ export function fillWantsBuckets(
     return bucketBalances;
 }
 
-function HELPER_quickDistributeMoneyToBuckets<TimeType>(
-    budgetHistory: HistoryOf<OLD_BudgetConfig, TimeType>,
-    balancesHistory: HistoryOf<BucketBalance, TimeType>,
-    undistributedIncomeBucket: BucketName,
-    currentTime: TimeType
-) {
-    // * Get current state
-    let budget = budgetHistory.getValue(currentTime);
-    if(budget == undefined) {
-        console.error("No budget config found at time", currentTime, "in", budgetHistory)   
-        return;
-    }
+export function HELPER_quickDistributeMoneyToBuckets(
+    budget: OLD_BudgetConfig,
+    initialBalances: BucketBalance,
+    logContext: any // * Used for logging
+) : BucketBalance {
+    let currentBalances = cloneDeep(initialBalances);
+    budget.incomes.bucketNames.forEach(undistributedIncomeBucket => {
+        let undistributedMoney = currentBalances ? (currentBalances[undistributedIncomeBucket] || 0) : 0;
 
-    let currentBalances = cloneDeep(balancesHistory.currentValue);
-    let undistributedMoney = currentBalances ? (currentBalances[undistributedIncomeBucket] || 0) : 0;
+        // # Move money from Income to Needs buckets
+        budget.needs.bucketNames.forEach((needBucketName) => {
 
-    // # Move money from Income to Needs buckets
-    budget.needs.bucketNames.forEach((needBucketName) => {
+            if(undistributedMoney < -currentBalances[needBucketName]) {
+                console.warn(
+                    "Insufficient income to cover needs at", logContext, 
+                    needBucketName, "bucket needs", -currentBalances[needBucketName], "from", undistributedMoney
+                ); 
+                
+                currentBalances[needBucketName] += undistributedMoney;
+                undistributedMoney = 0;
+            } else {
+                // console.log("Filling needs bucket", needBucketName, currentBalances[needBucketName], undistributedIncomeBucket, undistributedMoney)
+                undistributedMoney += currentBalances[needBucketName];
+                currentBalances[needBucketName] = 0;
+            }
+            // console.log("Filled needs bucket", needBucketName, currentBalances[needBucketName], undistributedIncomeBucket, undistributedMoney)            
+        })
 
-        if(undistributedMoney < -currentBalances[needBucketName]) {
-            console.warn(
-                "Insufficient income to cover needs at", currentTime, 
-                needBucketName, "bucket needs", -currentBalances[needBucketName], "from", undistributedMoney
-            ); 
-            
-            currentBalances[needBucketName] += undistributedMoney;
-            undistributedMoney = 0;
-        } else {
-            // console.log("Filling needs bucket", needBucketName, currentBalances[needBucketName], undistributedIncomeBucket, undistributedMoney)
-            undistributedMoney += currentBalances[needBucketName];
-            currentBalances[needBucketName] = 0;
-        }
-        // console.log("Filled needs bucket", needBucketName, currentBalances[needBucketName], undistributedIncomeBucket, undistributedMoney)
+        // * Move remaining money to wants buckets
+        let amountToAddToWants = undistributedMoney; // * Our expected amount is about $570 
+        if(logContext !== undefined) console.log(`Adding ${dollarFormat(amountToAddToWants)} to wants buckets on `, logContext)
 
-        
+        let newVal = fillWantsBuckets(currentBalances, budget, amountToAddToWants)
+        // console.log(cloneDeep(currentTime), cloneDeep(newVal))
+
+        // * Remove money from undistributed income, since it has been distributed.
+        newVal[undistributedIncomeBucket] = 0;
+
+        currentBalances = newVal;
     })
 
-    // * Move remaining money to wants buckets
-    let amountToAddToWants = undistributedMoney; // * Our expected amount is about $570 
-    console.log(`Adding ${dollarFormat(amountToAddToWants)} to wants buckets on `, currentTime)
-
-    let newVal = fillWantsBuckets(currentBalances, budget, amountToAddToWants)
-    // console.log(cloneDeep(currentTime), cloneDeep(newVal))
-
-    // * Remove money from undistributed income, since it has been distributed.
-    newVal[undistributedIncomeBucket] = 0;
-
-    // * Record new balances
-    balancesHistory.setValue(newVal, currentTime);
+    return currentBalances;
 }
 
 export function processTransaction<TimeType>(
@@ -226,17 +220,35 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
     let amountToAddToWants = 0;
     transactionsInRange.forEach((transaction, i) => {
         // * Fill buckets as many times as appropriate before the time of this transaction
-        while(bucketFillDates[0] && JsSort.IsRightArgFirst(utilities.laterTimeFirstSort, bucketFillDates[0], transaction.time))
+        const currentTime = bucketFillDates[0];
+        while(currentTime && JsSort.IsRightArgFirst(utilities.laterTimeFirstSort, bucketFillDates[0], transaction.time))
         {
             // TODO: Add money based on amount not spent on needs in the previous time period
                 // * Change initial to 0
                 // * Update value at end of after processing transactions but before build fill dates
                 // * Requires re-ordering functions to process bucket fills and transactions in date order (switching between as needed)
-            // const amountToAddToWants = 500;
 
-            // console.log("Filling buckets at time", bucketFillDates[0].toString(), "before transaction", i, cloneDeep(balancesHistory.currentValue));
-            HELPER_quickDistributeMoneyToBuckets(budgetConfig, balancesHistory, "Income", bucketFillDates[0])
-            // wantsFillAmounts.push({time: bucketFillDates[0], amount: amountToAddToWants})
+            // console.log("Filling buckets at time", currentTime.toString(), "before transaction", i, cloneDeep(balancesHistory.currentValue));
+            {
+                // * Get current state
+                let budget = budgetConfig.getValue(currentTime);
+                if(budget == undefined) {
+                    console.error("No budget config found at time", currentTime, "in", budgetConfig)   
+                    return;
+                }
+                let initialBalances = cloneDeep(balancesHistory.getValue(currentTime));
+                if(initialBalances == undefined) {
+                    console.error("No balance found at time", currentTime, "in", initialBalances)
+                    return;
+                }
+                
+                // * Record new balances
+                balancesHistory.setValue(
+                    HELPER_quickDistributeMoneyToBuckets(budget, initialBalances, currentTime), 
+                    currentTime
+                );
+            }
+            // wantsFillAmounts.push({time: currentTime, amount: amountToAddToWants})
 
             amountToAddToWants = 0;
             bucketFillDates.shift();
