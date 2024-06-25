@@ -5,6 +5,8 @@ import { BucketName } from "./enums"
 import { Purchase, PurchaseConfig } from "./purchase"
 import { Vendor } from "./vendor"
 import { Schedule } from "./rschedule"
+import * as vendorData from "./constants/vendorConstants"
+import * as acctData from "./constants/accountConstants"
 
 export class ExternalTransaction<TimeType = Date> {
     readonly time: TimeType
@@ -34,6 +36,37 @@ export class ExternalTransaction<TimeType = Date> {
             this.remainderPrice(), BucketName.NONE, 
             "Unaccounted", "The amount of transaction not accounted for by any purchase."
         )
+    }
+
+    static fromJson(parsedTransaction: Record<string, any>): ExternalTransaction | undefined {
+        // TODO: Check that all data exists and is in correct format
+        if(
+            typeof parsedTransaction.time == "string" &&
+            typeof parsedTransaction.amount == "number" &&
+            typeof parsedTransaction.vendor == "string" &&
+            typeof parsedTransaction.account == "string" &&
+            Array.isArray(parsedTransaction.purchases) && parsedTransaction.purchases.every(p => typeof p == "object")
+        ) {
+
+            const purchases = parsedTransaction.purchases.map(Purchase.fromJson)
+            if(purchases.every(x => typeof x == 'undefined')) return undefined;
+
+
+            const account = (acctData.acctLookup[parsedTransaction.account] != undefined) ? acctData.acctLookup[parsedTransaction.account] : new Account(parsedTransaction.account)
+
+            return new ExternalTransaction(
+                new Date(parsedTransaction.time), 
+                parsedTransaction.amount, 
+                new Vendor(parsedTransaction.vendor), 
+                account,
+                purchases as Array<Purchase>
+            )
+        }
+    }
+
+    toJson(): string {
+        const simplifiedTransaction = {"time": this.time, "amount": this.amount, "vendor": this.vendor.vendorId, "account": this.account.accountId, "purchases": this.purchases}
+        return JSON.stringify(simplifiedTransaction)
     }
 }
 

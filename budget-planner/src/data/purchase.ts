@@ -28,4 +28,14 @@ export class Purchase {
     static fromConfig(p: PurchaseConfig) {
         return new Purchase(p.price, p.reason, p.description.name, p.description.description);
     }
+
+    static fromJson(p: Record<string, any>) : Purchase | undefined {
+        const hasData = (
+            typeof p.price == 'number' &&
+            typeof p.reason == 'string' &&
+            typeof p.description == 'object' && typeof p.description.name == 'string' && typeof p.description.description == 'string'
+        )
+
+        return hasData ? Purchase.fromConfig(p as PurchaseConfig) : undefined
+    }
 }

@@ -15,6 +15,7 @@ export class Account {
 
     public get name(): string { return this._name; }
     public get balance() : number { return this._balance; }
+    public get accountId(): string {return this._name; }
 
     Deposit(amount: number): void { this._balance += amount; }
     TryWithdraw(wantedAmount : number): number {

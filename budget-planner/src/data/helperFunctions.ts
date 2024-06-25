@@ -2,6 +2,15 @@ import { ExternalTransaction, InternalTransaction } from "./transactions";
 import { Account } from "./account"
 import { Purchase } from "./purchase"
 import { AccountStatement } from "./account-statement-types";
+import { Vendor } from "./vendor";
+import * as vendorData from "./constants/vendorConstants";
+import * as acctData from "./constants/accountConstants"
+import { parse } from "path";
+
+const visa8042 = new Account("Vishal's Visa 8042")
+const visa0078 = new Account("Meridith's old Citi Visa 0078")
+
+const costco = new Vendor("Costco")
 
 export function makeDate(year: number, month: number, day: number): Date {
     return new Date(year, month-1, day, 1)
@@ -31,4 +40,14 @@ export function statement(statementAccount: Account, //Account the statement is 
         startDate: startStatementDate, endDate: endStatementDate, 
         transactions: statementTransactions}
 }
+
+// export function JSONToTransaction(jsonTransaction: string): ExternalTransaction {
+//     const parsedTransaction = JSON.parse(jsonTransaction)
+//     return t(new Date(parsedTransaction.time), 
+//     parsedTransaction.amount, 
+//     vendorData.vendorLookup[parsedTransaction.vendor.name], 
+//     acctData.acctLookup[parsedTransaction.account._name], 
+//     parsedTransaction.purchases.map(purchase => new Purchase(purchase.price, purchase.reason, purchase.description.name)))
+// }
+//TODO: Write code to parse json purchases and put them in the JSONToTransaction function.
 

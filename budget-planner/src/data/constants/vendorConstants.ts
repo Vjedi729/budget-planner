@@ -1,4 +1,4 @@
-import { Vendor } from "./vendor"
+import { Vendor } from "../vendor"
 
 export const meijer = new Vendor("Meijer")
 export const costco =  new Vendor("Costco")
@@ -21,14 +21,14 @@ export const ameren = new Vendor("Ameren IL")
 export const Amit = new Vendor("Amit Patel")
 export const Madeline = new Vendor("Madeline Macrae")
 export const Neil = new Vendor("Neil VanKannegan")
-export const tacoBell = new Vendor("Taco Bell")
+export const tacobell = new Vendor("Taco Bell")
 export const Nick = new Vendor("Nick Inocencio")
 export const epic = new Vendor("Epic Games")
 export const mattex = new Vendor("Mattex")
-export const farmAndFleet = new Vendor("Blaine's farm and fleet")
-export const harborFreight = new Vendor("Harbor Freight tools")
-export const dosReales = new Vendor("Dos Reales")
-export const tjMaxx = new Vendor("TJ Maxx")
+export const farmandfleet = new Vendor("Blaine's farm and fleet")
+export const harborfreight = new Vendor("Harbor Freight tools")
+export const dosreales = new Vendor("Dos Reales")
+export const tjmaxx = new Vendor("TJ Maxx")
 export const banfield = new Vendor("Banfield Pet Hospital")
 export const uofi = new Vendor("University of Illinois")
 export const google = new Vendor("Google play")
@@ -53,3 +53,59 @@ export const lamixteca = new Vendor("La Mixteca")
 export const emerge = new Vendor("Emerge Psychology Group")
 export const Max = new Vendor("Maxwell Shramuk")
 export const prairieGardens = new Vendor("Prairie Garden Center")
+
+export const vendorLookup: Record<string, Vendor> = {
+    "Costco": costco,
+    "Meijer": meijer,
+    "Menards": menards,
+    "CVS": cvs,
+    "i3 Broadband": i3,
+    "Elliot Counseling": elliot,
+    "Chewy": chewy,
+    "Sushi Kame": sushikame,
+    "Amazon": amazon,
+    "American Water": water,
+    "Carle Hospital": carle,
+    "Sweet Basil Cafe": sweetbasil,
+    "Joann Fabrics": joann,
+    "Republic Services": trash,
+    "Matthew Parkes": Matt,
+    "Anishi Patel": Ani,
+    "Varsha Hemady": Varsha,
+    "Ameren IL": ameren,
+    "Amit Patel": Amit,
+    "Madeline Macrae": Madeline,
+    "Neil VanKannegan": Neil,
+    "Taco Bell": tacobell,
+    "Nick Inocencio": Nick,
+    "Epic Games": epic,
+    "Mattex": mattex,
+    "Blaine's farm and fleet": farmandfleet,
+    "Harbor Freight Tools": harborfreight,
+    "Dos Reales": dosreales,
+    "TJ Maxx": tjmaxx,
+    "Banfield Pet Hospital": banfield,
+    "University of Illinois": uofi,
+    "Google Play": google,
+    "Lowes": lowes,
+    "Home Depot": homedepot,
+    "Spotify": spotify,
+    "Petsmart": petsmart,
+    "Capital One Bank": capitalOne,
+    "Mobile Meter": mobilemeter,
+    "Panera": panera,
+    "Domino's": dominos,
+    "Olive Garden": olivegarden,
+    "Papa Del's": papadels,
+    "Target": target,
+    "Walgreens": walgreens,
+    "Pekara": pekara,
+    "Walnut Street Tea Company": walnut,
+    "HomeGoods": homegoods,
+    "Chili's": chilis,
+    "Urbana Sanitary District": sewer,
+    "La Mixteca": lamixteca,
+    "Emerge Psychology Group": emerge,
+    "Maxwell Shramuk": Max,
+    "Prairie Garden Center": prairieGardens
+}

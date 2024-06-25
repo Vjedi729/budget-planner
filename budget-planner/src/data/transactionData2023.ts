@@ -4587,6 +4587,14 @@ t(makeTime(2024, 6, 7, 19), 63.21, new Vendor("Masijta Grill"), visa3408, [
     p(8.82, "Dining", "Tip")
 ]),
 
+t(makeTime(2024, 6, 7, 19, 58), 47.14, menards, visa3408, [
+    p(4.98, "Garden", "Sugar baby watermelon plant"),
+    p(11.38, "Housewares", "Softener Salt Pellets, 2 40 lb bags"),
+    p(4.49, "Garden", "Ground staples"),
+    p(22.40, "Housewares", "10 Fabric cube drawers"),
+    p(3.89, "Housewares", "Tax")
+]),
+
 t(makeTime(2024, 6, 8, 12, 27), 39.98, meijer, visa3408, [
     p(5.24, "Groceries", "2 gal 1% milk"),
     p(5.29, "Groceries", "Life Cereal"),
@@ -4608,11 +4616,166 @@ t(makeTime(2024, 6, 9, 13), 108.99, amazon, visa3408, [
     p(108.99, "Cats", "Cat tree")
 ]),
 
+t(makeTime(2024, 5, 20, 8), -150, new Vendor("Grandma"), new Account("cash"), [
+    p(-150, "Cats", "Birthday amazon money")
+]),
+
 t(makeTime(2024, 6, 11, 17, 36), 39.74, new Vendor("Jet's Pizza"), visa3408, [
     p(17.18, "Dining", "8 corner pizza"),
     p(8.99, "Dining", "Turbo stix"),
     p(4.50, "Dining", "Delivery charge"),
     p(3.01, "Dining", "Sales tax"),
     p(6.06, "Dining", "Tip")
+]),
+
+t(makeTime(2024, 6, 12, 19, 24), 50.00, elliot, visa3408, [
+    p(50.00, "Health", "M Therapy copay")
+]),
+
+t(makeTime(2024, 6, 14, 19, 21), 52.30, meijer, visa3408, [
+    p(0.67, "Groceries", "Roma tomatoes"),
+    p(1.39, "Groceries", "1 dozen eggs"),
+    p(2.49, "Groceries", "Pretzel twists"),
+    p(2.85, "Groceries", "10 ct soft taco tortillas"),
+    p(3.55, "Groceries", "Whipping cream"),
+    p(2.89, "Groceries", "Marshmallow fluff"),
+    p(3.79, "Groceries", "Orange Juice"),
+    p(4.69, "Groceries", "Ovaltine"),
+    p(20.99, "Cats", "Cat litter"),
+    p(1.00, "Groceries", "Mini marshmallows"),
+    p(1.29, "Groceries", "Bell peppers"),
+    p(2.19, "Groceries", "Baby spinach"),
+    p(-5.00, "Groceries", "$5 off coupon"),
+    p(2.39, "Cats", "9% sales tax"),
+    p(6.89, "Housewares", "Tablecloth"),
+    p(0.23, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 15, 12, 27), 1.18, meijer, visa3408, [
+    p(3.19, "Groceries", "Frozen pie shells"),
+    p(1.49, "Groceries", "Juice concentrate"),
+    p(1.49, "Groceries", "Juice concentrate"),
+    p(-5.00, "Groceries", "Mperks rewards"),
+    p(0.01, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 16, 19), 165.74, carle, visa3408, [
+    p(165.74, "Health", "Carle payment plan")
+]),
+
+t(makeTime(2024, 6, 16, 15), 154.40, new Vendor("Secretary of State"), visa3408, [
+    p(154.40, "Car", "Registration fee")
+]),
+
+t(makeTime(2024, 6, 17, 8), 72.42, water, chase, [
+    p(72.42, "Utilities", "Water for May 2024")
+]),
+
+t(makeTime(2024, 6, 16, 10, 27), 63.74, new Vendor("Steam"), visa3408, [
+    p(63.74, "Meridith Fun Money", "Baldur's Gate 3 for dad")
+]),
+
+t(makeTime(2024, 6, 17, 17, 22), 35.52, costco, visa3408, [
+    p(35.52, "Car", "11.105 gal gas at $3.199 per gal")
+]),
+
+t(makeTime(2024, 6, 17, 17, 35), 60.53, costco, visa3408, [
+    p(5.89, "Groceries", "4 lbs honeycrisp apples"),
+    p(5.89, "Groceries", "4 lbs honeycrisp apples"),
+    p(9.99, "Groceries", "Dots pretzels"),
+    p(8.99, "Groceries", "Almonds"),
+    p(11.79, "Groceries", "Goldfish crackers"),
+    p(8.69, "Groceries", "Cinnamon life cereal"),
+    p(8.69, "Groceries", "Cinnamon life cereal"),
+    p(0.60, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 17, 13), 70.68, new Vendor("Progressive"), visa3408, [
+    p(70.68, "Car", "insurance premium")
+]),
+
+t(makeTime(2024, 6, 18, 13, 52), 10.12, new Vendor("Ace Hardware"), chase, [
+    p(7.99, "Housewares", "Shelf pins"),
+    p(1.29, "Garden", "Bird suet"),
+    p(0.84, "Housewares", "Tax")
+]),
+
+t(makeTime(2024, 6, 18, 14, 9), 20.00, cvs, visa3408, [
+    p(20.00, "Health", "Buspirone prescription")
+]),
+
+t(makeTime(2024, 6, 19, 18), 9.25, amazon, visa3408, [
+    p(8.49, "Both Fun Money", "Keyboard for keyboard glove project"),
+    p(0.76, "Both Fun Money", "Tax")
+]),
+
+t(makeTime(2024, 6, 20, 18, 5), 8.71, new Vendor("Ace Hardware"), visa3408, [
+    p(7.99, "Housewares", "Shelf support pins"),
+    p(0.72, "Housewares", "Tax")
+]),
+
+t(makeTime(2024, 6, 20, 17, 5), 17.00, joann, visa3408, [
+    p(2.40, "Both Fun Money", "Sew on snaps for keyboard gloves"),
+    p(2.39, "Both Fun Money", "Sew on snaps for keyboard gloves"),
+    p(2.40, "Both Fun Money", "Sew on snaps for keyboard gloves"),
+    p(2.39, "Both Fun Money", "Sew on snaps for keyboard gloves"),
+    p(2.39, "Both Fun Money", "Sew on snaps for keyboard gloves"),
+    p(3.60, "Both Fun Money", "3D wood puzzle for Nick's B-Day"),
+    p(1.43, "Both Fun Money", "Tax")
+]),
+
+t(makeTime(2024, 6, 20, 16, 54), 21.77, lowes, visa3408, [
+    p(19.97, "Both Fun money", "Cat5 cable to split apart for keyboard gloves"),
+    p(1.80, "Both Fun Money", "Tax")
+]),
+
+t(makeTime(2024, 6, 22, 19, 36), 16.28, meijer, visa3408, [
+    p(2.75, "Groceries", "1 gal 1% milk"),
+    p(10.38, "Groceries", "2 frozen pizzas"),
+    p(2.99, "Groceries", "8 ct whole wheat hamburger buns"),
+    p(0.16, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 23, 15, 33), 65.67, costco, visa3408, [
+    p(4.99, "Groceries", "Ground cinnamon"),
+    p(5.79, "Groceries", "Tortilla chips"),
+    p(12.49, "Groceries", "5 lbs chocolate chips"),
+    p(8.99, "Groceries", "Vegetable stock base"),
+    p(19.99, "Groceries", "Apple sauce packets"),
+    p(5.89, "Groceries", "4 lbs honeycrisp apples"),
+    p(5.89, "Groceries", "4 lbs honeycrisp apples"),
+    p(1.64, "Groceries", "Tax")
+]),
+
+t(makeTime(2024, 6, 23, 18), 89.99, i3, chase, [
+    p(89.99, "Utilities", "July internet bill")
+]),
+
+t(makeTime(2024, 6, 23, 15, 51), 9.57, meijer, visa3408, [
+    p(1.49, "Groceries", "Frozen cauliflower florets"),
+    p(2.49-0.49, "Groceries", "Pretzel sticks"),
+    p(2.49-0.49, "Groceries", "Pretzel twists"),
+    p(8.99, "Both Fun Money", "Flaxseed oil"),
+    p(0.09, "Groceries", "Tax"),
+    p(-5.00, "Groceries", "Discount from mperks")
+]),
+
+t(makeTime(2024, 6, 24, 16, 11), 10.00, cvs, visa3408, [
+    p(10.00, "Health", "Adderall prescriptions")
+]),
+
+t(makeTime(2024, 6, 25, 12, 40), 52.02, meijer, visa3408, [
+    p(1.39, "Groceries", "1 dozen eggs"),
+    p(2.75, "Groceries", "1 gal 2% milk"),
+    p(2.89, "Groceries", "24 oz sour cream"),
+    p(7.69, "Groceries", "shredded cheddar cheese"),
+    p(0.55, "Groceries", "Ranch mix"),
+    p(33.58, "Cats", "2 boxes tidy cats comfort litter"),
+    p(3.02, "Cats", "9% sales tax"),
+    p(0.15, "Groceries", "1% sales tax")
 ])
 ]
+
+const fs = require("fs")
+
+fs.writefile("Transactions_09-01-22_06-20-24.txt", sampleTransactions.map(x => x.toJson()))
