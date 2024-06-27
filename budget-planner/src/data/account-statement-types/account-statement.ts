@@ -8,8 +8,8 @@ export interface VishalsAccountStatement {
     startDate: Date
     endDate: Date
 
-    internalTransactions?: Array<InternalTransaction>
-    externalTransactions: Array<ExternalTransaction>
+    internalTransactionSimple?: Array<[amount: number, isPayment: boolean, accountName: string]>
+    externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>
 }
 
 export class AccountStatement implements VishalsAccountStatement {
@@ -19,16 +19,16 @@ export class AccountStatement implements VishalsAccountStatement {
     public endDate: Date
     
     public endingBalance: number
-    public internalTransactions?: Array<InternalTransaction>
-    public externalTransactions: Array<ExternalTransaction>
+    public internalTransactionSimple?: Array<[amount: number, isPayment: boolean, accountName: string]>
+    public externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>
 
-    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactions: Array<InternalTransaction>, externalTransactions: Array<ExternalTransaction>){
+    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>){
         this.account = account
         this.startDate = startDate
         this.endDate = endDate
         this.endingBalance = endingBalance
-        this.internalTransactions = internalTransactions
-        this.externalTransactions = externalTransactions
+        this.internalTransactionSimple = internalTransactionSimple
+        this.externalTransactionsSimple = externalTransactionsSimple
     }
 }
 
@@ -38,16 +38,16 @@ export class BankStatement extends AccountStatement {
     public deductionCount: number
     public additionCount: number
 
-    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactions: Array<InternalTransaction>, externalTransactions: Array<ExternalTransaction>, beginningBalance: number, deductionCount: number, additionCount: number){
-        super(account, startDate, endDate, endingBalance, internalTransactions, externalTransactions);
+    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>, beginningBalance: number, deductionCount: number, additionCount: number){
+        super(account, startDate, endDate, endingBalance, internalTransactionSimple, externalTransactionsSimple);
         this.beginningBalance = beginningBalance
         this.deductionCount = deductionCount
         this.additionCount = additionCount
     }
 
-    getRemainderBalance(): number {
-        return (this.endingBalance - this.beginningBalance) - (this.externalTransactions.reduce((sum, curr) => sum + curr.amount, 0))
-    }
+    // getRemainderBalance(): number {
+    //     return (this.endingBalance - this.beginningBalance) - (this.externalTransactionsSimple.reduce((sum, curr) => sum + curr.amount, 0))
+    // }
 }
 
 export class CreditCardStatement extends AccountStatement {
@@ -61,8 +61,8 @@ export class CreditCardStatement extends AccountStatement {
 
     //public payments? = this.internalTransactions?.forEach();
 
-    constructor(payments: Array<[number, Date]>, account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactions: Array<InternalTransaction>, externalTransactions: Array<ExternalTransaction>, previousBalance: number, feesCharged: number, interestCharged: number, rewardsBalanceInitial: number, rewardsEarned: number){
-        super(account, startDate, endDate, endingBalance, internalTransactions, externalTransactions)
+    constructor(payments: Array<[number, Date]>, account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionsSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>, previousBalance: number, feesCharged: number, interestCharged: number, rewardsBalanceInitial: number, rewardsEarned: number){
+        super(account, startDate, endDate, endingBalance, internalTransactionsSimple, externalTransactionsSimple)
         this.previousBalance = previousBalance
         this.feesCharged = feesCharged
         this.interestCharged = interestCharged
@@ -72,7 +72,7 @@ export class CreditCardStatement extends AccountStatement {
         //TODO: make payments in constructor
     }
 
-    getRemainderBalance(): number {
-        return (this.endingBalance - this.previousBalance) - (this.externalTransactions.reduce((sum, curr) => sum + curr.amount, 0)) - this.interestCharged
-    }
+    // getRemainderBalance(): number {
+    //     return (this.endingBalance - this.previousBalance) - (this.externalTransactionsSimple.reduce((sum, curr) => sum + curr.amount, 0)) - this.interestCharged
+    // }
 }
