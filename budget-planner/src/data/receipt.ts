@@ -74,7 +74,6 @@ export class Receipt {
 export class StoreReceipt extends Receipt {
     storeIDNumber: number
     cashierName: string
-    storeName = "Meijer"
 
     constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, itemCount: number, cashierName: string, storeIDNumber: number){
         super(time, amount, tax, storeName, paymentMethod, lineItems, itemCount)
@@ -85,6 +84,7 @@ export class StoreReceipt extends Receipt {
 
 export class MeijerReceipt extends StoreReceipt {
     savingsTotal: number
+    storeName = "Meijer"
 
     constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, itemCount: number, cashierName: string, storeIDNumber: number, savingsTotal: number){
         super(time, amount, tax, storeName, paymentMethod, lineItems, itemCount, cashierName, storeIDNumber)
