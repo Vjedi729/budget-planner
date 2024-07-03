@@ -27,13 +27,16 @@ export interface OLD_BudgetConfig<Budgets extends string = string, People extend
 		// TODO: Support different types of money allocations in Money Split (dollars, percentages, etc.)
 	}
 }
-export interface BudgetConfig<People extends string = string> {
+export interface BudgetConfig<People extends string = string, TimeType = Date> {
 	people: Array<People>
+	incomes: {
+		bucketNames: Array<BucketName>
+	}
 	needs: {
 		bucketNames: Array<string>
 	}
 	moneyDistributions: Array<
-		{ recurrence: Recurrence<Date>, bucketFillAlgorithm: BucketFillAlgorithm<string> }
+		{ recurrence: Recurrence<TimeType>, bucketFillAlgorithm: BucketFillAlgorithm<string> }
 	>
 }
 
@@ -57,9 +60,9 @@ export function FromOldConfig_OLD_BEHAVIOR<Budget extends string, People extends
 		incomeBucket => new FillSequence(
 			oldStyleConfig.needs.bucketNames.map<BucketFillAlgorithm<string>>(name =>
 				// * Fill needs buckets first
-				new FillToTargetBalanceFromSource(incomeBucket, {[name]: 0}, FromSourceDistributionMethods.EqualPercentFull)
-			// ).concat(
-			// 	new LogBuckets("Filled Needs Buckets")
+				new FillToTargetBalanceFromSource(incomeBucket, {[name]: 0}, FromSourceDistributionMethods.EqualPercentFull),
+			).concat(
+				new LogBuckets("Filled Needs Buckets")
 			).concat(
 				// * Fill main wants buckets with remaining money
 				new AddFixedAmountFromSource(
@@ -67,8 +70,8 @@ export function FromOldConfig_OLD_BEHAVIOR<Budget extends string, People extends
 					wantsHackTargets,
 					FromSourceDistributionMethods.EqualPercentFull
 				)
-			// ).concat(
-			// 	new LogBuckets("Split Wants Buckets")
+			).concat(
+				new LogBuckets("Split Wants Buckets")
 			).concat(
 				// * Fill specific buckets from main wants buckets
 				Object.entries<OLD_BucketFillDescription>(oldStyleConfig.wants.bucketFilling).map(([fromBucket, data]) =>
@@ -81,6 +84,7 @@ export function FromOldConfig_OLD_BEHAVIOR<Budget extends string, People extends
 	)
 	return {
 		people: oldStyleConfig.people,
+		incomes: oldStyleConfig.incomes,
 		needs: {bucketNames: oldStyleConfig.needs.bucketNames.map(x => x)},
 		moneyDistributions: fillSequences.map(seq =>
 			({ recurrence: new EveryMonthOnTheNth(2), bucketFillAlgorithm: seq })
@@ -88,6 +92,7 @@ export function FromOldConfig_OLD_BEHAVIOR<Budget extends string, People extends
 	}
 }
 
-// export function FromOldConfig<Budget extends string, People extends string>(oldStyleConfig: OLD_BudgetConfig<Budget, People>) : BudgetConfig<People>{
-//     return oldStyleConfig;
-// } 
+export function FromOldConfig<Budget extends string, People extends string>(oldStyleConfig: OLD_BudgetConfig<Budget, People>) : BudgetConfig<People>{
+    return FromOldConfig_OLD_BEHAVIOR(oldStyleConfig);
+		// TODO: Implement new behavior
+}

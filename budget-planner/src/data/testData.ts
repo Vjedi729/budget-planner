@@ -4,13 +4,13 @@ import { ExternalTransaction, Recurrence } from "./transactions"
 import { BucketName } from "./enums"
 import { Purchase } from "./purchase"
 import { RecurringTransaction, EveryMonthOnTheNth } from "./transactions"
-import { BudgetConfig, OLD_BudgetConfig } from "./budgetConfig"
+import { BudgetConfig, OLD_BudgetConfig, FromOldConfig } from "./budgetConfig"
 import { BasicHistoryOf, HistoryOf } from "./history"
-import { BucketBalance } from "./bucket-fill-algorithm/interface"
+import { BucketBalance, BucketFillAlgorithm } from "./bucket-fill-algorithm/interface"
 
 import { cloneDeep, includes } from "lodash"
 import { JsSort } from "@/ts-utils/sort-utils"
-import { filterRecord } from "@/ts-utils/record-utils"
+import { filterRecord, getOrDefault } from "@/ts-utils/record-utils"
 import { dollarFormat } from "@/utilities/displayUtils"
 import { isDefined } from "@/ts-utils/undefined-utils"
 
@@ -89,7 +89,7 @@ export const earlierDateFirstSort: JsSort.FunctionType<Date> = (a, b) => -laterD
 export const testInitialDate = new Date(2020, 1, 1)
 export const testInitialBucketBalances = {}
 
-let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, testBudgetData, testInitialDate);
+let _testBudgetHistory = new BasicHistoryOf(laterDateFirstSort, FromOldConfig(testBudgetData), testInitialDate);
 _testBudgetHistory.reportNoChange(new Date(Date.now()));
 export var testBudgetConfigHistory = _testBudgetHistory;
 
@@ -186,8 +186,8 @@ export function processTransaction<TimeType>(
     return balances;
 }
     
-// TODO: Needs memoization
-export function getBucketBalancesDetailed<Budgets extends string, TimeType = Date>(
+// ! Expects config "moneyDistributions" recurrences to all be the same as `budgetRefillRecurrence`
+export function OLD_getBucketBalancesDetailed<Budgets extends string, TimeType>(
     utilities: {
         laterTimeFirstSort: JsSort.FunctionType<TimeType>,
     },
@@ -195,7 +195,7 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
         initialBucketBalances: BucketBalance, initialTime: TimeType,
         endTime: TimeType, inclusive: boolean | undefined
     },
-    budgetConfig: HistoryOf<OLD_BudgetConfig<Budgets>, TimeType>, 
+    budgetConfig: HistoryOf<BudgetConfig<Budgets, TimeType>, TimeType>, 
     budgetRefillRecurrence: Recurrence<TimeType>,
     transactionData: ExternalTransaction<TimeType>[],
 ) {
@@ -213,21 +213,16 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
     let transactionsInRange = transactionData.filter((transaction) => {
         let sortResult = utilities.laterTimeFirstSort(boundaryConditions.endTime, transaction.time)
         return JsSort.ResultEquals(sortResult, JsSort.ResultType.LeftArgFirst) || (boundaryConditions.inclusive && JsSort.ResultEquals(sortResult, JsSort.ResultType.KeepOriginalOrder))
-    }).sort((a, b) => -utilities.laterTimeFirstSort(a.time, b.time))
+    }).sort((a, b) => -utilities.laterTimeFirstSort(a.time, b.time)) // * Sorting happens later
 
     // console.log("Transactions given", cloneDeep(transactionData))
     // console.log("Transactions before", endTime, cloneDeep(transactionsInRange))
-    let amountToAddToWants = 0;
     transactionsInRange.forEach((transaction, i) => {
         // * Fill buckets as many times as appropriate before the time of this transaction
         const currentTime = bucketFillDates[0];
         while(currentTime && JsSort.IsRightArgFirst(utilities.laterTimeFirstSort, bucketFillDates[0], transaction.time))
         {
-            // TODO: Add money based on amount not spent on needs in the previous time period
-                // * Change initial to 0
-                // * Update value at end of after processing transactions but before build fill dates
-                // * Requires re-ordering functions to process bucket fills and transactions in date order (switching between as needed)
-
+            // * Add money based on amount not spent on needs in the previous time period
             // console.log("Filling buckets at time", currentTime.toString(), "before transaction", i, cloneDeep(balancesHistory.currentValue));
             {
                 // * Get current state
@@ -236,21 +231,20 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
                     console.error("No budget config found at time", currentTime, "in", budgetConfig)   
                     return;
                 }
-                let initialBalances = cloneDeep(balancesHistory.getValue(currentTime));
-                if(initialBalances == undefined) {
-                    console.error("No balance found at time", currentTime, "in", initialBalances)
+                let balances = cloneDeep(balancesHistory.getValue(currentTime));
+                if(balances == undefined) {
+                    console.error("No balance found at time", currentTime, "in", balances)
                     return;
                 }
                 
                 // * Record new balances
-                balancesHistory.setValue(
-                    HELPER_quickDistributeMoneyToBuckets(budget, initialBalances, currentTime), 
-                    currentTime
-                );
+                // TODO: Properly run distributions
+                budget.moneyDistributions.forEach(dist => {
+                    balances = dist.bucketFillAlgorithm.fillBuckets(balances as BucketBalance<number>)
+                });
             }
             // wantsFillAmounts.push({time: currentTime, amount: amountToAddToWants})
 
-            amountToAddToWants = 0;
             bucketFillDates.shift();
         }
 
@@ -259,7 +253,80 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
         // console.log("Processed transaction", i, transaction);
         // console.log(cloneDeep(transaction.time), cloneDeep(newBalances))
         balancesHistory.setValue(newBalances, transaction.time)
-    }) 
+    })
+
+    return {
+        bucketBalanceHistory: balancesHistory,
+        // wantsFillAmounts: wantsFillAmounts,
+    }
+
+}
+
+type Task<MoneyType = number> = ((inBalances: BucketBalance<MoneyType>) => BucketBalance<MoneyType>)
+type TaskList<TimeType> = Array<[TimeType, Task]>
+
+// TODO: Needs memoization
+export function getBucketBalancesDetailed<Budgets extends string, TimeType = Date>(
+    utilities: {
+        laterTimeFirstSort: JsSort.FunctionType<TimeType>,
+    },
+    boundaryConditions: {
+        initialBucketBalances: BucketBalance, initialTime: TimeType,
+        endTime: TimeType, inclusive: boolean | undefined
+    },
+    budgetConfig: HistoryOf<BudgetConfig<Budgets, TimeType>, TimeType>, 
+    budgetRefillRecurrence: Recurrence<TimeType>,
+    transactionData: ExternalTransaction<TimeType>[],
+) {
+    // * Set Param Defaults
+    boundaryConditions.inclusive = boundaryConditions.inclusive == undefined ? false : boundaryConditions.inclusive;  
+
+    // * Create Initial Data
+    let balancesHistory = new BasicHistoryOf(utilities.laterTimeFirstSort, boundaryConditions.initialBucketBalances, boundaryConditions.initialTime, 0);
+    // console.log("Initial Balances", cloneDeep(balancesHistory.currentValue))
+
+    // * Create Tasks
+    let transactionsInRange = transactionData.filter((transaction) => {
+        let sortResult = utilities.laterTimeFirstSort(boundaryConditions.endTime, transaction.time)
+        return JsSort.ResultEquals(sortResult, JsSort.ResultType.LeftArgFirst) || (boundaryConditions.inclusive && JsSort.ResultEquals(sortResult, JsSort.ResultType.KeepOriginalOrder))
+    })//.sort((a, b) => -utilities.laterTimeFirstSort(a.time, b.time)) // * Sorting happens later
+
+    const transactionTasks: TaskList<TimeType> = transactionsInRange.map(
+        t => [t.time, (inBal: BucketBalance<number>) => processTransaction<TimeType>(t, inBal)]
+    )
+
+    const refillTasks: TaskList<TimeType> = budgetConfig.getValues(boundaryConditions.initialTime, boundaryConditions.endTime).flatMap(
+        (budgetEntry) => budgetEntry.value.moneyDistributions.flatMap(
+            (distribution) => distribution.recurrence.listTimes(budgetEntry.start, budgetEntry.end).map(
+                (time) => [time, (inBal: BucketBalance<number>) => distribution.bucketFillAlgorithm.fillBuckets(inBal)] as [TimeType, Task]
+            )
+        ) 
+    )
+
+    // console.log("Refill tasks", refillTasks)    
+
+    const tasks = transactionTasks.concat(refillTasks).sort((a, b) => -utilities.laterTimeFirstSort(a[0], b[0]))
+
+    // console.log("Get Bucket Balances Tasks", tasks)
+
+    // * Execute tasks in order
+    let logArray: Array<{time: TimeType, old: BucketBalance, new: BucketBalance, diff: BucketBalance}> = []
+    tasks.forEach(
+        ([time, task]) => {
+            const oldVal = cloneDeep(balancesHistory.currentValue)
+            const newVal = task(cloneDeep(oldVal));
+            logArray.push({
+                time: time, old: oldVal, new: newVal, 
+                diff: Object.fromEntries(Object.entries(newVal).map(
+                    ([name, newBal]) => [name, newBal-getOrDefault(oldVal, name, 0)]
+                ))
+            })
+
+            return balancesHistory.setValue(/*task(cloneDeep(balancesHistory.currentValue))*/newVal, time)
+        }
+    )
+
+    console.log("Tasks", logArray)
 
     return {
         bucketBalanceHistory: balancesHistory,

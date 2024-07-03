@@ -44,6 +44,8 @@ export enum FromSourceDistributionMethods {
 }
 type BucketTargets = Readonly<Record<BucketName, number>>
 
+type FillBucketsFromSourcePrecalculatedValues =  {targets?: BucketTargets, moneyNeededToFillAllTargets?: number}
+
 export abstract class FillBucketsFromSource<T extends string> implements BucketFillAlgorithm<T> {
     readonly uniqueKeyString: T;
 
@@ -61,14 +63,14 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
     }
 
     abstract GetTargets(initialBucketBalances: BucketBalance): BucketTargets
-    GetMoneyNeededToFillAll(targets: BucketTargets): number { return Object.entries(targets).reduce((p, c) => p+c[1], 0); }
+    GetMoneyNeededToFillAll(targets: BucketTargets): number { return Object.entries(targets).reduce((p, [_, amount]) => p+amount, 0); }
 
     // fillCustomProportions(initialBucketBalances: BucketBalance, proportions: Record<BucketName, number>): BucketBalance {
 
     // }
 
-    fillEqualDollars(initialBucketBalances: BucketBalance, targets?: BucketTargets): BucketBalance {
-        targets = targets || this.GetTargets(initialBucketBalances);
+    fillEqualDollars(initialBucketBalances: BucketBalance, precalcs: FillBucketsFromSourcePrecalculatedValues = {} ): BucketBalance {
+        const targets = precalcs.targets || this.GetTargets(initialBucketBalances);
 
         let excessMoney = getOrDefault(initialBucketBalances, this.source, 0);
         let filledAmount = 0;
@@ -79,7 +81,7 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
             // console.log("Filling buckets with", excessMoney, "giving a max of", maxAmountToAdd, "dollars per bucket")
 
             targetsToFill = targetsToFill.reduce<BucketName[]>((nonFullTargets, targetName) => {
-                const targetAmount = targets[targetName]
+                const targetAmount = getOrDefault(targets, targetName, 0)
                 let willBeFull = targetAmount <= filledAmount + maxAmountToAdd
                 if(willBeFull) {
                     const amount = targetAmount-filledAmount
@@ -104,31 +106,37 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
         
     }
 
-    fillEqualPercent(initialBucketBalances: BucketBalance, targets?: BucketTargets): BucketBalance {
-        targets = targets || this.GetTargets(initialBucketBalances)
-        // console.log(targets);
-        const fractionToFillTo = initialBucketBalances[this.source] / this.GetMoneyNeededToFillAll(targets);
+    fillEqualPercent(initialBucketBalances: BucketBalance, precalcs: FillBucketsFromSourcePrecalculatedValues = {}): BucketBalance {
+        const targets = precalcs.targets || this.GetTargets(initialBucketBalances)
+        console.log("fillEqualPercents", "targets", targets);
+        const moneyNeededToFillAll = precalcs.moneyNeededToFillAllTargets || this.GetMoneyNeededToFillAll(targets)
+        console.log("fillEqualPercents", "moneyNeededToFillAll", moneyNeededToFillAll)
+        const fractionToFillTo = getOrDefault(initialBucketBalances, this.source, 0) / moneyNeededToFillAll;
+        console.log("fillEqualPercents", "fractionToFillTo", fractionToFillTo)
 
         Object.entries(targets).forEach(([targetName, targetAmount]) => {
             const amount = fractionToFillTo * targetAmount
-            // console.log("Adding", amount, "to bucket", targetName)
-            initialBucketBalances[this.source] -= amount;
+            console.log("Adding", amount, "to bucket", targetName)
+            initialBucketBalances[this.source] = getOrDefault(initialBucketBalances, this.source, 0) - amount;
             initialBucketBalances[targetName] = getOrDefault(initialBucketBalances, targetName, 0) + amount;
-            // console.log(initialBucketBalances[targetName])
+            console.log(initialBucketBalances[targetName])
         });
 
         return initialBucketBalances
     }
 
     fillBuckets(initialBucketBalances: BucketBalance): BucketBalance {
-        initialBucketBalances[this.source] = initialBucketBalances[this.source] || 0;
+        initialBucketBalances[this.source] = getOrDefault(initialBucketBalances, this.source, 0);
         const targets = this.GetTargets(initialBucketBalances);
         const moneyNeededToFillAll = this.GetMoneyNeededToFillAll(targets)
+        console.log("fillBuckets", "initialBucketBalances[this.source]", initialBucketBalances[this.source])
+        console.log("fillBuckets", "moneyNeededToFillAll", moneyNeededToFillAll)
+
         // # Fill all buckets to target if possible
-        if(initialBucketBalances[this.source] > moneyNeededToFillAll) {
+        if(initialBucketBalances[this.source] >= moneyNeededToFillAll) {
             initialBucketBalances[this.source] -= moneyNeededToFillAll
             Object.entries(targets).forEach(
-                ([targetName, targetAmount]) => initialBucketBalances[targetName] = (initialBucketBalances[targetName] || 0) + targetAmount
+                ([targetName, targetAmount]) => initialBucketBalances[targetName] = getOrDefault(initialBucketBalances, targetName, 0) + targetAmount
             );
             return initialBucketBalances;
         } 
