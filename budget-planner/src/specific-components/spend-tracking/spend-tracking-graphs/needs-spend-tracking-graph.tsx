@@ -1,4 +1,4 @@
-import { BucketBalance, GetGroupBalance } from "@/data/testData";
+import { GetGroupBalance } from "@/data/testData";
 import { HistoryOf, TimelineOf } from "@/data/history";
 import { BucketName } from "@/data/enums";
 
@@ -33,6 +33,7 @@ import { Line as LineChart } from "react-chartjs-2";
 import { TimelinePoint, plotDataFromTimeline, purchaseTooltipText } from "./wants-spend-tracking-graph";
 import { JsSort } from "@/ts-utils/sort-utils";
 import { ExternalTransaction } from "@/data/transactions";
+import { BucketBalance } from "@/data/bucket-fill-algorithm/interface";
 
 export interface NeedsSpendingProps<TimeType = Date> {
     startingBalances: BucketBalance
@@ -74,7 +75,7 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
     
     let datasets = [                
         plotDataFromTimeline(
-            "Actual", props.buckets, props.bucketSpendingHistory.getValues(props.startTime, props.endTime),
+            "Actual", props.buckets, props.bucketSpendingHistory.getEntries(props.startTime, props.endTime),
             [230, 250, 10], {}, x => -x
         ),
         plotDataFromTimeline(
@@ -92,7 +93,7 @@ export const NeedsSpendTrackingGraph: React.FC<NeedsSpendingProps> = (props) => 
         pastStartTime = props.pastSpendingOffset(pastStartTime)
         pastEndTime = props.pastSpendingOffset(pastEndTime)
         if(JsSort.IsRightArgFirst(props.bucketSpendingHistory.laterTimeFirstSort, pastStartTime, props.bucketSpendingHistory.initialTime)) break;
-        const pastSpendingTimeline = props.bucketSpendingHistory.getValues(pastStartTime, pastEndTime).map(x => {
+        const pastSpendingTimeline = props.bucketSpendingHistory.getEntries(pastStartTime, pastEndTime).map(x => {
             let start = x.start;
             let end = x.end;
             for(let i = 0; i <= pastI; i++) {

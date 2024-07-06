@@ -263,7 +263,7 @@ export function OLD_getBucketBalancesDetailed<Budgets extends string, TimeType>(
 }
 
 type Task<MoneyType = number> = ((inBalances: BucketBalance<MoneyType>) => BucketBalance<MoneyType>)
-type TaskList<TimeType> = Array<[TimeType, Task]>
+type TaskList<TimeType> = Array<{time: TimeType, task: Task, meta?: any}>
 
 // TODO: Needs memoization
 export function getBucketBalancesDetailed<Budgets extends string, TimeType = Date>(
@@ -291,42 +291,36 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
         return JsSort.ResultEquals(sortResult, JsSort.ResultType.LeftArgFirst) || (boundaryConditions.inclusive && JsSort.ResultEquals(sortResult, JsSort.ResultType.KeepOriginalOrder))
     })//.sort((a, b) => -utilities.laterTimeFirstSort(a.time, b.time)) // * Sorting happens later
 
-    const transactionTasks: TaskList<TimeType> = transactionsInRange.map(
-        t => [t.time, (inBal: BucketBalance<number>) => processTransaction<TimeType>(t, inBal)]
-    )
+    const transactionTasks: TaskList<TimeType> = transactionsInRange.map(transaction => ({
+        time: transaction.time, 
+        task: (inBal: BucketBalance<number>) => processTransaction<TimeType>(transaction, inBal),
+        meta: transaction
+    }))
 
-    const refillTasks: TaskList<TimeType> = budgetConfig.getValues(boundaryConditions.initialTime, boundaryConditions.endTime).flatMap(
+    const refillTasks: TaskList<TimeType> = budgetConfig.getEntries(boundaryConditions.initialTime, boundaryConditions.endTime).flatMap(
         (budgetEntry) => budgetEntry.value.moneyDistributions.flatMap(
             (distribution) => distribution.recurrence.listTimes(budgetEntry.start, budgetEntry.end).map(
-                (time) => [time, (inBal: BucketBalance<number>) => distribution.bucketFillAlgorithm.fillBuckets(inBal)] as [TimeType, Task]
+                (time) => ({
+                    time: time, 
+                    task: (inBal: BucketBalance<number>) => distribution.bucketFillAlgorithm.fillBuckets(inBal),
+                    meta: distribution
+                })
             )
         ) 
     )
 
     // console.log("Refill tasks", refillTasks)    
 
-    const tasks = transactionTasks.concat(refillTasks).sort((a, b) => -utilities.laterTimeFirstSort(a[0], b[0]))
+    const tasks = transactionTasks.concat(refillTasks).sort((a, b) => -utilities.laterTimeFirstSort(a.time, b.time))
 
     // console.log("Get Bucket Balances Tasks", tasks)
 
     // * Execute tasks in order
-    let logArray: Array<{time: TimeType, old: BucketBalance, new: BucketBalance, diff: BucketBalance}> = []
-    tasks.forEach(
-        ([time, task]) => {
-            const oldVal = cloneDeep(balancesHistory.currentValue)
-            const newVal = task(cloneDeep(oldVal));
-            logArray.push({
-                time: time, old: oldVal, new: newVal, 
-                diff: Object.fromEntries(Object.entries(newVal).map(
-                    ([name, newBal]) => [name, newBal-getOrDefault(oldVal, name, 0)]
-                ))
-            })
-
-            return balancesHistory.setValue(/*task(cloneDeep(balancesHistory.currentValue))*/newVal, time)
-        }
-    )
-
-    console.log("Tasks", logArray)
+    tasks.forEach(({time, task, meta}) => {
+        const oldVal = balancesHistory.currentValue
+        const newVal = task(cloneDeep(oldVal));
+        return balancesHistory.setValue(newVal, time, undefined, meta)
+    })
 
     return {
         bucketBalanceHistory: balancesHistory,

@@ -1,6 +1,7 @@
 import { PartialDeep } from "type-fest";
 import { cloneDeep } from 'lodash'
 import { JsSort } from "@/ts-utils/sort-utils";
+import { metadata } from "@/app/layout";
 
 export type ChangeOf<T> = PartialDeep<T>
 
@@ -28,6 +29,7 @@ export type TimelineOf<T, TimeType, Meta = any> = Array<TimelineEntry<T, TimeTyp
 export function TimelineSortByTime<TimeType>(sortFn: JsSort.FunctionType<TimeType>): JsSort.FunctionType<TimelineEntry<any, TimeType>> {
     return (a, b) => sortFn(a.start, b.start) || sortFn(a.end, b.end)
 }
+
 export abstract class HistoryOf<T, TimeType, Meta = any> {
 
     currentValue: T
@@ -45,14 +47,19 @@ export abstract class HistoryOf<T, TimeType, Meta = any> {
         this.currentValue = cloneDeep(currentValue);
     }
 
-    abstract getValue(time: TimeType, afterTime?: boolean) : T | undefined
+    abstract getEntry(time: TimeType, afterTime?: boolean): TimelineEntry<T, TimeType, Meta[]> | undefined
+    abstract getEntries(startTime: TimeType, endTime: TimeType/*, filterZeroTimeEntries: boolean*/): TimelineOf<T, TimeType, Meta[]>
+
+    getValue(time: TimeType, afterTime?: boolean) : T | undefined { return this.getEntry(time, afterTime)?.value }
     abstract setValue(object: ChangeOf<T>, time: TimeType, endTime?: TimeType, meta?: Meta) : ChangeOf<T> | undefined // The previous values of changed data OR undefined if the value could not be set
     abstract reportNoChange(time:TimeType): void
 
     // TODO: Add boolean for filtering zero-time entries
     // abstract getValues(startTime: TimeType, endTime: TimeType, filterZeroTimeEntries: true) : TimelineOf<T, TimeType, Meta[]>
     // abstract getValues(startTime: TimeType, endTime: TimeType, filterZeroTimeEntries: false) : TimelineOf<T, TimeType, Meta>    
-    abstract getValues(startTime: TimeType, endTime: TimeType/*, filterZeroTimeEntries: boolean*/) : TimelineOf<T, TimeType, Meta[]>
+    getValues(...x: Parameters<HistoryOf<T, TimeType, Meta>["getEntries"]>) : T[] {
+        return this.getEntries(...x).map(x => x.value);
+    }
     // abstract getFullTimeline(filterZeroTimeEntries: true): TimelineOf<T, TimeType, Meta[]>
     // abstract getFullTimeline(filterZeroTimeEntries: false): TimelineOf<T, TimeType, Meta>
     abstract getFullTimeline(/*filterZeroTimeEntries: boolean*/): TimelineOf<T, TimeType, Meta[]> // The full timeline
@@ -101,7 +108,7 @@ export class ChangeHistoryOf<T extends object, TimeType, Meta = any> extends His
         this.currentTime = this.laterTime(this.currentTime, time)
     }
 
-    getValue(time: TimeType, afterTime: boolean = true): T | undefined {
+    getEntry(time: TimeType, afterTime: boolean = true): TimelineEntry<T, TimeType, Meta[]> | undefined {
         if(JsSort.ResultEquals(this.laterTimeFirstSort(this.initialTime, time), JsSort.ResultType.LeftArgFirst))
         {
             // Too early, no data is known:
@@ -112,19 +119,32 @@ export class ChangeHistoryOf<T extends object, TimeType, Meta = any> extends His
             // Too late, can't tell the future:
             return undefined;
         }
+        if(this.changes.length < 1) { return undefined }
 
-        let retVal = cloneDeep(this.currentValue);
+        let retVal: T = cloneDeep(this.currentValue);
+        // ! This code is untested
+        let retStart: TimeType = this.currentTime;
+        let retEnd: TimeType = this.initialTime;
+        let retMeta: Meta[] = [] 
+        // * End
 
         // console.log("Starting from:", this.currentValue)
 
         this.changes.sort((a, b) => this.laterTimeFirstSort(a.time, b.time))
+        // ! Looks like this is going backwards?
         let i = 0;
         while(i < this.changes.length && (afterTime ? JsSort.ResultEquals(this.laterTimeFirstSort(this.changes[i].time, time), JsSort.ResultType.LeftArgFirst) : !JsSort.ResultEquals(this.laterTimeFirstSort(this.changes[i].time, time), JsSort.ResultType.RightArgFirst))){
             SetWithPartial<T>(retVal, this.changes[i].prevValuesOfChangedElements)
+            // ! This code is untested
+            retEnd = retStart;
+            retStart = this.changes[i].time;
+            retMeta = [this.changes[i].metadata];
+            // * End
+
             i++;
         }
 
-        return retVal;
+        return {value: retVal, start: retStart, end: retEnd, metadata: retMeta};
     }
 
     setValue(object: ChangeOf<T>, currentTime: TimeType, endTime?: TimeType, meta?:Meta): ChangeOf<T> | undefined {
@@ -143,7 +163,7 @@ export class ChangeHistoryOf<T extends object, TimeType, Meta = any> extends His
         return prevValOfChanges;
     }
 
-    getValues(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType, Meta[]> { // * Includes at end time result
+    getEntries(startTime: TimeType, endTime: TimeType) : TimelineOf<T, TimeType, Meta[]> { // * Includes at end time result
         let values: Array<{start:TimeType, end: TimeType, value: T}> = []
 
         if(JsSort.ResultEquals(this.laterTimeFirstSort(this.initialTime, endTime), JsSort.ResultType.LeftArgFirst)) {
@@ -180,7 +200,7 @@ export class ChangeHistoryOf<T extends object, TimeType, Meta = any> extends His
     }
 
     getFullTimeline(): TimelineOf<T, TimeType, Meta[]> {
-        return this.getValues(this.initialTime, this.currentTime)
+        return this.getEntries(this.initialTime, this.currentTime)
     }
 }
 
@@ -198,16 +218,21 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType, Meta = a
         return this.filterZeroTimeEntries(this.timeline, [this.currentTime, this.initialTime]);
     }
 
-    getValue(time: TimeType, afterTime: boolean = true): T | undefined {
+    getEntry(time: TimeType, afterTime: boolean = true) {
         // Shortcut for current value
         if(afterTime && JsSort.IsKeepOriginalOrder(this.laterTimeFirstSort, time, this.currentTime)) {
-            return this.currentValue;
+            const entry = this.timeline[this.timeline.length-1];
+            return {
+                value: entry.value, 
+                start: entry.start, end: entry.end, 
+                metadata: (entry.metadata !== undefined) ? [] : [entry.metadata as Meta]
+            }
         }
 
         let entries = this.getValuesUnmodified(time, time);
         // console.log("Timeline History entries for", afterTime ? "after" : "before", time, entries, this)
         if(entries.length == 0) return undefined;
-        return afterTime ? entries[entries.length-1].value : entries[0].value;
+        return afterTime ? entries[entries.length-1] : entries[0];
     }
 
     // * Start and end entries contain the full extent of their time, causing the timeline to extend beyond the specified start and end times
@@ -230,7 +255,7 @@ export class TimelineHistoryOf<T extends Record<string, any>, TimeType, Meta = a
         )
     }
 
-    getValues(startTime: TimeType, endTime: TimeType): TimelineOf<T, TimeType, Meta[]> {
+    getEntries(startTime: TimeType, endTime: TimeType): TimelineOf<T, TimeType, Meta[]> {
         return this.getValuesUnmodified(startTime, endTime).map(
             // Clip first and last entry
             x => { x.start = this.laterTime(x.start, startTime); x.end = this.earlierTime(x.end, endTime); return x; }

@@ -46,7 +46,7 @@ test("Test of BasicHistoryOf", () => {
         })
     // })
 
-    let actualValues = hist.getValues(startTime, testChanges.length)
+    let actualValues = hist.getEntries(startTime, testChanges.length)
     let expectedValues = testChanges.map(([change, result], i) => { return {start:i, end: Math.min(i+1, testChanges.length-1), value: result}; })
     
     expect(actualValues).toContainEqual({start: startTime, end: 0, value: initialObj})
@@ -54,18 +54,18 @@ test("Test of BasicHistoryOf", () => {
         expect(actualValues).toContainEqual(value)
     })
 
-    // TODO: add tests for time cut-off if getValues() times are between changes
-    // TODO: add test that getValues() return does not contain multiple entries with the same "start" or "end" time
+    // TODO: add tests for time cut-off if getEntries() times are between changes
+    // TODO: add test that getEntries() return does not contain multiple entries with the same "start" or "end" time
     // ? Add tests for adding values in the middle of the time period? -> Haven't decided if this "should" work.
 
     // No value given for `getValue` before and after end time
     expect(hist.getValue(startTime-1)).toBeUndefined();
     expect(hist.getValue(testChanges.length+1)).toBeUndefined();
     
-    // `getValue` and `getValues` work correctly with `reportNoChange`
+    // `getEntry` and `getEntries` work correctly with `reportNoChange`
     hist.reportNoChange(testChanges.length+1)
     expect(hist.getValue(testChanges.length+1)).toEqual(testChanges[testChanges.length-1][1]);
-    let valuesAfterReportNoChange = hist.getValues(-Infinity, Infinity)
+    let valuesAfterReportNoChange = hist.getEntries(-Infinity, Infinity)
     let latestEndTime = valuesAfterReportNoChange.map(x => x.end).reduce<number>((prevTime, currTime) => Math.max(prevTime, currTime), -Infinity)
     expect(latestEndTime).toEqual(testChanges.length+1);
 })

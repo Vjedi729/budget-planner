@@ -5,13 +5,16 @@ import { InnerSpendTrackingComponentProps } from "..";
 import { BasicHistoryOf, HistoryOf, TimelineOf, TimelineSortByTime } from "@/data/history";
 import { BucketName } from "@/data/enums";
 
-import { BucketBalance, earlierDateFirstSort, laterDateFirstSort, processTransaction } from "@/data/testData";
+import { earlierDateFirstSort, laterDateFirstSort, processTransaction } from "@/data/testData";
 import { cloneDeep } from "lodash";
 import { JsSort } from "@/ts-utils/sort-utils";
 import { WantsSpendTrackingGraph } from "./wants-spend-tracking-graph";
 import { FlexColumn } from "./flex-column";
 import { NeedsSpendTrackingGraph } from "./needs-spend-tracking-graph";
 import { ExternalTransaction } from "@/data/transactions";
+import { BucketBalance } from "@/data/bucket-fill-algorithm/interface";
+import { getOrDefault, diffRecords } from "@/ts-utils/record-utils";
+import { orDefault } from "@/ts-utils/undefined-utils";
 
 // const testBucket: string|undefined = "For Varsha"
 
@@ -46,7 +49,7 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
     // );
     // console.log("Filtered Transactions (in range)", sortedTransactions, startTime, endTime)
 
-    // let bucketBalanceTimeline = props.bucketBalanceHistory.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
+    // let bucketBalanceTimeline = props.bucketBalanceHistory.getEntries(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
     let bucketBalanceTimeline = props.bucketBalanceHistory.getFullTimeline().sort(TimelineSortByTime(earlierDateFirstSort));
     const startingBalances: Record<BucketName, number> = props.bucketBalanceHistory.getValue(startTime, false) || {}
     // console.log("BucketBalances", cloneDeep(props.bucketBalanceHistory))
@@ -67,17 +70,17 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
         // console.log("Purchase Amount previous values", changes, "new value", cloneDeep(purchaseAmounts))
     })
     purchaseAmounts.reportNoChange(inputEndTime);
-    // console.log("Purchase Amounts Timeline", purchaseAmounts.getValues(startTime, endTime))
+    // console.log("Purchase Amounts Timeline", purchaseAmounts.getEntries(startTime, endTime))
     
     let bucketBudgets: HistoryOf<Record<BucketName, number>, Date> = new BasicHistoryOf(laterDateFirstSort, {}, props.bucketBalanceHistory.initialTime)
     // if(testBucket) console.log("Test bucket is:", testBucket)
     bucketBalanceTimeline.forEach(({start, end, value}) => {
-        let bucketToPurchaseAmount = purchaseAmounts.getValue(start, true) || {}
-        let bucketToZeroedBudget = Object.fromEntries(Object.entries(value).map(([bucket, bucketBudgetValue]) => 
-            [bucket, ((bucketBudgetValue || 0) - (startingBalances[bucket] || 0))]
-        ));
+        let bucketToPurchaseAmount = purchaseAmounts.getEntry(start, true)
+        if(bucketToPurchaseAmount == undefined) return;
 
-        Object.entries(bucketToPurchaseAmount).forEach(([bucket, amount]) => {
+        let bucketToZeroedBudget = diffRecords(value, startingBalances, (a,b) => orDefault(a,0)-orDefault(b,0))
+        
+        Object.entries(bucketToPurchaseAmount.value).forEach(([bucket, amount]) => {
             bucketToZeroedBudget[bucket] -= (amount || 0)
         })
 
@@ -85,15 +88,15 @@ export const SpendTrackingGraphColumns: React.FC<{ props: InnerSpendTrackingComp
     })
     bucketBudgets.reportNoChange(inputEndTime);
 
-    // console.log("Bucket Budgets Timeline", bucketBudgets.getValues(startTime, endTime))
+    // console.log("Bucket Budgets Timeline", bucketBudgets.getEntries(startTime, endTime))
 
     // * Filter which buckets are wants
     let needsBuckets: string[] = props.budgetConfigHistory.currentValue.needs.bucketNames;
     let wantsBuckets: string[] = Object.keys(props.bucketBalanceHistory.currentValue).filter( x => !needsBuckets.includes(x) && x!=BucketName.UNDEFINED && !props.budgetConfigHistory.currentValue.incomes.bucketNames.includes(x) );
 
     // console.log("Wants Buckets", wantsBuckets)
-    const wantsBucketSpendingTimeline = purchaseAmounts.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
-    const wantsBucketBudgetTimeline = bucketBudgets.getValues(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
+    const wantsBucketSpendingTimeline = purchaseAmounts.getEntries(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
+    const wantsBucketBudgetTimeline = bucketBudgets.getEntries(startTime, endTime).sort(TimelineSortByTime(earlierDateFirstSort));
 
     // TODO: Something like this: https://stackoverflow.com/questions/57528694/chart-js-multiple-charts-with-one-common-legend
     return (
