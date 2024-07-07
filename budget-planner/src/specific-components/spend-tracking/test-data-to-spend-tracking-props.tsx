@@ -20,7 +20,6 @@ export function TestDataToSpendTrackingProps(
                 initialTime: sampleInitialDate, endTime: endDate, inclusive: false
             },
             testBudgetConfigHistory, 
-            testBudgetRefillRecurrence,
             transactions, 
         ),
         transactions: transactions.filter(transaction => 

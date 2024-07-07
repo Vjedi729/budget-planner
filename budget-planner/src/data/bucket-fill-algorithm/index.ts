@@ -7,10 +7,11 @@ import { getOrDefault } from "@/ts-utils/record-utils";
 
 export class LogBuckets implements BucketFillAlgorithm<"LogBuckets"> {
     readonly uniqueKeyString = "LogBuckets";
-
+    
     label: string
     bucketWhitelist: Array<BucketName> | undefined
-
+    
+    // TODO: Add options for blacklist and conditional logging
     constructor(label: string, whitelist?: Array<BucketName>) {
         this.label = label;
         this.bucketWhitelist = whitelist;
@@ -69,8 +70,8 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
 
     // }
 
-    fillEqualDollars(initialBucketBalances: BucketBalance, precalcs: FillBucketsFromSourcePrecalculatedValues = {} ): BucketBalance {
-        const targets = precalcs.targets || this.GetTargets(initialBucketBalances);
+    fillEqualDollars(initialBucketBalances: BucketBalance, precalculatedValues: FillBucketsFromSourcePrecalculatedValues = {} ): BucketBalance {
+        const targets = precalculatedValues.targets || this.GetTargets(initialBucketBalances);
 
         let excessMoney = getOrDefault(initialBucketBalances, this.source, 0);
         let filledAmount = 0;
@@ -106,10 +107,10 @@ export abstract class FillBucketsFromSource<T extends string> implements BucketF
         
     }
 
-    fillEqualPercent(initialBucketBalances: BucketBalance, precalcs: FillBucketsFromSourcePrecalculatedValues = {}): BucketBalance {
-        const targets = precalcs.targets || this.GetTargets(initialBucketBalances)
+    fillEqualPercent(initialBucketBalances: BucketBalance, precalculatedValues: FillBucketsFromSourcePrecalculatedValues = {}): BucketBalance {
+        const targets = precalculatedValues.targets || this.GetTargets(initialBucketBalances)
         console.log("fillEqualPercents", "targets", targets);
-        const moneyNeededToFillAll = precalcs.moneyNeededToFillAllTargets || this.GetMoneyNeededToFillAll(targets)
+        const moneyNeededToFillAll = precalculatedValues.moneyNeededToFillAllTargets || this.GetMoneyNeededToFillAll(targets)
         console.log("fillEqualPercents", "moneyNeededToFillAll", moneyNeededToFillAll)
         const fractionToFillTo = getOrDefault(initialBucketBalances, this.source, 0) / moneyNeededToFillAll;
         console.log("fillEqualPercents", "fractionToFillTo", fractionToFillTo)

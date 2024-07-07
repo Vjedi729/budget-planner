@@ -275,7 +275,6 @@ export function getBucketBalancesDetailed<Budgets extends string, TimeType = Dat
         endTime: TimeType, inclusive: boolean | undefined
     },
     budgetConfig: HistoryOf<BudgetConfig<Budgets, TimeType>, TimeType>, 
-    budgetRefillRecurrence: Recurrence<TimeType>,
     transactionData: ExternalTransaction<TimeType>[],
 ) {
     // * Set Param Defaults
