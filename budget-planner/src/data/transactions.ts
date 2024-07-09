@@ -39,7 +39,6 @@ export class ExternalTransaction<TimeType = Date> {
     }
 
     static fromJson(parsedTransaction: Record<string, any>): ExternalTransaction | undefined {
-        // TODO: Check that all data exists and is in correct format
         if(
             typeof parsedTransaction.time == "string" &&
             typeof parsedTransaction.amount == "number" &&

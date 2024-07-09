@@ -4773,9 +4773,26 @@ t(makeTime(2024, 6, 25, 12, 40), 52.02, meijer, visa3408, [
     p(33.58, "Cats", "2 boxes tidy cats comfort litter"),
     p(3.02, "Cats", "9% sales tax"),
     p(0.15, "Groceries", "1% sales tax")
+]),
+
+t(makeTime(2024, 6, 24, 19, 26), -27.18, menards, new Account("Menards Credit"), [
+    p(-14.95, "Home Improvment", "Springs for pull-down faucet"),
+    p(-9.99, "Home Improvment", "Faucet weight"),
+    p(-2.24, "Home Improvement", "9% sales tax")
+]),
+
+t(makeTime(2024, 6, 29, 10, 41), 30.53, meijer, visa3408, [
+    p(30.53, "Car", "8.878 gal gas at $3.439 per gal")
+]),
+
+t(makeTime(2024, 6, 29, 10, 35), 6.35, meijer, visa3408, [
+    p(3.99, "Meridith Fun Money", "Graduation card for Jason"),
+    p(1.98, "Dining", "Donuts for breakfast"),
+    p(0.36, "Meridith Fun Money", "9% sales tax"),
+    p(0.02, "Dining", "1% sales tax")
 ])
 ]
 
-const fs = require("fs")
+//const fs = require("fs")
 
-fs.writefile("Transactions_09-01-22_06-20-24.txt", sampleTransactions.map(x => x.toJson()))
+//fs.writefile("Transactions_09-01-22_06-20-24.txt", sampleTransactions.map(x => x.toJson()))
