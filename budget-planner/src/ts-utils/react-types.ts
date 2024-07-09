@@ -1,1 +1,0 @@
-export type PropsOnlyComponent<P = {}> = React.Component<P> | React.FunctionComponent<P>

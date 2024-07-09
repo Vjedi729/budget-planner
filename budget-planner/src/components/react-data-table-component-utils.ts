@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { ConditionalStyles, Media, TableColumn } from "react-data-table-component";
-import { ColumnSortFunction, Format, Primitive, Selector } from "react-data-table-component/dist/DataTable/types";
-import { CSSObject } from "styled-components";
+import { ColumnSortFunction, Format, Primitive, Selector } from "react-data-table-component/dist/src/DataTable/types";
 
 export class MyTableColumn<T> implements TableColumn<T> {
     allowOverflow?: boolean | undefined;
@@ -59,11 +58,6 @@ export class MyTableColumn<T> implements TableColumn<T> {
 
 type MySelector<T, D extends Primitive> = (row: T, rowIndex?: number) => D
 type ImprovedFormat<T, D extends Primitive> = (value: D, row: T, rowIndex?: number) => ReactNode
-interface ImprovedConditionalCellStyle<T, D extends Primitive> {
-    when: (value: D, row: T) => boolean; // * Improved When
-    style?: CSSObject | ((row: T) => CSSObject)
-    classNames?: string[]
-} 
 
 
 export class SimpleColumn<T, D extends Primitive> extends MyTableColumn<T> {
@@ -71,11 +65,10 @@ export class SimpleColumn<T, D extends Primitive> extends MyTableColumn<T> {
     selector?: MySelector<T, D>
 
     constructor(
-        columnData: TableColumn<T>,
+        columnData: TableColumn<T>, 
         overrides: {
             selector?: MySelector<T, D>,
-            format?: ImprovedFormat<T, D>,
-            conditionalCellStyles?: ImprovedConditionalCellStyle<T, D>[]
+            format?: ImprovedFormat<T, D>
         }
     ) {
         super(columnData);
@@ -83,7 +76,6 @@ export class SimpleColumn<T, D extends Primitive> extends MyTableColumn<T> {
         this.selectedValues = []
         this.selector = overrides.selector != undefined ? this.toSavingSelector(overrides.selector) : undefined;
         this.format = overrides.format ? this.toFormat(overrides.format) : undefined
-        this.conditionalCellStyles = overrides.conditionalCellStyles ? this.toConditionalCellStyles(overrides.conditionalCellStyles) : undefined
     }
 
     protected getValue(rowIndex: number | undefined, row: T) : D
@@ -112,14 +104,6 @@ export class SimpleColumn<T, D extends Primitive> extends MyTableColumn<T> {
         return (row: T, rowIndex?: number) => {
             return this.selector ? format(this.getValue(rowIndex, row), row, rowIndex) : undefined;
         }
-    }
-
-    protected toConditionalCellStyles(conditionalCellStyles: ImprovedConditionalCellStyle<T, D>[]): ConditionalStyles<T>[] {
-        return conditionalCellStyles.map(improvedStyle => ({
-            when: (row: T) => this.selector ? improvedStyle.when(this.getValue(undefined, row), row) : false,
-            style: improvedStyle.style,
-            classNames: improvedStyle.classNames,
-        }))
     }
 }
 
