@@ -34,11 +34,14 @@ export class TaxCharged {
 //TODO: make function to confirm tax category amounts are accurate
 
 export class Receipt {
-    public time: Date;
     public amount: number;
     public tax: Array<TaxCharged>
-    public storeName: string;
     public paymentMethod: string;
+    
+    public time: Date;
+    public storeName: string;
+    storeAddress?: string
+    
     public lineItems: Array<LineItem>;
     public itemCount?: number;
     

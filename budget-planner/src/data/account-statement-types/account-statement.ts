@@ -8,21 +8,31 @@ export interface VishalsAccountStatement {
     startDate: Date
     endDate: Date
 
-    internalTransactionSimple?: Array<[amount: number, isPayment: boolean, accountName: string]>
-    externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>
+    readonly internalTransactions: Array<InternalTransaction>
+    readonly externalTransactions: Array<ExternalTransaction>
 }
 
-export class AccountStatement implements VishalsAccountStatement {
-    public account: Account
+export interface StatementInternalTransaction {
+    amount: number
+    // isPayment: boolean // ? Not needed, 
+    accountName: string
+}
+export interface StatementExternalTransaction {
+    time: Date, 
+    amount: number, 
+    vendorName: string, 
+}
+export class AccountStatement {
+    public account: Account // ! Change to only include data that is on statement
     
     public startDate: Date
     public endDate: Date
     
     public endingBalance: number
-    public internalTransactionSimple?: Array<[amount: number, isPayment: boolean, accountName: string]>
-    public externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>
+    public internalTransactionSimple: Array<StatementInternalTransaction>
+    public externalTransactionsSimple: Array<StatementExternalTransaction>
 
-    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>){
+    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<StatementInternalTransaction>, externalTransactionsSimple: Array<StatementExternalTransaction>){
         this.account = account
         this.startDate = startDate
         this.endDate = endDate
@@ -38,7 +48,7 @@ export class BankStatement extends AccountStatement {
     public deductionCount: number
     public additionCount: number
 
-    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>, beginningBalance: number, deductionCount: number, additionCount: number){
+    constructor(account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionSimple: Array<StatementInternalTransaction>, externalTransactionsSimple: Array<StatementExternalTransaction>, beginningBalance: number, deductionCount: number, additionCount: number){
         super(account, startDate, endDate, endingBalance, internalTransactionSimple, externalTransactionsSimple);
         this.beginningBalance = beginningBalance
         this.deductionCount = deductionCount
@@ -61,7 +71,7 @@ export class CreditCardStatement extends AccountStatement {
 
     //public payments? = this.internalTransactions?.forEach();
 
-    constructor(payments: Array<[number, Date]>, account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionsSimple: Array<[amount: number, isPayment: boolean, accountName: string]>, externalTransactionsSimple: Array<[time: Date, amount: number, vendorName: string, accountName: string]>, previousBalance: number, feesCharged: number, interestCharged: number, rewardsBalanceInitial: number, rewardsEarned: number){
+    constructor(payments: Array<[number, Date]> /* ! What are these */, account: Account, startDate: Date, endDate: Date, endingBalance: number, internalTransactionsSimple: Array<StatementInternalTransaction>, externalTransactionsSimple: Array<StatementExternalTransaction>, previousBalance: number, feesCharged: number, interestCharged: number, rewardsBalanceInitial: number, rewardsEarned: number){
         super(account, startDate, endDate, endingBalance, internalTransactionsSimple, externalTransactionsSimple)
         this.previousBalance = previousBalance
         this.feesCharged = feesCharged
