@@ -6,23 +6,27 @@ import { ExternalTransaction } from "./transactions";
 import { Vendor } from "./vendor"
 
 export class LineItem {
-    public cost: number
-    public lineName: string
-    public taxCode?: string
+    cost: number
+    lineName: string
+    taxCode?: string
+    quantity?: number
+    discount?: number
 
-    constructor(cost: number, lineName: string, taxCode?: string){
+    constructor(cost: number, lineName: string, taxCode?: string, quantity?: number, discount?: number){
         this.cost = cost
         this.lineName = lineName
         this.taxCode = taxCode
+        this.quantity = quantity
+        this.discount = discount
     }
 }
 
 //TODO: make lookup table for tax codes
 
 export class TaxCharged {
-    public taxPercent?: number
-    public taxName: string
-    public taxAmount: number
+    taxPercent?: number
+    taxName: string
+    taxAmount: number
 
     constructor(taxName: string, taxAmount: number, taxPercent?: number){
         this.taxPercent = taxPercent
@@ -34,25 +38,25 @@ export class TaxCharged {
 //TODO: make function to confirm tax category amounts are accurate
 
 export class Receipt {
-    public amount: number;
-    public tax: Array<TaxCharged>
-    public paymentMethod: string;
+    time: Date;
+    amount: number;
+    tax: Array<TaxCharged>
+    storeName: string;
+    paymentMethod: string;
+    lineItems: Array<LineItem>;
+    itemCount?: number;
+    address: string
     
-    public time: Date;
-    public storeName: string;
-    storeAddress?: string
-    
-    public lineItems: Array<LineItem>;
-    public itemCount?: number;
-    
-    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, itemCount: number){
-        this.time = time;
-        this.amount = amount;
-        this.tax = tax;
-        this.storeName = storeName;
-        this.paymentMethod = paymentMethod;
-        this.lineItems = lineItems;
+    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, address: string, itemCount?: number){
+        this.time = time
+        this.amount = amount
+        this.tax = tax
+        this.storeName = storeName
+        this.paymentMethod = paymentMethod
+        this.lineItems = lineItems
         this.itemCount = itemCount
+        this.address = address
+        
     }
 
     unaccountedItems() {
@@ -62,6 +66,7 @@ export class Receipt {
             console.log(remainingItems.toString() + "items unaccounted for")
             }
         }
+        
     }
 
     //transactionFromReceipt(itemDescription: string): ExternalTransaction {
@@ -75,11 +80,11 @@ export class Receipt {
 //TODO: Function to make transaction from receipt info, lookup tables, and additional user entered info.
 
 export class StoreReceipt extends Receipt {
-    storeIDNumber: number
+    storeIDNumber?: number
     cashierName: string
 
-    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, itemCount: number, cashierName: string, storeIDNumber: number){
-        super(time, amount, tax, storeName, paymentMethod, lineItems, itemCount)
+    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, address: string, cashierName: string, itemCount?: number, storeIDNumber?: number){
+        super(time, amount, tax, storeName, paymentMethod, lineItems, address, itemCount)
         this.storeIDNumber = storeIDNumber
         this.cashierName = cashierName
     }
@@ -89,8 +94,8 @@ export class MeijerReceipt extends StoreReceipt {
     savingsTotal: number
     storeName = "Meijer"
 
-    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, itemCount: number, cashierName: string, storeIDNumber: number, savingsTotal: number){
-        super(time, amount, tax, storeName, paymentMethod, lineItems, itemCount, cashierName, storeIDNumber)
+    constructor(time: Date, amount: number, tax: Array<TaxCharged>, storeName: string, paymentMethod: string, lineItems: Array<LineItem>, address: string, cashierName: string, storeIDNumber: number, savingsTotal: number, itemCount: number){
+        super(time, amount, tax, storeName, paymentMethod, lineItems, address, cashierName, storeIDNumber, itemCount)
         this.savingsTotal = savingsTotal
     }
 }
