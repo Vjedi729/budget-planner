@@ -27,6 +27,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.6.2",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.52.2",
     "styled-components": "^6.0.7",
     "type-fest": "^4.7.1",
     "typescript": "5.1.6"
