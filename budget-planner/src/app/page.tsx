@@ -10,7 +10,8 @@ export default function MainMenu() {
             {text: "Budget Planner", action: "/budget-planning"},
             {text: "Transactions", action: "/transactions"},
             {text: "Recurring Transactions", action: "/recurring-transactions"},
-            {text: "Spending Tracker", action: "/spending-tracker"}
+            {text: "Spending Tracker", action: "/spending-tracker"},
+            {text: "Upload Files", action:"/file-uploads"}
         ]}/>
     )
 }

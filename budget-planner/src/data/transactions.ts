@@ -65,8 +65,7 @@ export class ExternalTransaction<TimeType = Date> {
 
     toJson(): string {
         const simplifiedTransaction = {"time": this.time, "amount": this.amount, "vendor": this.vendor.vendorId, "account": this.account.accountId, "purchases": this.purchases}
-        return JSON.stringify(simplifiedTransaction)
-    }
+        return JSON.stringify(simplifiedTransaction)}
 }
 
 export interface InternalTransaction<TimeType = Date> {
